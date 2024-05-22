@@ -23,6 +23,7 @@ import PetsScreen from "./screens/PetsScreen";
 import PetProfileScreen from "./screens/PetsProfileScreen";
 import ChangeDetails from "./screens/ChangeDetails";
 import SwitchAccounts from "./screens/SwitchAccounts";
+import PaymentScreen from "./screens/PaymentScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -188,6 +189,14 @@ export default function App() {
         <Stack.Screen
           name="SwitchAccounts"
           component={SwitchAccounts}
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="PaymentScreen"
+          component={PaymentScreen}
           options={{
             headerShown: false,
           }}
