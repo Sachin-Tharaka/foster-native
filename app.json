@@ -16,6 +16,7 @@
     },
     "android": {
       "package": "com.fosterpet.fosterpet",
+      "googleServicesFile": "./android/app/google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -23,6 +24,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "750f7a13-ac45-40b6-ac4d-bac69a27bbd0"
+      }
     }
   }
 }
