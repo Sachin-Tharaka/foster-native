@@ -3,6 +3,14 @@
 # dependencies
 node_modules/
 
+#Idea
+.idea
+
+#SensitiveFiles
+fosterpet-fcm-firebase-adminsdk-ufcei-c4a423571c.json
+android/app/google-services.json
+firebaseconfig.js
+
 # Expo
 .expo/
 dist/
