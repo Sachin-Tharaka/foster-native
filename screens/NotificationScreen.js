@@ -72,6 +72,17 @@ const NotificationScreen = ({ navigation }) => {
           Payments
         </Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.button, styles.loginButton]}
+        onPress={() => {
+          navigation.navigate("ChatList");
+        }}
+      >
+        <Text style={[styles.buttonText, styles.loginButtonText]}>
+          ChatList
+        </Text>
+      </TouchableOpacity>
       <Text style={styles.header}>Notifications</Text>
       <ScrollView style={styles.list}>
         {notifications.map((notification) => (
