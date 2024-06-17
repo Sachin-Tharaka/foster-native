@@ -1,5 +1,5 @@
 // ChatList.js
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {
   View,
   Text,
@@ -7,28 +7,38 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-
-const dummyChats = [
-  { id: "1", name: "Alice", lastMessage: "Hey, how are you?" },
-  { id: "2", name: "Bob", lastMessage: "Are we still on for tomorrow?" },
-  { id: "3", name: "Charlie", lastMessage: "Check this out!" },
-];
+import ChatService from "../services/ChatService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ChatList = ({ navigation }) => {
+
+  const [chatPreview, setChatPreview] = useState([]);
+
+  useEffect(() => {
+    const fetchChatPreview = async () => {
+      const token = await AsyncStorage.getItem("token");
+      const userId = await AsyncStorage.getItem("userId");
+      const chatPreview = await ChatService.fetchMessagePreviews(token, userId);
+      setChatPreview(chatPreview);
+    };
+
+    fetchChatPreview();
+  });
+
   const renderChatItem = ({ item }) => (
     <TouchableOpacity
       style={styles.chatItem}
-      onPress={() => navigation.navigate("Chat", { chatId: item.id })}
+      onPress={() => navigation.navigate("Chat", { chatId: item.chatThreadId })}
     >
-      <Text style={styles.chatName}>{item.name}</Text>
-      <Text style={styles.lastMessage}>{item.lastMessage}</Text>
+      <Text style={styles.chatName}>{item.chatThreadName}</Text>
+      <Text style={styles.lastMessage}>{item.lastMessage.message}</Text>
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={dummyChats}
+        data={chatPreview}
         keyExtractor={(item) => item.id}
         renderItem={renderChatItem}
       />

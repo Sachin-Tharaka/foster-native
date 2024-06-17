@@ -1,27 +1,36 @@
 // ChatScreen.js
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
-
-const dummyMessages = [
-  { id: "1", text: "Hey, how are you?", sender: "Alice" },
-  { id: "2", text: "I am good, thanks! And you?", sender: "Me" },
-  { id: "3", text: "Doing well, just working on the app.", sender: "Alice" },
-  { id: "4", text: "Awesome! Keep it up.", sender: "Me" },
-];
+import ChatService from "../services/ChatService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ChatScreen = ({ route }) => {
+
+  const[chatMessages, setChatMessages] = useState([]);
   const { chatId } = route.params;
 
+    useEffect(() => {
+    // Fetch chat messages
+    const fetchChatMessages = async () => {
+      const token = await AsyncStorage.getItem("token");
+      const messages = await ChatService.fetchMessages(token, chatId);
+      setChatMessages(messages);
+    };
+
+    fetchChatMessages();
+    }, []);
+
+
   const renderMessage = ({ item }) => (
-    <View style={item.sender === "Me" ? styles.myMessage : styles.otherMessage}>
-      <Text style={styles.messageText}>{item.text}</Text>
+    <View style={item.senderType === "User" ? styles.myMessage : styles.otherMessage}>
+      <Text style={styles.messageText}>{item.message}</Text>
     </View>
   );
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={dummyMessages}
+        data={chatMessages}
         keyExtractor={(item) => item.id}
         renderItem={renderMessage}
         inverted
