@@ -1,47 +1,38 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  TextInput,
-  Button,
-  StyleSheet,
-} from "react-native";
-
-const dummyMessages = [
-  { id: "1", text: "Hey, how are you?", sender: "Alice" },
-  { id: "2", text: "I am good, thanks! And you?", sender: "Me" },
-  { id: "3", text: "Doing well, just working on the app.", sender: "Alice" },
-  { id: "4", text: "Awesome! Keep it up.", sender: "Me" },
-];
+// ChatScreen.js
+import React, { useEffect, useState } from "react";
+import { View, Text, FlatList, StyleSheet } from "react-native";
+import ChatService from "../services/ChatService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ChatScreen = ({ route }) => {
+  const [chatMessages, setChatMessages] = useState([]);
   const { chatId } = route.params;
-  const [messages, setMessages] = useState(dummyMessages);
-  const [inputText, setInputText] = useState("");
 
-  const handleSend = () => {
-    if (inputText.trim().length > 0) {
-      const newMessage = {
-        id: (messages.length + 1).toString(),
-        text: inputText,
-        sender: "Me",
-      };
-      setMessages([newMessage, ...messages]);
-      setInputText("");
-    }
-  };
+  useEffect(() => {
+    // Fetch chat messages
+    const fetchChatMessages = async () => {
+      const token = await AsyncStorage.getItem("token");
+      const messages = await ChatService.fetchMessages(token, chatId);
+      setChatMessages(messages);
+    };
+
+    fetchChatMessages();
+  }, []);
 
   const renderMessage = ({ item }) => (
-    <View style={item.sender === "Me" ? styles.myMessage : styles.otherMessage}>
-      <Text style={styles.messageText}>{item.text}</Text>
+    <View
+      style={
+        item.senderType === "User" ? styles.myMessage : styles.otherMessage
+      }
+    >
+      <Text style={styles.messageText}>{item.message}</Text>
     </View>
   );
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={messages}
+        data={chatMessages}
         keyExtractor={(item) => item.id}
         renderItem={renderMessage}
         inverted
