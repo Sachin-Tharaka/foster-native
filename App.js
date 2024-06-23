@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import WelcomeScreen from "./screens/WelcomeScreen";
@@ -25,6 +24,8 @@ import PetProfileScreen from "./screens/PetProfileScreen";
 import ChangeDetails from "./screens/ChangeDetails";
 import SwitchAccounts from "./screens/SwitchAccounts";
 import PaymentScreen from "./screens/PaymentScreen";
+import ChatList from "./screens/ChatList";
+import ChatScreen from "./screens/ChatScreen";
 import AddPetScreen from "./screens/AddPetScreen";
 import UpdatePetProfileScreen from "./screens/UpdatePetProfileScreen";
 import VerificationScreenForForgetPassword from "./screens/VerificationScreenForForgetPassword";
@@ -124,7 +125,6 @@ export default function App() {
       Notifications.addNotificationReceivedListener((notification) => {
         setNotification(notification);
       });
-
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
         console.log(response);
@@ -312,6 +312,10 @@ export default function App() {
             headerShown: false,
           }}
         />
+
+        <Stack.Screen name="ChatList" component={ChatList} />
+        <Stack.Screen name="Chat" component={ChatScreen} />
+
         <Stack.Screen
           name="AddPetScreen"
           component={AddPetScreen}
