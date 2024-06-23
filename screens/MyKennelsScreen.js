@@ -7,13 +7,11 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import KennelService from "../services/KennelService";
-import PetsService from "../services/PetsService";
 
-const PetsScreen = ({ navigation }) => {
-  const [pets, setPets] = useState([]);
+const MyKennelsScreen = ({ navigation }) => {
+  const [kennels, setKennels] = useState([]);
 
   useEffect(() => {
     const getToken = async () => {
@@ -21,8 +19,7 @@ const PetsScreen = ({ navigation }) => {
       const userId = await AsyncStorage.getItem("userId");
       if (token) {
         // Token exists, fetch pets data
-
-        getPetsByUserId(userId, token);
+        getKennelsByUserId(userId, token);
       } else {
         // Token doesn't exist, navigate to Login screen
         console.log("Please login");
@@ -30,44 +27,47 @@ const PetsScreen = ({ navigation }) => {
       }
     };
     getToken();
-  }, []);
+  }, [navigation]);
 
   //get pets by user id
-  const getPetsByUserId = async (id, token) => {
-    // call get pets by userid function
+  const getKennelsByUserId = async (id, token) => {
     try {
-      const data = await PetsService.getPetsByOwnerId(id, token);
-      console.log("pets data:", data);
-      setPets(data);
+      const data = await KennelService.getKennelsByUserId(id, token);
+      console.log("Kennels data:", data);
+      setKennels(data);
     } catch (error) {
       // Handle error
       console.error("Error:", error.message);
     }
   };
 
+  //handle click on pet
+  const handleClickOnKennel = (id) => {
+    console.log("navigate to kennel profile screen");
+    navigation.navigate("AgentHome", { kennelID: id });
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Pets</Text>
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("AddPetScreen")}
-        >
-          <Text style={styles.buttonText}>Add Pet</Text>
+      <Text style={styles.header}>My Kennels</Text>
+      <View style={styles.buttonContainer}>
+
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AddNewKennelScreen')}>
+
+
+          <Text style={styles.buttonText}>Add Kennel</Text>
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.list}>
-        {pets.map((pet) => (
+        {kennels.map((kennel) => (
           <TouchableOpacity
-            key={pet.petID}
+            key={kennel.kennelId}
             style={styles.entry}
-            onPress={() =>
-              navigation.navigate("PetProfileScreen", { petID: pet.petID })
-            }
+            onPress={() => handleClickOnKennel(kennel.kennelId)}
           >
-            <Image source={{ uri: pet.petImages[0] }} style={styles.image} />
+            <Image source={{ uri: kennel.images[0] }} style={styles.image} />
             <View style={styles.infoContainer}>
-              <Text style={styles.name}>{pet.petName}</Text>
+              <Text style={styles.name}>{kennel.kennelName}</Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -89,7 +89,6 @@ const styles = StyleSheet.create({
     margin: "auto",
     marginBottom: 30,
   },
-
   buttonContainer: {
     flexDirection: "row",
     width: "70%",
@@ -97,7 +96,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 20,
   },
-
   button: {
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -106,18 +104,11 @@ const styles = StyleSheet.create({
     elevation: 3,
     marginBottom: 20,
   },
-
   buttonText: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
   },
-
-  change_button: {
-    color: "blue",
-    fontWeight: "bold",
-  },
-
   list: {
     flex: 1,
   },
@@ -149,4 +140,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PetsScreen;
+export default MyKennelsScreen;
