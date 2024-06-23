@@ -14,19 +14,37 @@ import NotificationScreen from "./screens/NotificationScreen";
 import FosterProfile from "./screens/FosterProfile";
 import LocationSetterScreen from "./screens/LocationSetterScreen";
 import UserAccount from "./screens/UserAccount";
-import BecomeAgent from "./screens/BecomeAgent";
-import AgentHome from "./screens/AgentHome";
+import MyBookingScreen from "./screens/MyBookingScreen";
+import AgentHome from "./screens/KennelHome";
 import AgentChat from "./screens/AgentChat";
-import AgentApprovals from "./screens/AgentApprovals";
+import KennelBookingScreen from "./screens/KennelBookingScreen";
 import AgentWallet from "./screens/AgentWallet";
 import PetsScreen from "./screens/PetsScreen";
-import PetProfileScreen from "./screens/PetsProfileScreen";
+import PetProfileScreen from "./screens/PetProfileScreen";
 import ChangeDetails from "./screens/ChangeDetails";
 import SwitchAccounts from "./screens/SwitchAccounts";
 import PaymentScreen from "./screens/PaymentScreen";
 import ChatList from "./screens/ChatList";
 import ChatScreen from "./screens/ChatScreen";
-
+import AddPetScreen from "./screens/AddPetScreen";
+import UpdatePetProfileScreen from "./screens/UpdatePetProfileScreen";
+import VerificationScreenForForgetPassword from "./screens/VerificationScreenForForgetPassword";
+import SaveNewPasswordScreen from "./screens/SaveNewPasswordScreen";
+import MyKennelsScreen from "./screens/MyKennelsScreen";
+import AddNewKennelScreen from "./screens/AddNewKennelScreen";
+import UpdateKennelDataScreen from "./screens/UpdateKennelDataScreen";
+import KennelReviewScreen from "./screens/KennelReviewScreen";
+import BeAVolunteerScreen from "./screens/BeAVolunteerScreen";
+import VolunteerScreen from "./screens/VolunteerScreen";
+import UpdateVolunteerScreen from "./screens/UpdateVolunteerScreen";
+import CustomerProfileScreen from "./screens/CustomerProfileScreen";
+import CustomerPetsScreen from "./screens/CustomerPetsScreen";
+import CustomerPetProfileScreen from "./screens/CustomerPetProfileScreen";
+import VolunteerReviewScreen from "./screens/VolunteerReviewScreen";
+import VolunteerBookingScreen from "./screens/VolunteerBookingScreen";
+import KennelReviewsForUserScreen from "./screens/KennelReviewsForUserScreen";
+import VolunteerProfileScreen from "./screens/VolunteerProfileScreen";
+import VolunteerReviewForUser from "./screens/VolunteerReviewForUser";
 import "./firebaseconfig";
 import { registerRootComponent } from "expo";
 import * as Notifications from "expo-notifications";
@@ -107,7 +125,6 @@ export default function App() {
       Notifications.addNotificationReceivedListener((notification) => {
         setNotification(notification);
       });
-
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
         console.log(response);
@@ -222,8 +239,8 @@ export default function App() {
         />
 
         <Stack.Screen
-          name="AgentApprovals"
-          component={AgentApprovals}
+          name="KennelBookingScreen"
+          component={KennelBookingScreen}
           options={{
             headerShown: false,
           }}
@@ -237,8 +254,8 @@ export default function App() {
           }}
         />
         <Stack.Screen
-          name="BecomeAgent"
-          component={BecomeAgent}
+          name="MyBookingScreen"
+          component={MyBookingScreen}
           options={{
             headerShown: false,
           }}
@@ -288,7 +305,6 @@ export default function App() {
             headerShown: false,
           }}
         />
-
         <Stack.Screen
           name="PaymentScreen"
           component={PaymentScreen}
@@ -299,6 +315,151 @@ export default function App() {
 
         <Stack.Screen name="ChatList" component={ChatList} />
         <Stack.Screen name="Chat" component={ChatScreen} />
+          
+        <Stack.Screen
+          name="AddPetScreen"
+          component={AddPetScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="UpdatePetProfileScreen"
+          component={UpdatePetProfileScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="VerificationScreenForSaveNewPassword"
+          component={VerificationScreenForForgetPassword}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="SaveNewPasswordScreen"
+          component={SaveNewPasswordScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="MyKennelsScreen"
+          component={MyKennelsScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="AddNewKennelScreen"
+          component={AddNewKennelScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="UpdateKennelDataScreen"
+          component={UpdateKennelDataScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="KennelReviewScreen"
+          component={KennelReviewScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="BeVolunteerScreen"
+          component={BeAVolunteerScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="VolunteerScreen"
+          component={VolunteerScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="UpdateVolunteerProfileScreen"
+          component={UpdateVolunteerScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="CustomerProfile"
+          component={CustomerProfileScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="CustomerPetsScreen"
+          component={CustomerPetsScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="CustomerPetProfileScreen"
+          component={CustomerPetProfileScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="VolunteerReview"
+          component={VolunteerReviewScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="VolunteerBooking"
+          component={VolunteerBookingScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="KennelReviewsForUserScreen"
+          component={KennelReviewsForUserScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="VolunteerProfileScreen"
+          component={VolunteerProfileScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="VolunteerReviewForUser"
+          component={VolunteerReviewForUser}
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

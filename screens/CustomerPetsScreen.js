@@ -7,22 +7,20 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import KennelService from "../services/KennelService";
 import PetsService from "../services/PetsService";
 
-const PetsScreen = ({ navigation }) => {
+const CustomerPetsScreen = ({ route, navigation }) => {
+    const { customerId } = route.params || { customerId: "" };
   const [pets, setPets] = useState([]);
 
   useEffect(() => {
     const getToken = async () => {
       const token = await AsyncStorage.getItem("token");
-      const userId = await AsyncStorage.getItem("userId");
+      
       if (token) {
         // Token exists, fetch pets data
-
-        getPetsByUserId(userId, token);
+        getPetsByCustomerId(customerId, token);
       } else {
         // Token doesn't exist, navigate to Login screen
         console.log("Please login");
@@ -30,11 +28,10 @@ const PetsScreen = ({ navigation }) => {
       }
     };
     getToken();
-  }, []);
+  }, [navigation]);
 
   //get pets by user id
-  const getPetsByUserId = async (id, token) => {
-    // call get pets by userid function
+  const getPetsByCustomerId = async (id, token) => {
     try {
       const data = await PetsService.getPetsByOwnerId(id, token);
       console.log("pets data:", data);
@@ -45,25 +42,22 @@ const PetsScreen = ({ navigation }) => {
     }
   };
 
+  //handle click on pet
+  const handleClickOnPet = (id) => {
+    console.log("navigate to pet profile screen");
+    navigation.navigate("CustomerPetProfileScreen", { petID: id });
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Pets</Text>
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("AddPetScreen")}
-        >
-          <Text style={styles.buttonText}>Add Pet</Text>
-        </TouchableOpacity>
-      </View>
+      
       <ScrollView style={styles.list}>
         {pets.map((pet) => (
           <TouchableOpacity
             key={pet.petID}
             style={styles.entry}
-            onPress={() =>
-              navigation.navigate("PetProfileScreen", { petID: pet.petID })
-            }
+            onPress={() => handleClickOnPet(pet.petID)}
           >
             <Image source={{ uri: pet.petImages[0] }} style={styles.image} />
             <View style={styles.infoContainer}>
@@ -89,7 +83,6 @@ const styles = StyleSheet.create({
     margin: "auto",
     marginBottom: 30,
   },
-
   buttonContainer: {
     flexDirection: "row",
     width: "70%",
@@ -97,7 +90,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 20,
   },
-
   button: {
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -106,18 +98,11 @@ const styles = StyleSheet.create({
     elevation: 3,
     marginBottom: 20,
   },
-
   buttonText: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
   },
-
-  change_button: {
-    color: "blue",
-    fontWeight: "bold",
-  },
-
   list: {
     flex: 1,
   },
@@ -149,4 +134,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PetsScreen;
+export default CustomerPetsScreen;

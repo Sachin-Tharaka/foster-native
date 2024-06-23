@@ -95,7 +95,8 @@ const NotificationScreen = ({ navigation }) => {
               <Text style={styles.heading}>{notification.heading}</Text>
               <Text style={styles.message}>{notification.message}</Text>
               <View style={{ flexDirection: "row" }}>
-                ★★★★
+                <Text>★★★★</Text>
+
                 {/* {renderStars(notification.stars)} */}
               </View>
             </View>
