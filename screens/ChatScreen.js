@@ -1,23 +1,64 @@
 // ChatScreen.js
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import {View, Text, FlatList, StyleSheet, Button, TextInput, Image} from "react-native";
 import ChatService from "../services/ChatService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from "expo-image-picker";
 
 const ChatScreen = ({ route }) => {
   const [chatMessages, setChatMessages] = useState([]);
+  const [inputText, setInputText] = useState("");
+  const [attachment, setAttachment] = useState(null);
   const { chatId } = route.params;
 
-  useEffect(() => {
-    // Fetch chat messages
-    const fetchChatMessages = async () => {
-      const token = await AsyncStorage.getItem("token");
-      const messages = await ChatService.fetchMessages(token, chatId);
-      setChatMessages(messages);
-    };
+  // Fetch chat messages
+  const fetchChatMessages = async () => {
+    const token = await AsyncStorage.getItem("token");
+    const messages = await ChatService.fetchMessages(token, chatId);
+    setChatMessages(messages);
+  };
 
+  useEffect(() => {
     fetchChatMessages();
   }, []);
+
+  const pickAttachment = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: false,
+      base64: false,
+    });
+
+    if (!result.canceled) {
+      setAttachment(result.assets[0]);
+      console.log(attachment);
+    }
+  };
+
+    const handleSend = async () => {
+      const token = await AsyncStorage.getItem("token");
+      const senderId = await AsyncStorage.getItem("userId");
+
+      const formData = new FormData();
+      formData.append("chatThreadId", chatId);
+      formData.append("message", inputText);
+      formData.append("senderId", senderId);
+      if (attachment != null) {
+        formData.append("attachment", {
+          uri: attachment.uri,
+          name: attachment.fileName,
+          type: attachment.mimeType,
+        });
+      }
+      formData.append("senderType", "User");
+
+      const response = await ChatService.sendMessage(token, formData);
+      if (response.ok) {
+        setInputText("");
+        setAttachment(null);
+        await fetchChatMessages(); // Fetch chat messages again after sending a message
+      }
+    }
 
   const renderMessage = ({ item }) => (
     <View
@@ -26,6 +67,9 @@ const ChatScreen = ({ route }) => {
       }
     >
       <Text style={styles.messageText}>{item.message}</Text>
+      {item.attachment && (
+          <Image style={{ width: 200, height: 200 }} source={{ uri: item.attachment }} />
+      )}
     </View>
   );
 
@@ -44,6 +88,7 @@ const ChatScreen = ({ route }) => {
           value={inputText}
           onChangeText={setInputText}
         />
+        <Button title="Attach" onPress={pickAttachment} />
         <Button title="Send" onPress={handleSend} />
       </View>
     </View>

@@ -19,7 +19,7 @@ class ChatService {
           }
 
           const data = await response.json();
-          console.warn(data);
+          //console.warn(data);
           return data;
       } catch (error) {
           throw error;
@@ -42,11 +42,33 @@ class ChatService {
             }
 
             const data = await response.json();
-            console.warn(data);
+            //console.warn(data);
             return data;
         } catch (error) {
             throw error;
         }
+    }
+
+    async sendMessage(token, formData) {
+        fetch(`${this.baseUrl}/api/chat/send-message`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+        })
+            .then(response => {
+                console.log("response body: ", response.body)
+                // Check if response status is OK
+                if (!response.ok) {
+                    // If response status is not OK, handle the error
+                    return response.text().then(errorMessage => {
+                        throw new Error(errorMessage);
+                    })
+                }
+                // If response status is OK, return the JSON response
+                return response;
+            })
     }
 }
 
