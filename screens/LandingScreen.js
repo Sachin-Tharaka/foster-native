@@ -33,7 +33,7 @@ const LandingScreen = ({ navigation }) => {
   //resend email
   const handleSkip = () => {
     //call resend email function
-    navigation.navigate("Home");
+    navigation.navigate("BookingHouse");
   };
 
   return (

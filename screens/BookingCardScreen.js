@@ -256,6 +256,18 @@ const BookingCardScreen = ({ route, navigation }) => {
       <TouchableOpacity onPress={handleBooking} style={styles.button}>
         <Text style={styles.buttonText}>Place Booking</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.button, styles.loginButton]}
+        onPress={() => {
+          // Handle login button press
+          navigation.navigate("PaymentScreen");
+        }}
+      >
+        <Text style={[styles.buttonText, styles.loginButtonText]}>
+          Payments
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };

@@ -1,48 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 import Navbar from '../components/Navbar';
 
-const LocationSetterScreen = ({ navigation }) => {
+const LocationSetterScreen = ({ navigation, route }) => {
   const [searchText, setSearchText] = useState('');
-  const [locations, setLocations] = useState([
-    { key: '1', label: 'Home', address: 'Kandy Road, Kelaniya' },
-    { key: '2', label: 'Office', address: 'Kandy Road, Kelaniya' },
-    { key: '3', label: 'Set location on map', address: '' }
-  ]);
+  const [locations, setLocations] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
+  const { setLocation } = route.params;
+
+  useEffect(() => {
+    // Initialize with some locations or fetch from an API
+    setLocations([]);
+  }, []);
 
   const filteredLocations = locations.filter(location => 
     location.label.toLowerCase().includes(searchText.toLowerCase())
   );
 
+  const handleLocationSelect = (location) => {
+    setLocation(location);
+    navigation.goBack();
+  };
+
+  const handleMapPress = (event) => {
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    setSelectedLocation({ label: 'Custom Location', latitude, longitude });
+  };
+
+  const handleSaveLocation = () => {
+    if (selectedLocation) {
+      setLocation(selectedLocation);
+      navigation.goBack();
+    }
+  };
+
   const renderLocation = ({ item }) => (
-    <View style={styles.locationItem}>
-      <View style={styles.iconContainer}>
-        <Text style={styles.iconText}>📍</Text>
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.locationLabel}>{item.label}</Text>
-        {item.address ? <Text style={styles.locationAddress}>{item.address}</Text> : null}
-      </View>
-    </View>
+    <TouchableOpacity onPress={() => handleLocationSelect(item)} style={styles.locationContainer}>
+      <Text style={styles.locationLabel}>{item.label}</Text>
+      <Text style={styles.locationAddress}>{item.address}</Text>
+    </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <TextInput
-          placeholder="SEARCH"
-          style={styles.searchInput}
-          value={searchText}
-          onChangeText={text => setSearchText(text)}
-        />
-      </View>
-      <Text style={styles.savedPlacesText}>Saved places</Text>
+      <Text style={styles.header}>Search Location</Text>
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Type location name"
+        value={searchText}
+        onChangeText={setSearchText}
+      />
       <FlatList
         data={filteredLocations}
         renderItem={renderLocation}
         keyExtractor={item => item.key}
       />
-      <View> <Navbar /></View>
+      <MapView
+        style={styles.map}
+        onPress={handleMapPress}
+      >
+        {selectedLocation && (
+          <Marker coordinate={selectedLocation} />
+        )}
+      </MapView>
+      <TouchableOpacity onPress={handleSaveLocation} style={styles.saveButton}>
+        <Text style={styles.saveButtonText}>Save Location</Text>
+      </TouchableOpacity>
+      <Navbar />
     </View>
   );
 };
@@ -50,49 +76,49 @@ const LocationSetterScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    padding: 10,
+    backgroundColor: '#ffffff',
     marginTop: 60,
   },
-  searchContainer: {
-    padding: 10,
-    backgroundColor: '#f0f0f0'
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
   searchInput: {
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 10
-  },
-  savedPlacesText: {
-    margin: 10,
-    fontWeight: 'bold'
-  },
-  locationItem: {
-    flexDirection: 'row',
-    padding: 10,
-    alignItems: 'center',
-    backgroundColor: 'white',
-    marginBottom: 2
-  },
-  iconContainer: {
-    width: 40,
     height: 40,
-    backgroundColor: 'lightblue',
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center'
+    borderColor: '#cccccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 20,
   },
-  iconText: {
-    fontSize: 20
-  },
-  textContainer: {
-    marginLeft: 10
+  locationContainer: {
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eeeeee',
   },
   locationLabel: {
-    fontWeight: 'bold'
+    fontSize: 18,
   },
   locationAddress: {
-    color: 'grey'
-  }
+    fontSize: 14,
+    color: '#666666',
+  },
+  map: {
+    flex: 1,
+    marginBottom: 10,
+  },
+  saveButton: {
+    padding: 10,
+    backgroundColor: 'blue',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  saveButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 });
 
 export default LocationSetterScreen;

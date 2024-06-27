@@ -1,9 +1,18 @@
 // ChatScreen.js
 import React, { useEffect, useState } from "react";
-import {View, Text, FlatList, StyleSheet, Button, TextInput, Image} from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TextInput,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import ChatService from "../services/ChatService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const ChatScreen = ({ route }) => {
   const [chatMessages, setChatMessages] = useState([]);
@@ -35,30 +44,30 @@ const ChatScreen = ({ route }) => {
     }
   };
 
-    const handleSend = async () => {
-      const token = await AsyncStorage.getItem("token");
-      const senderId = await AsyncStorage.getItem("userId");
+  const handleSend = async () => {
+    const token = await AsyncStorage.getItem("token");
+    const senderId = await AsyncStorage.getItem("userId");
 
-      const formData = new FormData();
-      formData.append("chatThreadId", chatId);
-      formData.append("message", inputText);
-      formData.append("senderId", senderId);
-      if (attachment != null) {
-        formData.append("attachment", {
-          uri: attachment.uri,
-          name: attachment.fileName,
-          type: attachment.mimeType,
-        });
-      }
-      formData.append("senderType", "User");
-
-      const response = await ChatService.sendMessage(token, formData);
-      if (response.ok) {
-        setInputText("");
-        setAttachment(null);
-        await fetchChatMessages(); // Fetch chat messages again after sending a message
-      }
+    const formData = new FormData();
+    formData.append("chatThreadId", chatId);
+    formData.append("message", inputText);
+    formData.append("senderId", senderId);
+    if (attachment != null) {
+      formData.append("attachment", {
+        uri: attachment.uri,
+        name: attachment.fileName,
+        type: attachment.mimeType,
+      });
     }
+    formData.append("senderType", "User");
+
+    const response = await ChatService.sendMessage(token, formData);
+    if (response.ok) {
+      setInputText("");
+      setAttachment(null);
+      await fetchChatMessages(); // Fetch chat messages again after sending a message
+    }
+  };
 
   const renderMessage = ({ item }) => (
     <View
@@ -68,7 +77,10 @@ const ChatScreen = ({ route }) => {
     >
       <Text style={styles.messageText}>{item.message}</Text>
       {item.attachment && (
-          <Image style={{ width: 200, height: 200 }} source={{ uri: item.attachment }} />
+        <Image
+          style={{ width: 200, height: 200 }}
+          source={{ uri: item.attachment }}
+        />
       )}
     </View>
   );
@@ -82,14 +94,23 @@ const ChatScreen = ({ route }) => {
         inverted
       />
       <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Type a message"
-          value={inputText}
-          onChangeText={setInputText}
-        />
-        <Button title="Attach" onPress={pickAttachment} />
-        <Button title="Send" onPress={handleSend} />
+        <View style={styles.textInputContainer}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Type a message"
+            value={inputText}
+            onChangeText={setInputText}
+          />
+          <TouchableOpacity
+            onPress={pickAttachment}
+            style={styles.attachmentIcon}
+          >
+            <Icon name="paperclip" size={24} color="#007AFF" />
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity onPress={handleSend} style={styles.iconButton}>
+          <Icon name="send" size={24} color="#007AFF" />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -98,7 +119,6 @@ const ChatScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
     backgroundColor: "#f5f5f5",
   },
   myMessage: {
@@ -108,6 +128,11 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 5,
     maxWidth: "80%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 5,
   },
   otherMessage: {
     alignSelf: "flex-start",
@@ -116,9 +141,20 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 5,
     maxWidth: "80%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 5,
   },
   messageText: {
     fontSize: 16,
+  },
+  attachment: {
+    width: 200,
+    height: 200,
+    borderRadius: 10,
+    marginTop: 5,
   },
   inputContainer: {
     flexDirection: "row",
@@ -128,13 +164,28 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#fff",
   },
-  textInput: {
+  textInputContainer: {
     flex: 1,
-    padding: 10,
+    flexDirection: "row",
+    alignItems: "center",
     borderColor: "#e1e1e1",
     borderWidth: 1,
     borderRadius: 20,
-    marginRight: 10,
+    backgroundColor: "#f9f9f9",
+    paddingRight: 40,
+  },
+  textInput: {
+    flex: 1,
+    padding: 10,
+  },
+  attachmentIcon: {
+    position: "absolute",
+    right: 10,
+    top: "50%",
+    transform: [{ translateY: -12 }],
+  },
+  iconButton: {
+    padding: 10,
   },
 });
 

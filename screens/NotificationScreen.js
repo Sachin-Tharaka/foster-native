@@ -61,28 +61,6 @@ const NotificationScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={[styles.button, styles.loginButton]}
-        onPress={() => {
-          // Handle login button press
-          navigation.navigate("PaymentScreen");
-        }}
-      >
-        <Text style={[styles.buttonText, styles.loginButtonText]}>
-          Payments
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.button, styles.loginButton]}
-        onPress={() => {
-          navigation.navigate("ChatList");
-        }}
-      >
-        <Text style={[styles.buttonText, styles.loginButtonText]}>
-          ChatList
-        </Text>
-      </TouchableOpacity>
       <Text style={styles.header}>Notifications</Text>
       <ScrollView style={styles.list}>
         {notifications.map((notification) => (
