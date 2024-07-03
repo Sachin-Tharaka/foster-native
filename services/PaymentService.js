@@ -1,24 +1,25 @@
-import React, {useEffect, useState} from 'react';
-import {View, Button, StyleSheet, Alert} from 'react-native';
-import {useStripe} from '@stripe/stripe-react-native';
+import React, { useEffect, useState } from "react";
+import { View, Button, StyleSheet, Alert } from "react-native";
+import { useStripe } from "@stripe/stripe-react-native";
 
 export default function PaymentService() {
-  const {initPaymentSheet, presentPaymentSheet} = useStripe();
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
 
   const fetchPaymentSheetParams = async () => {
-    console.log('Fetching PaymentSheet params');
+    console.log("Fetching PaymentSheet params");
     const response = await fetch(
-      'https://fosterpet.azurewebsites.net/api/payment/create-payment-intent',
+      "https://fosterpet.azurewebsites.net/api/payment/create-payment-intent",
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWhlbGExMDBAZ21haWwuY29tIiwiaWF0IjoxNzE1NjcyNzI2LCJleHAiOjE3MTU4MDIzMjZ9.LuVFi58QN7KdU9M0uuBWxWzKkuIgKHx5hUt5nJxbQKM'
+          "Content-Type": "application/json",
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWhlbGExMDBAZ21haWwuY29tIiwiaWF0IjoxNzE1NjcyNzI2LCJleHAiOjE3MTU4MDIzMjZ9.LuVFi58QN7KdU9M0uuBWxWzKkuIgKHx5hUt5nJxbQKM",
         },
-      },
+      }
     );
-    const {paymentIntent, ephemeralKey, customer} = await response.json();
+    const { paymentIntent, ephemeralKey, customer } = await response.json();
     console.log(response.json());
 
     return {
@@ -29,12 +30,12 @@ export default function PaymentService() {
   };
 
   const initializePaymentSheet = async () => {
-    console.log('Initializing PaymentSheet');
-    const {paymentIntent, ephemeralKey, customer} =
+    console.log("Initializing PaymentSheet");
+    const { paymentIntent, ephemeralKey, customer } =
       await fetchPaymentSheetParams();
 
-    const {error} = await initPaymentSheet({
-      merchantDisplayName: 'Example, Inc.',
+    const { error } = await initPaymentSheet({
+      merchantDisplayName: "Example, Inc.",
       customerId: customer,
       customerEphemeralKeySecret: ephemeralKey,
       paymentIntentClientSecret: paymentIntent,
@@ -42,7 +43,7 @@ export default function PaymentService() {
       //methods that complete payment after a delay, like SEPA Debit and Sofort.
       allowsDelayedPaymentMethods: true,
       defaultBillingDetails: {
-        name: 'Jane Doe',
+        name: "Jane Doe",
       },
     });
     if (!error) {
@@ -51,13 +52,13 @@ export default function PaymentService() {
   };
 
   const openPaymentSheet = async () => {
-    console.log('Opening PaymentSheet');
-    const {error} = await presentPaymentSheet();
+    console.log("Opening PaymentSheet");
+    const { error } = await presentPaymentSheet();
 
     if (error) {
       Alert.alert(`Error code: ${error.code}`, error.message);
     } else {
-      Alert.alert('Success', 'Your order is confirmed!');
+      Alert.alert("Success", "Your order is confirmed!");
     }
   };
 

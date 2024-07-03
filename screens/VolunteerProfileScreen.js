@@ -42,33 +42,27 @@ const VolunteerProfileScreen = ({ route, navigation }) => {
     }
   };
 
+  const openChat = async () => {};
 
-
-  const openChat=async()=>{
-
-  }
-
-  const viewReview=async()=>{
+  const viewReview = async () => {
     navigation.navigate("VolunteerReviewForUser", { volunteerId: volunteerId });
-  }
+  };
 
-  const bookingVolunteer=async()=>{
+  const bookingVolunteer = async () => {
     navigation.navigate("Booking", { volunteerID: volunteerId });
-  }
-  
+  };
+
   return (
     <View style={styles.container}>
-     
-
       <TouchableOpacity style={styles.button} onPress={viewReview}>
-       <Text style={styles.buttonText}>View Review</Text>
+        <Text style={styles.buttonText}>View Review</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={bookingVolunteer}>
-       <Text style={styles.buttonText}>Book</Text>
+        <Text style={styles.buttonText}>Book</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.button} onPress={openChat}>
-       <Text style={styles.buttonText}>Message</Text>
+        <Text style={styles.buttonText}>Message</Text>
       </TouchableOpacity>
 
       <View style={styles.petContainer}>
@@ -81,14 +75,23 @@ const VolunteerProfileScreen = ({ route, navigation }) => {
           }
         />
         <View>
-        <Text>Name: {volunteer.volunteerName}</Text>
+          <Text>Name: {volunteer.volunteerName}</Text>
           <Text>Nic NO: {volunteer.nicNumber}</Text>
-          <Text style={styles.location}>Address: 
-          {volunteer.volunteerAddress
-            ? `${volunteer.volunteerAddress.address1}, ${volunteer.volunteerAddress.address2}, ${volunteer.volunteerAddress.city}.`
-            : "Address not available"}
-        </Text>
+          <Text style={styles.location}>
+            Address:
+            {volunteer.volunteerAddress
+              ? `${volunteer.volunteerAddress.address1}, ${volunteer.volunteerAddress.address2}, ${volunteer.volunteerAddress.city}.`
+              : "Address not available"}
+          </Text>
         </View>
+        {volunteer.paymentRates && (
+          <View>
+            <Text>Animal Types:</Text>
+            {volunteer.paymentRates.map((rate, index) => (
+              <Text key={index}>{rate.animalType}</Text>
+            ))}
+          </View>
+        )}
       </View>
 
       <ScrollView>
