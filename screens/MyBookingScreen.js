@@ -113,7 +113,7 @@ const MyBookingScreen = ({ navigation }) => {
           style={styles.button}
           onPress={() => cancelBooking(booking.bookingID)}
         >
-          <Text style={styles.buttonText}>Cancel Booking</Text>
+          <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
       );
     }
