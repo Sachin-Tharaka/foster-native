@@ -222,6 +222,8 @@ export default function App() {
             headerShown: false,
           }}
         />
+        <Stack.Screen name="ChatList" component={ChatList} />
+        <Stack.Screen name="Chat" component={ChatScreen} />
         <Stack.Screen
           name="AddPetScreen"
           component={AddPetScreen}
