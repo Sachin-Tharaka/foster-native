@@ -61,7 +61,10 @@ const NotificationScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Notifications</Text>
+      <View>
+        <Text style={styles.header}>Notifications</Text>
+      </View>
+
       <ScrollView style={styles.list}>
         {notifications.map((notification) => (
           <View key={notification.id} style={styles.entry}>
@@ -96,7 +99,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "#ffffff",
-    marginTop: 100,
   },
   header: {
     fontSize: 24,

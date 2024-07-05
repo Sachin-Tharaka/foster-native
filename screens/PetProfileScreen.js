@@ -6,6 +6,7 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PetsService from "../services/PetsService";
@@ -29,30 +30,63 @@ const PetProfileScreen = ({ route, navigation }) => {
     getToken();
   }, [navigation]);
 
-  //get pet by id
+  // Get pet by id
   const getPetById = async (id, token) => {
-    // call get pets by userid function
     try {
       const data = await PetsService.getPetById(id, token);
       console.log("pets data:", data);
       setPet(data);
     } catch (error) {
-      // Handle error
       console.error("Error:", error.message);
     }
   };
 
-
-  //navigate to update screen
-  const handleEditProfile =async()=>{
-    console.log("navigate to update pet profile screen");
+  // Navigate to update screen
+  const handleEditProfile = async () => {
+    console.log("Navigate to update pet profile screen");
     navigation.navigate("UpdatePetProfileScreen", { petID: petID });
-  }
-  
+  };
+
+  // Delete pet by id
+  const handleDeletePet = async () => {
+    Alert.alert(
+      "Delete Pet",
+      "Are you sure you want to delete this pet?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "OK", onPress: deletePet },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const deletePet = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const response = await PetsService.delete(petID, token);
+      console.log("Pet deleted successfully", response);
+      navigation.navigate("PetsScreen");
+    } catch (error) {
+      console.error("Error deleting pet:", error.message);
+      Alert.alert("Error", "Failed to delete pet. Please try again later.");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
-       <Text style={styles.buttonText}>Edit Account</Text>
+        <Text style={styles.buttonText}>Edit Account</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: "red" }]}
+        onPress={handleDeletePet}
+      >
+        <Text style={styles.buttonText}>Delete Pet</Text>
       </TouchableOpacity>
 
       <View style={styles.petContainer}>
@@ -72,11 +106,15 @@ const PetProfileScreen = ({ route, navigation }) => {
           <Text>Weight: {pet.petWeight} lbs</Text>
           <Text>Medical Conditions: {pet.petMediConditions}</Text>
           <Text>Vaccination Status: {pet.petVaccinationStatus}</Text>
-         <Text>KASL Registration Number: {pet.kasl_regNo}</Text>
+          <Text>KASL Registration Number: {pet.kasl_regNo}</Text>
           <Text>Owner: {pet.ownerName}</Text>
           <Text>Contact: {pet.ownerPhone}</Text>
           <Text>Email: {pet.ownerEmail}</Text>
-          <Text>Address: {pet.petAddress && `${pet.petAddress.address1}, ${pet.petAddress.address2}, ${pet.petAddress.city}, ${pet.petAddress.zipCode}`}</Text>
+          <Text>
+            Address:{" "}
+            {pet.petAddress &&
+              `${pet.petAddress.address1}, ${pet.petAddress.address2}, ${pet.petAddress.city}, ${pet.petAddress.zipCode}`}
+          </Text>
         </View>
       </View>
 
@@ -123,7 +161,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginTop: 10,
-    marginBottom: 40,
+    marginBottom: 10,
   },
   buttonText: {
     fontWeight: "bold",

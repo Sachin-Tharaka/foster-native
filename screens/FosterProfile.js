@@ -13,7 +13,10 @@ import KennelService from "../services/KennelService";
 
 const FosterProfile = ({ route, navigation }) => {
   const { kennelId } = route.params;
-  const [kennelData, setKennelData] = useState({ images: [] });
+  const [kennelData, setKennelData] = useState({
+    images: [],
+    paymentRates: [],
+  });
 
   useEffect(() => {
     const getToken = async () => {
@@ -49,6 +52,10 @@ const FosterProfile = ({ route, navigation }) => {
     navigation.navigate("Booking", { kennelID: kennelId });
   };
 
+  const viewReviews = () => {
+    navigation.navigate("KennelReviewsForUserScreen", { kennelId: kennelId });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -68,10 +75,23 @@ const FosterProfile = ({ route, navigation }) => {
             : "Address not available"}
         </Text>
       </View>
+      <View style={styles.paymentRatesContainer}>
+        <Text style={styles.sectionTitle}>Payment Rates:</Text>
+        {kennelData.paymentRates.map((rate, index) => (
+          <View key={index} style={styles.rateRow}>
+            <Text style={styles.rateText}>
+              {rate.animalType}: ${rate.rate}
+            </Text>
+          </View>
+        ))}
+      </View>
 
       <View style={styles.buttonsContainer}>
         <TouchableOpacity style={styles.button} onPress={handleBookFosterHouse}>
           <Text style={styles.buttonText}>Book A Fostering</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={viewReviews}>
+          <Text style={styles.buttonText}>Reviews</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Message</Text>
@@ -156,6 +176,22 @@ const styles = StyleSheet.create({
     width: "50%",
     height: 150,
     margin: 5,
+  },
+  paymentRatesContainer: {
+    padding: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  rateRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 10,
+  },
+  rateText: {
+    fontSize: 16,
   },
 });
 

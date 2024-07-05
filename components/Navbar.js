@@ -22,10 +22,6 @@ const Navbar = () => {
     navigation.navigate("Home");
   };
 
-  const handleChats = () => {
-    navigation.navigate("ChatList");
-  };
-
   return (
     <View style={styles.navBar}>
       <TouchableOpacity onPress={handleHome} style={styles.iconContainer}>
@@ -42,9 +38,6 @@ const Navbar = () => {
       </TouchableOpacity>
       <TouchableOpacity onPress={handleGallery} style={styles.iconContainer}>
         <Icon name="navicon" size={24} color="#333" />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleChats} style={styles.iconContainer}>
-        <Icon name="comment" size={24} color="#333" />
       </TouchableOpacity>
     </View>
   );

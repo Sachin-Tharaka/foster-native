@@ -6,11 +6,12 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
-  Image
+  Image,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 import UserService from "../services/UserService";
+import NotificationService from "../services/NotificationService";
 
 const ChangeDetails = ({ navigation }) => {
   const [firstName, setFirstName] = useState("");
@@ -23,7 +24,7 @@ const ChangeDetails = ({ navigation }) => {
   const [userZip, setUserZip] = useState("");
   const [profileImage, setProfileImage] = useState("");
   const [password, setPassword] = useState("");
- 
+
   useEffect(() => {
     const getToken = async () => {
       const token = await AsyncStorage.getItem("token");
@@ -45,53 +46,70 @@ const ChangeDetails = ({ navigation }) => {
       setLastName(data.lastName);
       setEmail(data.email);
       setPhoneNumber(data.phoneNumber);
-      setUserAddress1(data.userAddress1);
-      setUserAddress2(data.userAddress2);
-      setUserCity(data.userCity);
-      setUserZip(data.userZip);
-      setProfileImage(data.profileImage);
-      setPassword(data.password);
+      setUserAddress1(data.address.address1);
+      setUserAddress2(data.address.address2);
+      setUserCity(data.address.city);
+      setUserZip(data.address.zipCode.toString());
+      setProfileImage(data.profileImage.imageUrl);
     } catch (error) {
       console.error("Error:", error.message);
     }
   };
 
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
   const handleSubmit = async () => {
+    if (!firstName) {
+      Alert.alert("Error", "First Name cannot be null.");
+      return;
+    }
+    if (!lastName) {
+      Alert.alert("Error", "Last Name cannot be null.");
+      return;
+    }
+    if (!email) {
+      Alert.alert("Error", "Email cannot be null.");
+      return;
+    }
+    if (!validateEmail(email)) {
+      Alert.alert("Error", "Please enter a valid email.");
+      return;
+    }
+    if (!password) {
+      Alert.alert("Error", "Password cannot be null.");
+      return;
+    }
+
     const token = await AsyncStorage.getItem("token");
     const userId = await AsyncStorage.getItem("userId");
     if (token && userId) {
-      const updatedData = {
-        userId,
-        firstName,
-        lastName,
-        email,
-        password,
-        phoneNumber,
-        userAddress1,
-        userAddress2,
-        userCity,
-        userZip,
-        profileImage
-      };
-
       const formData = new FormData();
-      formData.append('userId', userId);
-      formData.append('firstName', firstName);
-      formData.append('lastName', lastName);
-      formData.append('email', email);
-      formData.append('password', password);
-      formData.append('phoneNumber', phoneNumber);
-      formData.append('userAddress1', userAddress1);
-      formData.append('userAddress2', userAddress2);
-      formData.append('userCity', userCity);
-      formData.append('userZip', userZip);
-      formData.append('profileImage',profileImage);
-      
+      formData.append("userId", userId);
+      formData.append("firstName", firstName);
+      formData.append("lastName", lastName);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("phoneNumber", phoneNumber);
+      formData.append("address1", userAddress1);
+      formData.append("address2", userAddress2);
+      formData.append("city", userCity);
+      formData.append("zipCode", userZip);
 
-      
+      if (profileImage) {
+        const uriParts = profileImage.split(".");
+        const fileType = uriParts[uriParts.length - 1];
+        formData.append("profileImage", {
+          uri: profileImage,
+          name: `photo.${fileType}`,
+          type: `image/${fileType}`,
+        });
+      }
 
       try {
-        const response = await UserService.updateUser(formData, token);
+        await UserService.updateUser(formData, token);
         Alert.alert("Success", "Your details have been updated.");
         navigation.goBack();
       } catch (error) {
@@ -147,6 +165,7 @@ const ChangeDetails = ({ navigation }) => {
         value={password}
         onChangeText={setPassword}
         style={styles.input}
+        secureTextEntry
       />
       <TextInput
         placeholder="Address 1"

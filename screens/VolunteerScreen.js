@@ -6,20 +6,22 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import VounteerService from "../services/VounteerService";
+import VolunteerService from "../services/VounteerService";
 
-const VolunteerScreen = ({ route, navigation }) => {
-  const { volunteerId } = route.params || { volunteerId: "" };
-  const [volunteer, setVolunteer] = useState([]);
+const VolunteerScreen = ({ navigation }) => {
+  const [volunteerId, setVolunteerId] = useState("");
+  const [volunteer, setVolunteer] = useState({});
 
   useEffect(() => {
     const getToken = async () => {
       const token = await AsyncStorage.getItem("token");
+      const userId = await AsyncStorage.getItem("userId");
       if (token) {
-        // Token exists, fetch pet data
-        getVolunteerById(volunteerId, token);
+        // Token exists, fetch volunteer data
+        getVolunteerByUserId(userId, token);
       } else {
         // Token doesn't exist, navigate to Login screen
         console.log("Please login");
@@ -29,53 +31,90 @@ const VolunteerScreen = ({ route, navigation }) => {
     getToken();
   }, [navigation]);
 
-  //get pet by id
-  const getVolunteerById = async (id, token) => {
-    // call get pets by userid function
+  const getVolunteerByUserId = async (id, token) => {
     try {
-      const data = await VounteerService.getVolunteerDataById(id, token);
+      const data = await VolunteerService.getVolunteerByUserId(id, token);
       console.log("volunteer data:", data);
       setVolunteer(data);
+      setVolunteerId(data.volunteerId);
     } catch (error) {
-      // Handle error
       console.error("Error:", error.message);
     }
   };
 
-
-  //navigate to update screen
-  const handleEditProfile =async()=>{
+  // Navigate to update screen
+  const handleEditProfile = () => {
     console.log("navigate to update profile screen");
-    navigation.navigate("UpdateVolunteerProfileScreen", { volunteerId: volunteerId });
-  }
+    navigation.navigate("UpdateVolunteerProfileScreen", { volunteerId });
+  };
 
-  const openChat=async()=>{
+  const openChat = () => {
+    // Handle chat functionality here
+  };
 
-  }
+  const viewReview = () => {
+    navigation.navigate("VolunteerReview", { volunteerId });
+  };
 
-  const viewReview=async()=>{
-    navigation.navigate("VolunteerReview", { volunteerId: volunteerId });
-  }
+  const viewBooking = () => {
+    navigation.navigate("VolunteerBooking", { volunteerId });
+  };
 
-  const viewBooking=async()=>{
-    navigation.navigate("VolunteerBooking", { volunteerId: volunteerId });
-  }
-  
+  const addPetTypes = () => {
+    navigation.navigate("AddPetTypesToVolunteerProfileScreen", { volunteerId });
+  };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete this account?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "Yes", onPress: () => deleteVolunteerAccount() },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const deleteVolunteerAccount = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const response = await VolunteerService.delete(volunteerId, token);
+      console.log("response ", response);
+      console.log("Volunteer account deleted");
+      navigation.navigate("UserAccount");
+    } catch (error) {
+      console.error("Error deleting account:", error.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
-       <Text style={styles.buttonText}>Edit Account</Text>
+        <Text style={styles.buttonText}>Edit Account</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.button} onPress={viewReview}>
-       <Text style={styles.buttonText}>View Review</Text>
+        <Text style={styles.buttonText}>View Review</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={viewBooking}>
-       <Text style={styles.buttonText}>View Booking</Text>
+        <Text style={styles.buttonText}>View Booking</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.button} onPress={openChat}>
-       <Text style={styles.buttonText}>Open Chat</Text>
+        <Text style={styles.buttonText}>Open Chat</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={addPetTypes}>
+        <Text style={styles.buttonText}>Add Pet Types</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={handleDeleteAccount}>
+        <Text style={styles.buttonText}>Delete Account</Text>
       </TouchableOpacity>
 
       <View style={styles.petContainer}>
@@ -89,6 +128,14 @@ const VolunteerScreen = ({ route, navigation }) => {
         />
         <View>
           <Text>Nic NO: {volunteer.nicNumber}</Text>
+          {volunteer.paymentRates && (
+            <View>
+              <Text>Animal Types:</Text>
+              {volunteer.paymentRates.map((rate, index) => (
+                <Text key={index}>{rate.animalType}</Text>
+              ))}
+            </View>
+          )}
         </View>
       </View>
 
