@@ -315,7 +315,7 @@ export default function App() {
 
         <Stack.Screen name="ChatList" component={ChatList} />
         <Stack.Screen name="Chat" component={ChatScreen} />
-          
+
         <Stack.Screen
           name="AddPetScreen"
           component={AddPetScreen}
