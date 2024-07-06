@@ -46,6 +46,8 @@ import VolunteerReviewForUser from "./screens/VolunteerReviewForUser";
 import AddChargingReatesScreen from "./screens/AddChargingRatesScreen";
 import AddReviewScreen from "./screens/AddReviewScreen";
 import AddPetTypesToVolunteerProfileScreen from "./screens/AddPetTypesToVolunteerProfileScreen";
+import ChatList from "./screens/ChatList";
+import ChatScreen from "./screens/ChatScreen";
 
 const Stack = createNativeStackNavigator();
 

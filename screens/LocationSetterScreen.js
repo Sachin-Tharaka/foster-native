@@ -1,75 +1,68 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, TextInput } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import Navbar from '../components/Navbar';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 const LocationSetterScreen = ({ navigation, route }) => {
-  const [searchText, setSearchText] = useState('');
-  const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
-
+  const [locationText, setLocationText] = useState('');
   const { setLocation } = route.params;
 
-  useEffect(() => {
-    // Initialize with some locations or fetch from an API
-    setLocations([]);
-  }, []);
-
-  const filteredLocations = locations.filter(location => 
-    location.label.toLowerCase().includes(searchText.toLowerCase())
-  );
-
-  const handleLocationSelect = (location) => {
-    setLocation(location);
-    navigation.goBack();
+  const handlePlaceSelect = (data, details) => {
+    const { name } = data;
+    const { lat: latitude, lng: longitude } = details.geometry.location;
+    const location = {
+      label: name,
+      latitude,
+      longitude,
+    };
+    setSelectedLocation(location);
+    handleSaveLocation(location);
   };
 
-  const handleMapPress = (event) => {
-    const { latitude, longitude } = event.nativeEvent.coordinate;
-    setSelectedLocation({ label: 'Custom Location', latitude, longitude });
-  };
-
-  const handleSaveLocation = () => {
-    if (selectedLocation) {
-      setLocation(selectedLocation);
+  const handleSaveLocation = (location) => {
+    if (location) {
+      setLocation(location);
       navigation.goBack();
     }
   };
 
-  const renderLocation = ({ item }) => (
-    <TouchableOpacity onPress={() => handleLocationSelect(item)} style={styles.locationContainer}>
-      <Text style={styles.locationLabel}>{item.label}</Text>
-      <Text style={styles.locationAddress}>{item.address}</Text>
-    </TouchableOpacity>
-  );
+  const handleMapPress = (event) => {
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    const location = { label: locationText || 'Selected Location', latitude, longitude };
+    setSelectedLocation(location);
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Search Location</Text>
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Type location name"
-        value={searchText}
-        onChangeText={setSearchText}
-      />
-      <FlatList
-        data={filteredLocations}
-        renderItem={renderLocation}
-        keyExtractor={item => item.key}
-      />
-      <MapView
-        style={styles.map}
-        onPress={handleMapPress}
-      >
+      <View style={styles.container}>
+        <Text style={styles.header}>Select Location</Text>
+        <GooglePlacesAutocomplete
+            placeholder='Enter Location'
+            fetchDetails
+            onPress={handlePlaceSelect}
+            query={{
+              key: 'AIzaSyBlzB96dEoYVpv_cZ79JqxOKvuYjE9uuB8',
+              language: 'en',
+            }}
+            styles={{
+              textInput: styles.input,
+              predefinedPlacesDescription: styles.predefinedPlacesDescription,
+            }}
+        />
+        <MapView
+            style={styles.map}
+            onPress={handleMapPress}
+        >
+          {selectedLocation && (
+              <Marker coordinate={selectedLocation} />
+          )}
+        </MapView>
         {selectedLocation && (
-          <Marker coordinate={selectedLocation} />
+            <TouchableOpacity onPress={() => handleSaveLocation(selectedLocation)} style={styles.saveButton}>
+              <Text style={styles.saveButtonText}>Save Location</Text>
+            </TouchableOpacity>
         )}
-      </MapView>
-      <TouchableOpacity onPress={handleSaveLocation} style={styles.saveButton}>
-        <Text style={styles.saveButtonText}>Save Location</Text>
-      </TouchableOpacity>
-      <Navbar />
-    </View>
+      </View>
   );
 };
 
@@ -85,25 +78,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
   },
-  searchInput: {
-    height: 40,
-    borderColor: '#cccccc',
+  input: {
     borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
+    borderColor: '#ccc',
+    padding: 10,
     marginBottom: 20,
-  },
-  locationContainer: {
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eeeeee',
-  },
-  locationLabel: {
-    fontSize: 18,
-  },
-  locationAddress: {
-    fontSize: 14,
-    color: '#666666',
   },
   map: {
     flex: 1,
@@ -111,7 +90,7 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     padding: 10,
-    backgroundColor: 'blue',
+    backgroundColor: 'green',
     borderRadius: 5,
     alignItems: 'center',
   },
