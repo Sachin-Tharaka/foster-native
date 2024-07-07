@@ -46,8 +46,10 @@ import VolunteerReviewForUser from "./screens/VolunteerReviewForUser";
 import AddChargingReatesScreen from "./screens/AddChargingRatesScreen";
 import AddReviewScreen from "./screens/AddReviewScreen";
 import AddPetTypesToVolunteerProfileScreen from "./screens/AddPetTypesToVolunteerProfileScreen";
-import ChatList from "./screens/ChatList";
-import ChatScreen from "./screens/ChatScreen";
+import ChatListUser from "./screens/ChatListUser";
+import ChatScreenUser from "./screens/ChatScreenUser";
+import ChatListAgent from "./screens/ChatListAgent";
+import ChatScreenAgent from "./screens/ChatScreenAgent";
 
 const Stack = createNativeStackNavigator();
 
@@ -224,8 +226,36 @@ export default function App() {
             headerShown: false,
           }}
         />
-        <Stack.Screen name="ChatList" component={ChatList} />
-        <Stack.Screen name="Chat" component={ChatScreen} />
+        <Stack.Screen
+            name="ChatListUser"
+            component={ChatListUser}
+            options={{
+                headerShown: false,
+            }}
+        />
+        <Stack.Screen
+            name="ChatUser"
+            component={ChatScreenUser}
+            options={{
+                headerShown: false,
+            }}
+        />
+
+        <Stack.Screen
+            name="ChatListAgent"
+            component={ChatListAgent}
+            options={{
+                headerShown: false,
+            }}
+        />
+        <Stack.Screen
+            name="ChatAgent"
+            component={ChatScreenAgent}
+            options={{
+                headerShown: false,
+            }}
+        />
+
         <Stack.Screen
           name="AddPetScreen"
           component={AddPetScreen}
