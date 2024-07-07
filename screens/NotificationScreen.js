@@ -59,6 +59,49 @@ const NotificationScreen = ({ navigation }) => {
     return stars;
   };
 
+  const handleRedirect = (type) => {
+    switch(type) {
+      case "CHAT_USER":
+        navigation.navigate("ChatListUser");
+        break;
+      case "CHAT_AGENT":
+        navigation.navigate("ChatListAgent");
+        break;
+      case "BOOKING_USER":
+        navigation.navigate("MyBookingScreen");
+        break;
+      case "BOOKING_KENNEL":
+        navigation.navigate("KennelBookingScreen");
+        break;
+      case "BOOKING_VOLUNTEER":
+        navigation.navigate("VolunteerBooking");
+        break;
+      case "ACCOUNT_USER":
+        navigation.navigate("UserAccount");
+        break;
+      case "ACCOUNT_KENNEL":
+        //navigation.navigate("SwitchAccounts");
+        break;
+      case "ACCOUNT_VOLUNTEER":
+        //navigation.navigate("AccountVolunteerScreen");
+        break;
+      case "PAYMENT_USER":
+        //navigation.navigate("PaymentUserScreen");
+        break;
+      case "PAYMENT_KENNEL":
+        //navigation.navigate("PaymentKennelScreen");
+        break;
+      case "PAYMENT_VOLUNTEER":
+        //navigation.navigate("PaymentVolunteerScreen");
+        break;
+      case "SYSTEM":
+        //navigation.navigate("SystemScreen");
+        break;
+      default:
+        //console.log("Invalid type");
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View>
@@ -67,24 +110,26 @@ const NotificationScreen = ({ navigation }) => {
 
       <ScrollView style={styles.list}>
         {notifications.map((notification) => (
-          <View key={notification.id} style={styles.entry}>
-            <Image
-              source={{ uri: "https://picsum.photos/400/600?image=1" }}
-              style={styles.image}
-            />
-            <View style={styles.infoContainer}>
-              <Text style={styles.heading}>{notification.heading}</Text>
-              <Text style={styles.message}>{notification.message}</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text>★★★★</Text>
+          <TouchableOpacity key={notification.notificationID} style={styles.entry} onPress={() => handleRedirect(notification.type)}>
+            <View key={notification.id} style={styles.entry}>
+              <Image
+                source={{ uri: "https://picsum.photos/400/600?image=1" }}
+                style={styles.image}
+              />
+              <View style={styles.infoContainer}>
+                <Text style={styles.heading}>{notification.heading}</Text>
+                <Text style={styles.message}>{notification.message}</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text>★★★★</Text>
 
-                {/* {renderStars(notification.stars)} */}
+                  {/* {renderStars(notification.stars)} */}
+                </View>
               </View>
+              <TouchableOpacity onPress={() => console.log("Close notification")}>
+                <Text style={{ fontSize: 18, color: "#888" }}>✕</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => console.log("Close notification")}>
-              <Text style={{ fontSize: 18, color: "#888" }}>✕</Text>
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
       <View>
