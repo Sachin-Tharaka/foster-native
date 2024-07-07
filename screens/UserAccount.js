@@ -60,9 +60,6 @@ const UserAccount = ({ navigation }) => {
   const notifications = () => {
     navigation.navigate("NotificationScreen");
   };
-  const goToKennels = () => {
-    navigation.navigate("MyKennelsScreen");
-  };
   const goToVolunteerScreen = async () => {
     navigation.navigate("VolunteerScreen");
   };
@@ -84,7 +81,7 @@ const UserAccount = ({ navigation }) => {
               <Icon name="pencil" size={24} color="black" />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.navigate("SwitchAccounts")}
+              onPress={() => navigation.navigate("MyKennelsScreen")}
             >
               <Icon name="exchange" size={24} color="black" />
             </TouchableOpacity>
@@ -109,9 +106,6 @@ const UserAccount = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={notifications}>
             <Text style={styles.buttonText}>Notifications</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={goToKennels}>
-            <Text style={styles.buttonText}>My Kennels (Remove later)</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={goToVolunteerScreen}>
             <Text style={styles.buttonText}>Volunteer</Text>
