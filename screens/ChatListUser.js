@@ -1,4 +1,4 @@
-// ChatList.js
+// ChatListUser.js
 import React, {useEffect, useState} from "react";
 import {
   View,
@@ -10,7 +10,7 @@ import {
 import ChatService from "../services/ChatService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ChatList = ({ navigation }) => {
+const ChatListUser = ({ navigation }) => {
 
   const [chatPreview, setChatPreview] = useState([]);
 
@@ -66,4 +66,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChatList;
+export default ChatListUser;

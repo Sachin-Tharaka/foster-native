@@ -12,6 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navbar from "../components/Navbar";
 import UserService from "../services/UserService";
 import defaultProfileImage from "../assets/ProfilePicture.png";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const UserAccount = ({ navigation }) => {
   const [userData, setUserData] = useState({});
@@ -48,10 +49,6 @@ const UserAccount = ({ navigation }) => {
     navigation.navigate("MyBookingScreen");
   };
 
-  const switchAccounts = () => {
-    navigation.navigate("SwitchAccounts");
-  };
-
   const goToPetsUI = () => {
     navigation.navigate("PetsScreen");
   };
@@ -63,47 +60,8 @@ const UserAccount = ({ navigation }) => {
   const notifications = () => {
     navigation.navigate("NotificationScreen");
   };
-  const goToKennels = () => {
-    navigation.navigate("MyKennelsScreen");
-  };
   const goToVolunteerScreen = async () => {
     navigation.navigate("VolunteerScreen");
-  };
-
-  const deleteUserAccount = async () => {
-    Alert.alert(
-      "Delete Account",
-      "Are you sure you want to delete your account? This action cannot be undone.",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          onPress: async () => {
-            const token = await AsyncStorage.getItem("token");
-            const userId = await AsyncStorage.getItem("userId");
-            try {
-              const response = await UserService.delete(userId, token);
-              console.log("User account deleted successfully", response);
-              // Clear AsyncStorage or perform any logout actions here if needed
-              await AsyncStorage.removeItem("token");
-              await AsyncStorage.removeItem("userId");
-              navigation.navigate("Signup");
-            } catch (error) {
-              console.error("Error deleting user account:", error.message);
-              Alert.alert(
-                "Error",
-                "Failed to delete user account. Please try again later."
-              );
-            }
-          },
-          style: "destructive",
-        },
-      ],
-      { cancelable: false }
-    );
   };
 
   return (
@@ -118,6 +76,16 @@ const UserAccount = ({ navigation }) => {
             }
             style={styles.logo}
           />
+          <View style={styles.iconContainer}>
+            <TouchableOpacity onPress={changeDetails}>
+              <Icon name="pencil" size={24} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("MyKennelsScreen")}
+            >
+              <Icon name="exchange" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.title}>
             {userData.firstName} {userData.lastName}
           </Text>
@@ -130,32 +98,17 @@ const UserAccount = ({ navigation }) => {
         </View>
 
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.button} onPress={changeDetails}>
-            <Text style={styles.buttonText}>Change Details</Text>
-          </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={goToPetsUI}>
-            <Text style={styles.buttonText}>Pets</Text>
+            <Text style={styles.buttonText}>My Pets</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={goToMyBooking}>
-            <Text style={styles.buttonText}>My Booking</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={switchAccounts}>
-            <Text style={styles.buttonText}>Switch Accounts</Text>
+            <Text style={styles.buttonText}>My Bookings</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={notifications}>
             <Text style={styles.buttonText}>Notifications</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={goToKennels}>
-            <Text style={styles.buttonText}>My Kennels (Remove later)</Text>
-          </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={goToVolunteerScreen}>
             <Text style={styles.buttonText}>Volunteer</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, { backgroundColor: "red" }]}
-            onPress={deleteUserAccount}
-          >
-            <Text style={styles.buttonText}>Delete Account</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -176,11 +129,18 @@ const styles = StyleSheet.create({
   header: {
     alignItems: "center",
     marginTop: 20,
+    position: "relative",
   },
   logo: {
     width: 120,
     height: 120,
     borderRadius: 60,
+  },
+  iconContainer: {
+    top: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: 60,
   },
   title: {
     fontSize: 24,
