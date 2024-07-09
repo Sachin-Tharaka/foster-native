@@ -11,6 +11,10 @@ const FilterScreen = ({ navigation }) => {
     navigation.navigate("BookingHouse", { petType, numberOfPets });
   };
 
+  const handleBookingNavigate = () => {
+    navigation.navigate("BookingHouse", { petType, numberOfPets });
+  };
+
   const renderNumberOfPetsButtons = () => {
     const buttons = [];
     for (let i = 1; i <= 10; i++) {
@@ -57,6 +61,9 @@ const FilterScreen = ({ navigation }) => {
       </View>
       <TouchableOpacity style={styles.button} onPress={handleApplyFilters}>
         <Text style={styles.buttonText}>Apply Filters</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleBookingNavigate}>
+        <Text style={styles.buttonText}>Skip for now</Text>
       </TouchableOpacity>
     </View>
   );
