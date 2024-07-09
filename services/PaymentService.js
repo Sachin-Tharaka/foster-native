@@ -59,6 +59,7 @@ export default function PaymentService() {
       Alert.alert(`Error code: ${error.code}`, error.message);
     } else {
       Alert.alert("Success", "Your order is confirmed!");
+      navigation.navigate("MyBookingScreen");
     }
   };
 
