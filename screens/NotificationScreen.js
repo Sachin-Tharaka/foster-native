@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Image,
   TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -30,14 +29,10 @@ const NotificationScreen = ({ navigation }) => {
     getToken();
   }, []);
 
-  //get notifications by user id
+  // Get notifications by user id
   const getNotificationsByUserId = async (id, token) => {
-    // call notifications by user id function
     try {
-      const data = await NotificationService.getNotificationsByUserId(
-        id,
-        token
-      );
+      const data = await NotificationService.getNotificationsByUserId(id, token);
       console.log("user data:", data);
       setNotifications(data);
     } catch (error) {
@@ -46,27 +41,8 @@ const NotificationScreen = ({ navigation }) => {
     }
   };
 
-  // Function to render stars based on rating
-  const renderStars = (count) => {
-    let stars = [];
-    for (let i = 0; i < 5; i++) {
-      stars.push(
-        <Text key={i} style={{ color: i < count ? "#FFD700" : "#ccc" }}>
-          ★
-        </Text>
-      );
-    }
-    return stars;
-  };
-
-  const handleRedirect = (type) => {
-    switch(type) {
-      case "CHAT_USER":
-        navigation.navigate("ChatListUser");
-        break;
-      case "CHAT_AGENT":
-        navigation.navigate("ChatListAgent");
-        break;
+  const handleNotificationPress = (notification) => {
+    switch (notification.type) {
       case "BOOKING_USER":
         navigation.navigate("MyBookingScreen");
         break;
@@ -80,54 +56,31 @@ const NotificationScreen = ({ navigation }) => {
         navigation.navigate("UserAccount");
         break;
       case "ACCOUNT_KENNEL":
-        //navigation.navigate("SwitchAccounts");
+        navigation.navigate("AgentHome");
         break;
       case "ACCOUNT_VOLUNTEER":
-        //navigation.navigate("AccountVolunteerScreen");
-        break;
-      case "PAYMENT_USER":
-        //navigation.navigate("PaymentUserScreen");
-        break;
-      case "PAYMENT_KENNEL":
-        //navigation.navigate("PaymentKennelScreen");
-        break;
-      case "PAYMENT_VOLUNTEER":
-        //navigation.navigate("PaymentVolunteerScreen");
-        break;
-      case "SYSTEM":
-        //navigation.navigate("SystemScreen");
+        navigation.navigate("VolunteerScreen");
         break;
       default:
-        //console.log("Invalid type");
+        console.log("Unknown notification type");
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.header}>Notifications</Text>
-      </View>
-
+      
+      <Text style={styles.header}>Notifications</Text>
       <ScrollView style={styles.list}>
         {notifications.map((notification) => (
-          <TouchableOpacity key={notification.notificationID} style={styles.entry} onPress={() => handleRedirect(notification.type)}>
-            <View key={notification.id} style={styles.entry}>
-              <Image
-                source={{ uri: "https://picsum.photos/400/600?image=1" }}
-                style={styles.image}
-              />
-              <View style={styles.infoContainer}>
-                <Text style={styles.heading}>{notification.heading}</Text>
-                <Text style={styles.message}>{notification.message}</Text>
-                <View style={{ flexDirection: "row" }}>
-                  <Text>★★★★</Text>
-
-                  {/* {renderStars(notification.stars)} */}
-                </View>
-              </View>
-              <TouchableOpacity onPress={() => console.log("Close notification")}>
-                <Text style={{ fontSize: 18, color: "#888" }}>✕</Text>
-              </TouchableOpacity>
+          <TouchableOpacity
+            key={notification.id}
+            style={styles.entry}
+            onPress={() => handleNotificationPress(notification)}
+          >
+            <View style={styles.infoContainer}>
+              <Text style={styles.sender}>{notification.senderName}</Text>
+              <Text style={styles.heading}>{notification.heading}</Text>
+              <Text style={styles.message}>{notification.message}</Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -144,6 +97,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "#ffffff",
+    marginTop: 100,
   },
   header: {
     fontSize: 24,
@@ -166,18 +120,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
   },
-  image: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 15,
-  },
   infoContainer: {
     flex: 1,
     justifyContent: "center",
   },
-  heading: {
+  sender: {
     fontSize: 18,
+    fontWeight: "bold",
+  },
+  heading: {
+    fontSize: 14,
     fontWeight: "bold",
   },
   message: {
