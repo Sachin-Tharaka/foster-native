@@ -64,7 +64,10 @@ const LandingScreen = ({ navigation }) => {
       </View>
       <Text>
         Skip for now?{" "}
-        <Text style={styles.skip} onPress={() => navigation.navigate("Home")}>
+        <Text
+          style={styles.skip}
+          onPress={() => navigation.navigate("BookingHouse")}
+        >
           Skip
         </Text>
       </Text>
