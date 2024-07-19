@@ -14,6 +14,7 @@ import KennelService from "../services/KennelService";
 import UserService from "../services/UserService";
 import VolunteerService from "../services/VounteerService";
 import Navbar from "../components/Navbar";
+import KennelFilterScreen from "./KennelFilterScreen";
 
 const BookingHouseScreen = ({ navigation }) => {
   const [kennels, setKennels] = useState([]);
@@ -84,8 +85,11 @@ const BookingHouseScreen = ({ navigation }) => {
   };
 
   const goToChangeLocation = async () => {
-    console.log("existing location: ",selectedLocation);
-    navigation.navigate('LocationSetterScreen', { setLocation: setSelectedLocation,existingLocation:selectedLocation });
+    console.log("existing location: ", selectedLocation);
+    navigation.navigate("LocationSetterScreen", {
+      setLocation: setSelectedLocation,
+      existingLocation: selectedLocation,
+    });
     console.log(selectedLocation);
   };
 
@@ -175,6 +179,7 @@ const BookingHouseScreen = ({ navigation }) => {
           <Text style={styles.changeButtonText}>Change</Text>
         </TouchableOpacity>
       </View>
+
       <View>
         <TextInput
           style={styles.input}
@@ -189,6 +194,8 @@ const BookingHouseScreen = ({ navigation }) => {
           <Text style={styles.changeButtonText}>Search</Text>
         </TouchableOpacity>
       </View>
+      <KennelFilterScreen />
+
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={getAll}>
           <Text>All</Text>

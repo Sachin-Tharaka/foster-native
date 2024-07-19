@@ -64,7 +64,7 @@ const UserAccount = ({ navigation }) => {
     navigation.navigate("VolunteerScreen");
   };
   const goToUserReceipts = async () => {
-    navigation.navigate("UserReceiptsScreen");
+    navigation.navigate("UserInvoiceScreen");
   };
   const goToKennelReceipts = async () => {
     navigation.navigate("KennelInvoicesScreen");
@@ -105,7 +105,7 @@ const UserAccount = ({ navigation }) => {
 
         <View style={styles.buttonsContainer}>
           <TouchableOpacity style={styles.button} onPress={goToPetsUI}>
-            <Text style={styles.buttonText}>My Pets</Text>
+            <Text style={styles.buttonText}>My Pet</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={goToMyBooking}>
             <Text style={styles.buttonText}>My Bookings</Text>

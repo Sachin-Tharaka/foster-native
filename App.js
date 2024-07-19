@@ -51,7 +51,7 @@ import ChatScreenUser from "./screens/ChatScreenUser";
 import ChatListAgent from "./screens/ChatListAgent";
 import ChatScreenAgent from "./screens/ChatScreenAgent";
 import KennelFilterScreen from "./screens/KennelFilterScreen";
-import UserReceiptsScreen from "./screens/UserReceiptsScreen";
+import UserInvoiceScreen from "./screens/UserInvoiceScreen";
 import KennelInvoicesScreen from "./screens/KennelInvoicesScreen";
 
 const Stack = createNativeStackNavigator();
@@ -437,8 +437,8 @@ export default function App() {
         />
 
         <Stack.Screen
-          name="UserReceiptsScreen"
-          component={UserReceiptsScreen}
+          name="UserInvoiceScreen"
+          component={UserInvoiceScreen}
           options={{
             headerShown: false,
           }}
