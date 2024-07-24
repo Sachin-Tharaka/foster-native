@@ -1,4 +1,4 @@
-// ChatScreen.js
+// ChatScreenUser.js
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -14,7 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-const ChatScreen = ({ route }) => {
+const ChatScreenUser = ({ route }) => {
   const [chatMessages, setChatMessages] = useState([]);
   const [inputText, setInputText] = useState("");
   const [attachment, setAttachment] = useState(null);
@@ -189,4 +189,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChatScreen;
+export default ChatScreenUser;

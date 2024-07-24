@@ -84,9 +84,8 @@ const BookingHouseScreen = ({ navigation }) => {
   };
 
   const goToChangeLocation = async () => {
-    navigation.navigate("LocationSetterScreen", {
-      setLocation: setSelectedLocation,
-    });
+    console.log("existing location: ",selectedLocation);
+    navigation.navigate('LocationSetterScreen', { setLocation: setSelectedLocation,existingLocation:selectedLocation });
     console.log(selectedLocation);
   };
 
@@ -264,10 +263,7 @@ const styles = StyleSheet.create({
   locationText: {
     flex: 1,
   },
-  address: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
+
   addressDetails: {
     fontSize: 14,
     color: "#888",

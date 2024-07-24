@@ -76,18 +76,18 @@ const MyBookingScreen = ({ navigation }) => {
       <TouchableOpacity
         key="petProfile"
         style={styles.button}
-        onPress={() => handlePetProfilePress(booking.petID)}
+        onPress={() => handlePetProfilePress(booking.pet.petID)}
       >
         <Text style={styles.buttonText}>Pet Profile</Text>
       </TouchableOpacity>
     );
 
-    if (booking.kennelID) {
+    if (booking.kennel && booking.kennel.kennelId) {
       buttons.push(
         <TouchableOpacity
           key="kennelProfile"
           style={styles.button}
-          onPress={() => handleKennelProfilePress(booking.kennelID)}
+          onPress={() => handleKennelProfilePress(booking.kennel.kennelId)}
         >
           <Text style={styles.buttonText}>Kennel Profile</Text>
         </TouchableOpacity>
@@ -144,6 +144,7 @@ const MyBookingScreen = ({ navigation }) => {
       <Text style={styles.header}>My Bookings</Text>
       {bookings.map((booking) => (
         <View key={booking.bookingID} style={styles.bookingContainer}>
+          <Text style={styles.bookingText}>Status: {booking.pet.petName}</Text>
           <Text style={styles.bookingText}>
             Start Date: {new Date(booking.startDate).toLocaleString()}
           </Text>

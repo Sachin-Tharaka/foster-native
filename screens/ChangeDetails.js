@@ -134,6 +134,42 @@ const ChangeDetails = ({ navigation }) => {
     }
   };
 
+  const deleteUserAccount = async () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete your account? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: async () => {
+            const token = await AsyncStorage.getItem("token");
+            const userId = await AsyncStorage.getItem("userId");
+            try {
+              const response = await UserService.delete(userId, token);
+              console.log("User account deleted successfully", response);
+              // Clear AsyncStorage or perform any logout actions here if needed
+              await AsyncStorage.removeItem("token");
+              await AsyncStorage.removeItem("userId");
+              navigation.navigate("Signup");
+            } catch (error) {
+              console.error("Error deleting user account:", error.message);
+              Alert.alert(
+                "Error",
+                "Failed to delete user account. Please try again later."
+              );
+            }
+          },
+          style: "destructive",
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -203,6 +239,12 @@ const ChangeDetails = ({ navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Update Details</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: "red" }]}
+        onPress={deleteUserAccount}
+      >
+        <Text style={styles.buttonText}>Delete Account</Text>
       </TouchableOpacity>
     </View>
   );
