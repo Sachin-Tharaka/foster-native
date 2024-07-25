@@ -39,7 +39,7 @@ const KennelReviewScreen = ({ route, navigation }) => {
   const handleReviewClick = (reviewerId) => {
     console.log(`Navigate to profile of reviewer with ID: ${reviewerId}`);
     // Implement navigation to the profile page
-    navigation.navigate("CustomerProfile", { customerId:reviewerId });
+    navigation.navigate("CustomerProfile", { customerId: reviewerId });
   };
 
   return (
@@ -47,13 +47,18 @@ const KennelReviewScreen = ({ route, navigation }) => {
       <Text style={styles.header}>Reviews</Text>
       <ScrollView style={styles.list}>
         {reviews.map((review) => (
-          <TouchableOpacity key={review.reviewId} onPress={() => handleReviewClick(review.reviewerId)}>
+          <TouchableOpacity
+            key={review.reviewId}
+            onPress={() => handleReviewClick(review.reviewerId)}
+          >
             <View style={styles.entry}>
               <View style={styles.infoContainer}>
                 <Text style={styles.message}>{review.message}</Text>
                 <Text style={styles.rating}>
                   {Array(review.rating).fill("★").join("")}
-                  {Array(5 - review.rating).fill("☆").join("")}
+                  {Array(5 - review.rating)
+                    .fill("☆")
+                    .join("")}
                 </Text>
               </View>
             </View>
@@ -69,7 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "#ffffff",
-    marginTop: 100,
+    paddingTop: 100,
   },
   header: {
     fontSize: 24,
