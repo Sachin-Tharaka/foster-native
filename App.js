@@ -50,6 +50,9 @@ import ChatListUser from "./screens/ChatListUser";
 import ChatScreenUser from "./screens/ChatScreenUser";
 import ChatListAgent from "./screens/ChatListAgent";
 import ChatScreenAgent from "./screens/ChatScreenAgent";
+import KennelFilterScreen from "./screens/KennelFilterScreen";
+import UserInvoiceScreen from "./screens/UserInvoiceScreen";
+import KennelInvoicesScreen from "./screens/KennelInvoicesScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -227,33 +230,33 @@ export default function App() {
           }}
         />
         <Stack.Screen
-            name="ChatListUser"
-            component={ChatListUser}
-            options={{
-                headerShown: false,
-            }}
+          name="ChatListUser"
+          component={ChatListUser}
+          options={{
+            headerShown: false,
+          }}
         />
         <Stack.Screen
-            name="ChatUser"
-            component={ChatScreenUser}
-            options={{
-                headerShown: false,
-            }}
+          name="ChatUser"
+          component={ChatScreenUser}
+          options={{
+            headerShown: false,
+          }}
         />
 
         <Stack.Screen
-            name="ChatListAgent"
-            component={ChatListAgent}
-            options={{
-                headerShown: false,
-            }}
+          name="ChatListAgent"
+          component={ChatListAgent}
+          options={{
+            headerShown: false,
+          }}
         />
         <Stack.Screen
-            name="ChatAgent"
-            component={ChatScreenAgent}
-            options={{
-                headerShown: false,
-            }}
+          name="ChatAgent"
+          component={ChatScreenAgent}
+          options={{
+            headerShown: false,
+          }}
         />
 
         <Stack.Screen
@@ -420,6 +423,30 @@ export default function App() {
         <Stack.Screen
           name="AddPetTypesToVolunteerProfileScreen"
           component={AddPetTypesToVolunteerProfileScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="KennelFilterScreen"
+          component={KennelFilterScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="UserInvoiceScreen"
+          component={UserInvoiceScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="KennelInvoicesScreen"
+          component={KennelInvoicesScreen}
           options={{
             headerShown: false,
           }}

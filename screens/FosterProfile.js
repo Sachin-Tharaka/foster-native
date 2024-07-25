@@ -76,7 +76,7 @@ const FosterProfile = ({ route, navigation }) => {
         </Text>
       </View>
       <View style={styles.paymentRatesContainer}>
-        <Text style={styles.sectionTitle}>Payment Rates:</Text>
+        <Text style={styles.sectionTitle}>Payment Rates</Text>
         {kennelData.paymentRates.map((rate, index) => (
           <View key={index} style={styles.rateRow}>
             <Text style={styles.rateText}>
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    marginTop: 60,
+    paddingTop: 60,
   },
   header: {
     alignItems: "center",
@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "gray",
     marginBottom: 20,
+    textAlign: "center",
   },
   buttonsContainer: {
     flexDirection: "column",
@@ -178,16 +179,19 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   paymentRatesContainer: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    alignItems: "center", // Center horizontally
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
+    textAlign: "center",
   },
   rateRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center", // Center horizontally
     marginBottom: 10,
   },
   rateText: {

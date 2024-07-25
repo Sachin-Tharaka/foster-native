@@ -32,7 +32,10 @@ const NotificationScreen = ({ navigation }) => {
   // Get notifications by user id
   const getNotificationsByUserId = async (id, token) => {
     try {
-      const data = await NotificationService.getNotificationsByUserId(id, token);
+      const data = await NotificationService.getNotificationsByUserId(
+        id,
+        token
+      );
       console.log("user data:", data);
       setNotifications(data);
     } catch (error) {
@@ -68,7 +71,6 @@ const NotificationScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      
       <Text style={styles.header}>Notifications</Text>
       <ScrollView style={styles.list}>
         {notifications.map((notification) => (
@@ -97,12 +99,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "#ffffff",
-    marginTop: 100,
+    paddingTop: 60,
   },
   header: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 40,
     textAlign: "center",
   },
   list: {

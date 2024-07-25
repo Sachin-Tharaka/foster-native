@@ -19,7 +19,7 @@ const Navbar = () => {
   };
 
   const handleGallery = () => {
-    navigation.navigate("Home");
+    navigation.navigate("ChatListUser");
   };
 
   return (
@@ -37,7 +37,7 @@ const Navbar = () => {
         <Icon name="user-circle" size={24} color="#333" />
       </TouchableOpacity>
       <TouchableOpacity onPress={handleGallery} style={styles.iconContainer}>
-        <Icon name="navicon" size={24} color="#333" />
+        <Icon name="comment" size={24} color="#333" />
       </TouchableOpacity>
     </View>
   );
@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#fff",
-    height: 60,
-    paddingHorizontal: 8,
+    height: 48,
+    paddingHorizontal: 0,
     width: "100%", // Make the navigation bar span the full width
   },
   iconContainer: {

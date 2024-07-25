@@ -9,7 +9,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import InvoiceService from "../services/InvoiceService";
 
-const InvoiceScreen = ({ navigation }) => {
+const UserInvoiceScreen = ({ navigation }) => {
   const [invoices, setInvoices] = useState([]);
 
   useEffect(() => {
@@ -45,21 +45,20 @@ const InvoiceScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Invoices</Text>
-        <ScrollView style={styles.list}>
-            {invoices.map((invoice) => (
-                <TouchableOpacity
-                    key={invoice.id}
-                    style={styles.entry}
-                >
-                    <Text style={styles.name}>{invoice.invoiceId}</Text>
-                    <Text style={styles.name}>{invoice.amount}</Text>
-                    <Text style={styles.name}>{invoice.status}</Text>
-                    <Text style={styles.name}>{invoice.paymentMethod}</Text>
-                    <Text style={styles.name}>{invoice.createdAt}</Text>
-                    <Text style={styles.name}>{invoice.paymentDate}</Text>
-                </TouchableOpacity>
-            ))}
-        </ScrollView>
+      <ScrollView style={styles.list}>
+        {invoices.map((invoice) => (
+          <TouchableOpacity key={invoice.id} style={styles.entry}>
+            <Text style={styles.name}>{invoice.invoiceId}</Text>
+            <Text style={styles.name}>{invoice.booking.bookingID}</Text>
+
+            <Text style={styles.name}>{invoice.amount}</Text>
+            <Text style={styles.name}>{invoice.status}</Text>
+            <Text style={styles.name}>{invoice.paymentMethod}</Text>
+            <Text style={styles.name}>{invoice.createdAt}</Text>
+            <Text style={styles.name}>{invoice.paymentDate}</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
     </View>
   );
 };
@@ -137,4 +136,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PetsScreen;
+export default UserInvoiceScreen;

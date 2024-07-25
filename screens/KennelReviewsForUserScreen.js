@@ -20,7 +20,7 @@ const KennelReviewsForUserScreen = ({ route, navigation }) => {
   useEffect(() => {
     const getToken = async () => {
       const token = await AsyncStorage.getItem("token");
-      
+
       if (token) {
         getReviewByKennelId(kennelId, token);
       } else {
@@ -43,7 +43,7 @@ const KennelReviewsForUserScreen = ({ route, navigation }) => {
 
   const postReview = async () => {
     const token = await AsyncStorage.getItem("token");
-    const userId=await AsyncStorage.getItem("userId");
+    const userId = await AsyncStorage.getItem("userId");
     if (!token) {
       console.log("Please login");
       navigation.navigate("Login");
@@ -53,12 +53,12 @@ const KennelReviewsForUserScreen = ({ route, navigation }) => {
     const newReview = {
       message: newReviewMessage,
       rating: newReviewRating,
-      kennelId:kennelId,
-      reviewerId:userId
+      kennelId: kennelId,
+      reviewerId: userId,
     };
 
     try {
-        console.log(newReview);
+      console.log(newReview);
       const data = await ReviewService.postReview(newReview, token);
       setReviews([...reviews, data]);
       setNewReviewMessage("");
@@ -72,7 +72,9 @@ const KennelReviewsForUserScreen = ({ route, navigation }) => {
     return (
       <Text style={styles.rating}>
         {Array(rating).fill("★").join("")}
-        {Array(5 - rating).fill("☆").join("")}
+        {Array(5 - rating)
+          .fill("☆")
+          .join("")}
       </Text>
     );
   };
@@ -117,7 +119,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "#ffffff",
-    marginTop: 100,
+    paddingTop: 100,
   },
   header: {
     fontSize: 24,
