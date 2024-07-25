@@ -54,17 +54,6 @@ const VolunteerProfileScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={viewReview}>
-        <Text style={styles.buttonText}>View Review</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={bookingVolunteer}>
-        <Text style={styles.buttonText}>Book</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.button} onPress={openChat}>
-        <Text style={styles.buttonText}>Message</Text>
-      </TouchableOpacity>
-
       <View style={styles.petContainer}>
         <Image
           style={styles.petImage}
@@ -93,6 +82,17 @@ const VolunteerProfileScreen = ({ route, navigation }) => {
           </View>
         )}
       </View>
+
+      <TouchableOpacity style={styles.button} onPress={viewReview}>
+        <Text style={styles.buttonText}>View Review</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={bookingVolunteer}>
+        <Text style={styles.buttonText}>Book</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={openChat}>
+        <Text style={styles.buttonText}>Message</Text>
+      </TouchableOpacity>
 
       <ScrollView>
         <View style={styles.images}>
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "#ffffff",
-    marginTop: 100,
+    paddingTop: 60,
   },
   petImage: {
     width: 120,
@@ -137,7 +137,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginTop: 5,
-    marginBottom: 5,
   },
   buttonText: {
     fontWeight: "bold",
@@ -151,10 +150,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "black",
     borderRadius: 5,
+    marginBottom: 20,
   },
   images: {
     flexDirection: "row",
     flexWrap: "wrap",
+    marginTop: 20,
   },
   petRow: {
     flexDirection: "row",

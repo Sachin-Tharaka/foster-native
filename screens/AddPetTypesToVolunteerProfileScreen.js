@@ -1,18 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, ScrollView } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import VounteerService from '../services/VounteerService';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Button,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import VounteerService from "../services/VounteerService";
 
 const AddPetTypesToVolunteerProfileScreen = ({ route, navigation }) => {
   const { volunteerId } = route.params || { volunteerId: "" };
   const [paymentRates, setPaymentRates] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const getTokenAndFetchData = async () => {
       const token = await AsyncStorage.getItem("token");
       if (token) {
-        console.log("volunteer id"+volunteerId);
+        console.log("volunteer id" + volunteerId);
         getVolunteerById(volunteerId, token);
       } else {
         navigation.navigate("Login");
@@ -31,33 +39,33 @@ const AddPetTypesToVolunteerProfileScreen = ({ route, navigation }) => {
   };
 
   const addRates = async () => {
-    const formattedRates = paymentRates.map(rate => ({
+    const formattedRates = paymentRates.map((rate) => ({
       animalType: rate.animalType,
-      rate: 0 // Set the default rate to 0
+      rate: 0, // Set the default rate to 0
     }));
 
-    if (formattedRates.some(rate => !rate.animalType)) {
-      setError('All fields are required.');
+    if (formattedRates.some((rate) => !rate.animalType)) {
+      setError("All fields are required.");
       return;
     }
 
     try {
-      const token = await AsyncStorage.getItem('token');
+      const token = await AsyncStorage.getItem("token");
       const data = {
         volunteerId,
-        paymentRates: formattedRates
+        paymentRates: formattedRates,
       };
       const response = await VounteerService.addRates(data, token);
       navigation.navigate("VolunteerScreen");
-      setPaymentRates([{ animalType: '' }]);
+      setPaymentRates([{ animalType: "" }]);
     } catch (error) {
-      console.error('Error:', error.message);
+      console.error("Error:", error.message);
       setError("Failed to save pet types");
     }
   };
 
   const handleAddField = () => {
-    setPaymentRates([...paymentRates, { animalType: '' }]);
+    setPaymentRates([...paymentRates, { animalType: "" }]);
   };
 
   const handleRemoveField = (index) => {
@@ -86,13 +94,24 @@ const AddPetTypesToVolunteerProfileScreen = ({ route, navigation }) => {
               style={styles.input}
               placeholder="Animal Type"
               value={rate.animalType}
-              onChangeText={(value) => handleInputChange(index, 'animalType', value)}
+              onChangeText={(value) =>
+                handleInputChange(index, "animalType", value)
+              }
             />
-            <Button title="Remove" onPress={() => handleRemoveField(index)} />
+            <TouchableOpacity
+              onPress={() => handleRemoveField(index)}
+              style={styles.removeButton}
+            >
+              <Text style={styles.removeButtonText}>Remove</Text>
+            </TouchableOpacity>
           </View>
         ))}
-        <Button title="Add More" onPress={handleAddField} />
-        <Button title="Save Pet Types" onPress={addRates} />
+        <TouchableOpacity onPress={handleAddField} style={styles.addButton}>
+          <Text style={styles.addButtonText}>Add More</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={addRates} style={styles.saveButton}>
+          <Text style={styles.saveButtonText}>Save Pet Types</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -101,29 +120,67 @@ const AddPetTypesToVolunteerProfileScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    backgroundColor: '#ffffff',
-    marginTop: 100,
+    padding: 20,
+    backgroundColor: "#ffffff",
+    paddingTop: 40,
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
+    fontWeight: "bold",
+    marginBottom: 40,
+    textAlign: "center",
   },
   input: {
+    flex: 1,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     padding: 10,
-    marginBottom: 10,
     borderRadius: 5,
+    height: 50,
   },
   error: {
-    color: 'red',
+    color: "red",
     marginTop: 5,
     marginBottom: 10,
   },
   rateContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 20,
+  },
+  removeButton: {
+    marginLeft: 10,
+    backgroundColor: "#8B0000",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    height: 50,
+    justifyContent: "center",
+  },
+  removeButtonText: {
+    color: "white",
+    fontSize: 14,
+  },
+  addButton: {
+    backgroundColor: "black",
+    padding: 15,
+    borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  addButtonText: {
+    color: "white",
+    fontSize: 16,
+  },
+  saveButton: {
+    backgroundColor: "black",
+    padding: 15,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  saveButtonText: {
+    color: "white",
+    fontSize: 16,
   },
 });
 
