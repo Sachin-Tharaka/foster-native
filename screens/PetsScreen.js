@@ -11,6 +11,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import KennelService from "../services/KennelService";
 import PetsService from "../services/PetsService";
+import Navbar from "../components/Navbar";
 
 const PetsScreen = ({ navigation }) => {
   const [pets, setPets] = useState([]);
@@ -53,7 +54,7 @@ const PetsScreen = ({ navigation }) => {
           style={styles.button}
           onPress={() => navigation.navigate("AddPetScreen")}
         >
-          <Text style={styles.buttonText}>Add Pet</Text>
+          <Text style={styles.buttonText}>Add a Pet</Text>
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.list}>
@@ -72,6 +73,7 @@ const PetsScreen = ({ navigation }) => {
           </TouchableOpacity>
         ))}
       </ScrollView>
+      <Navbar />
     </View>
   );
 };
@@ -81,13 +83,13 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "#ffffff",
-    paddingTop: 100,
+    paddingTop: 60,
   },
   header: {
     fontSize: 24,
     fontWeight: "bold",
     margin: "auto",
-    marginBottom: 30,
+    marginBottom: 60,
   },
 
   buttonContainer: {
@@ -105,6 +107,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: 3,
     marginBottom: 20,
+    width: "90%",
+    margin: "auto",
   },
 
   buttonText: {
@@ -134,8 +138,8 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 60,
+    height: 60,
     borderRadius: 50,
     marginRight: 15,
   },

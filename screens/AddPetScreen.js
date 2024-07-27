@@ -12,6 +12,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PetsService from "../services/PetsService";
 import * as ImagePicker from "expo-image-picker";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const AddPetScreen = ({ navigation }) => {
   const [petType, setPetType] = useState("");
@@ -91,12 +92,6 @@ const AddPetScreen = ({ navigation }) => {
       console.log("pet data: ", response);
       console.log("navigate to pet screen");
       navigation.navigate("PetsScreen");
-      //   if (response==null) {
-      //     setError("Failed to add new pet");
-      //   } else {
-      //     console.log("navigate to pet screen");
-      //     navigation.navigate('PetsScreen');
-      //   }
 
       setPetType("");
       setPetName("");
@@ -135,153 +130,209 @@ const AddPetScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.headerContainer}>
         <Text style={styles.header}>Add New Pet</Text>
-        {error && <Text style={styles.error}>{error}</Text>}
-        <TextInput
-          style={styles.input}
-          placeholder="Pet Type"
-          value={petType}
-          onChangeText={setPetType}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Pet Name"
-          value={petName}
-          onChangeText={setPetName}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Pet Address Line 1"
-          value={petAddress1}
-          onChangeText={setPetAddress1}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Pet Address Line 2"
-          value={petAddress2}
-          onChangeText={setPetAddress2}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Pet City"
-          value={petCity}
-          onChangeText={setPetCity}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Pet Zip"
-          value={petZip}
-          onChangeText={setPetZip}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Pet Age"
-          value={petAge}
-          onChangeText={setPetAge}
-          keyboardType="numeric"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Pet Weight"
-          value={petWeight}
-          onChangeText={setPetWeight}
-          keyboardType="numeric"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Pet Breed"
-          value={petBreed}
-          onChangeText={setPetBreed}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Medical Conditions"
-          value={petMediConditions}
-          onChangeText={setPetMediConditions}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Vaccination Status"
-          value={petVaccinationStatus}
-          onChangeText={setPetVaccinationStatus}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="KASL Registration Number"
-          value={kasl_regNo}
-          onChangeText={setKasl_regNo}
-        />
-
-        <Button title="Choose Images" onPress={pickImages} />
-        <View style={styles.imageContainer}>
-          {images.map((image, index) => (
-            <View key={index} style={styles.imageWrapper}>
-              <Image source={{ uri: image.uri }} style={styles.image} />
-              <TouchableOpacity
-                onPress={() => removeImage(index)}
-                style={styles.removeButton}
-              >
-                <Text style={styles.removeButtonText}>Remove</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
-        <Button title="Add Pet" onPress={addNewPet} />
       </View>
+      {error && <Text style={styles.error}>{error}</Text>}
+
+      <TextInput
+        style={styles.input}
+        placeholder="Pet Type"
+        value={petType}
+        onChangeText={setPetType}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Pet Name"
+        value={petName}
+        onChangeText={setPetName}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Pet Address Line 1"
+        value={petAddress1}
+        onChangeText={setPetAddress1}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Pet Address Line 2"
+        value={petAddress2}
+        onChangeText={setPetAddress2}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Pet City"
+        value={petCity}
+        onChangeText={setPetCity}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Pet Zip"
+        value={petZip}
+        onChangeText={setPetZip}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Pet Age"
+        value={petAge}
+        onChangeText={setPetAge}
+        keyboardType="numeric"
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Pet Weight"
+        value={petWeight}
+        onChangeText={setPetWeight}
+        keyboardType="numeric"
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Pet Breed"
+        value={petBreed}
+        onChangeText={setPetBreed}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Medical Conditions"
+        value={petMediConditions}
+        onChangeText={setPetMediConditions}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Vaccination Status"
+        value={petVaccinationStatus}
+        onChangeText={setPetVaccinationStatus}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="KASL Registration Number"
+        value={kasl_regNo}
+        onChangeText={setKasl_regNo}
+      />
+
+      <TouchableOpacity style={styles.imagePickerButton} onPress={pickImages}>
+        <Text style={styles.imagePickerButtonText}>Choose Images</Text>
+      </TouchableOpacity>
+      <View style={styles.imageContainer}>
+        {images.map((image, index) => (
+          <View key={index} style={styles.imageWrapper}>
+            <Image source={{ uri: image.uri }} style={styles.image} />
+            <TouchableOpacity
+              onPress={() => removeImage(index)}
+              style={styles.removeButton}
+            >
+              <Icon name="close" size={24} color="#ffffff" />
+            </TouchableOpacity>
+          </View>
+        ))}
+      </View>
+      <TouchableOpacity style={styles.addButton} onPress={addNewPet}>
+        <Text style={styles.addButtonText}>Add Pet</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: "#ffffff",
-    paddingTop: 100,
+    padding: 20,
+    backgroundColor: "#f8f8f8",
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
   },
   header: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    color: "black",
+    margin: "auto",
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 5,
+    color: "#333",
   },
   input: {
+    height: 50,
+    borderColor: "#ddd",
     borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    marginBottom: 10,
+    borderRadius: 10,
+    marginBottom: 15,
+    paddingHorizontal: 15,
+    backgroundColor: "#fff",
+    width: "100%",
   },
-  error: {
-    color: "red",
-    marginTop: 5,
-    marginBottom: 10,
+  imagePickerButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "black",
+    borderRadius: 10,
+    height: 48,
+    width: "100%",
+    marginBottom: 20,
+  },
+  imagePickerButtonText: {
+    color: "#fff",
+    marginLeft: 10,
+    fontSize: 16,
   },
   imageContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
+    marginTop: 10,
+    marginBottom: 20,
   },
   imageWrapper: {
     position: "relative",
-    margin: 10,
+    marginRight: 10,
+    marginBottom: 10,
   },
   image: {
     width: 100,
     height: 100,
-    borderRadius: 5,
+    borderRadius: 10,
   },
   removeButton: {
     position: "absolute",
     top: 5,
     right: 5,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    padding: 5,
-    borderRadius: 5,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    borderRadius: 15,
+    padding: 2,
   },
-  removeButtonText: {
-    color: "white",
-    fontSize: 12,
+  addButton: {
+    backgroundColor: "black",
+    borderRadius: 10,
+    height: 48,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+  addButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  error: {
+    color: "red",
+    marginBottom: 10,
   },
 });
 

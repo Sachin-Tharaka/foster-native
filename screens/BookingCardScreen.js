@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 40,
   },
   iconContainer: {
     position: "absolute",
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   bookingButton: {
-    backgroundColor: "#007bff",
+    backgroundColor: "black",
     padding: 16,
     alignItems: "center",
     borderRadius: 8,
