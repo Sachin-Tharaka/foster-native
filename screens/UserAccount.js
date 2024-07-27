@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     top: 10,
     flexDirection: "row",
     justifyContent: "space-between",
-    width: 60,
+    width: 100,
   },
   title: {
     fontSize: 24,
