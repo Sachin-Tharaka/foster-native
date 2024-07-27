@@ -70,6 +70,12 @@ const UserAccount = ({ navigation }) => {
     navigation.navigate("KennelInvoicesScreen");
   };
 
+  const logout = async () => {
+    await AsyncStorage.removeItem("token");
+    await AsyncStorage.removeItem("userId");
+    navigation.navigate("Login");
+  };
+
   return (
     <View style={styles.outerContainer}>
       <ScrollView style={styles.container}>
@@ -90,6 +96,9 @@ const UserAccount = ({ navigation }) => {
               onPress={() => navigation.navigate("MyKennelsScreen")}
             >
               <Icon name="exchange" size={24} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={logout}>
+              <Icon name="sign-out" size={24} color="black" />
             </TouchableOpacity>
           </View>
           <Text style={styles.title}>
