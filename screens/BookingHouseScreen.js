@@ -165,11 +165,7 @@ const BookingHouseScreen = ({ navigation }) => {
             <Text style={styles.address}>
               {selectedLocation.label || "Set Location"}
             </Text>
-            <Text style={styles.addressDetails}>
-              {selectedLocation.latitude && selectedLocation.longitude
-                ? `${selectedLocation.latitude}, ${selectedLocation.longitude}`
-                : ""}
-            </Text>
+            
           </TouchableOpacity>
         </View>
         <TouchableOpacity
