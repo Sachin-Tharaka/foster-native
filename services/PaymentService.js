@@ -1,32 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { View, Button, StyleSheet, Alert } from "react-native";
+import { View, Button, Alert } from "react-native";
 import { useStripe } from "@stripe/stripe-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function PaymentService() {
+
+export default function PaymentService({ navigation, bookingId }) {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
 
   const fetchPaymentSheetParams = async () => {
-    console.log("Fetching PaymentSheet params");
-    const response = await fetch(
-      "https://fosterpet.azurewebsites.net/api/payment/create-payment-intent",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWhlbGExMDBAZ21haWwuY29tIiwiaWF0IjoxNzE1NjcyNzI2LCJleHAiOjE3MTU4MDIzMjZ9.LuVFi58QN7KdU9M0uuBWxWzKkuIgKHx5hUt5nJxbQKM",
-        },
+    try {
+      console.log("Fetching PaymentSheet params");
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        throw new Error("Token not found");
       }
-    );
-    const { paymentIntent, ephemeralKey, customer } = await response.json();
-    console.log(response.json());
 
-    return {
-      paymentIntent,
-      ephemeralKey,
-      customer,
-    };
+      const response = await fetch(
+          `https://fosterpet.azurewebsites.net/api/payment/create-payment-intent?bookingId=${bookingId}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            }
+          }
+      );
+
+      if (!response.ok) {
+        const message = `An error has occurred: ${response.status}`;
+        throw new Error(message);
+      }
+
+      const { paymentIntent, ephemeralKey, customer } = await response.json();
+      return {
+        paymentIntent,
+        ephemeralKey,
+        customer,
+      };
+    } catch (error) {
+
+      console.error("Error fetching payment sheet params:", error);
+      throw error;
+    }
   };
 
   const initializePaymentSheet = async () => {
@@ -72,7 +88,7 @@ export default function PaymentService() {
       <Button
         variant="primary"
         disabled={!loading}
-        title="Checkout"
+        title="Pay Now"
         onPress={openPaymentSheet}
       />
     </View>
