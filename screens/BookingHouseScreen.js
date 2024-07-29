@@ -42,13 +42,14 @@ const BookingHouseScreen = ({ navigation }) => {
     getToken();
   }, [selectedLocation]);
 
-  const getAllKennelNear = async (longitude, latitude, maxDistance, token) => {
+  const getAllKennelNear = async (longitude, latitude, maxDistance, animalType, token) => {
     console.log("Calling for get near by kennels...");
     try {
       const data = await KennelService.getAllKennelNear(
         longitude,
         latitude,
         maxDistance,
+        animalType,
         token
       );
       setKennels(data);
@@ -61,6 +62,7 @@ const BookingHouseScreen = ({ navigation }) => {
     longitude,
     latitude,
     maxDistance,
+    animalType,
     token
   ) => {
     console.log("Calling for get near by volunteer...");
@@ -69,6 +71,7 @@ const BookingHouseScreen = ({ navigation }) => {
         longitude,
         latitude,
         maxDistance,
+        animalType,
         token
       );
       setVolunteersData(data);
@@ -143,7 +146,7 @@ const BookingHouseScreen = ({ navigation }) => {
 
     const token = await AsyncStorage.getItem("token");
     const distanceInMeters = maxDistance * 1000;
-    
+
     getAllKennelNear(
       selectedLocation.longitude,
       selectedLocation.latitude,
@@ -180,7 +183,7 @@ const BookingHouseScreen = ({ navigation }) => {
             <Text style={styles.address}>
               {selectedLocation.label || "Set Location"}
             </Text>
-            
+
           </TouchableOpacity>
         </View>
         <TouchableOpacity
@@ -211,7 +214,7 @@ const BookingHouseScreen = ({ navigation }) => {
           <Text style={styles.changeButtonText}>Search</Text>
         </TouchableOpacity>
       </View>
-      
+
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={getAll}>

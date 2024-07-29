@@ -4,9 +4,8 @@ class KennelService {
   }
 
   //get kennel nearby
-  async getAllKennelNear(longitude, latitude, distanceInMeters,animalType, token) {
+  async getAllKennelNear(longitude, latitude, distanceInMeters, animalType, token) {
     console.warn("Calling api...");
-    console.warn("passed data:",longitude, latitude, distanceInMeters,animalType);
     try {
       const response = await fetch(
         `${this.baseUrl}/api/kennel/filter?longitude=${longitude}&latitude=${latitude}&maxDistance=${distanceInMeters}&animalType=${animalType}`,
@@ -16,12 +15,11 @@ class KennelService {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          //mode: 'no-cors'
         }
       );
 
       if (!response.ok) {
-        
+
         console.warn(
           "Response from server for filter kennel:",
           response.status,

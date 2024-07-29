@@ -6,16 +6,17 @@ class VoulnteerService {
   //get volunteer nearby
   async getAllVolunteerNear(longitude, latitude, distanceInMeters,animalType, token) {
     console.warn("Calling api...");
+    console.warn("passed data:",longitude, latitude, distanceInMeters,animalType);
+    console.warn("token:",token);
     try {
       const response = await fetch(
         `${this.baseUrl}/api/volunteer/filter?longitude=${longitude}&latitude=${latitude}&maxDistance=${distanceInMeters}&animalType=${animalType}`,
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          //mode: 'no-cors'
         }
       );
 
