@@ -14,6 +14,7 @@ import * as ImagePicker from "expo-image-picker";
 import PetsService from "../services/PetsService";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Navbar from "../components/Navbar";
+import AnimalTypeDropdown from "../components/AnimalTypeDropdown";
 
 const UpdatePetProfileScreen = ({ route, navigation }) => {
   const { petID } = route.params || { petID: "" };
@@ -168,6 +169,10 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
     setImages(updatedImages);
   };
 
+  const handleAnimalTypeChange = (type) => {
+    setPetType(type);
+  };
+
   return (
     <View>
       <ScrollView contentContainerStyle={styles.container}>
@@ -177,12 +182,7 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
         {error && <Text style={styles.error}>{error}</Text>}
 
         <Text style={styles.label}>Pet Type</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Pet Type"
-          value={petType}
-          onChangeText={setPetType}
-        />
+        <AnimalTypeDropdown selectedAnimal={petType} onAnimalTypeChange={handleAnimalTypeChange} />
 
         <Text style={styles.label}>Pet Name</Text>
         <TextInput

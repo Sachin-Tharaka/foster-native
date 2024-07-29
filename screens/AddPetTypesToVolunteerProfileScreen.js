@@ -3,13 +3,12 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
-  Button,
-  ScrollView,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import VounteerService from "../services/VounteerService";
+import AnimalTypeDropdown from "../components/AnimalTypeDropdown";
 
 const AddPetTypesToVolunteerProfileScreen = ({ route, navigation }) => {
   const { volunteerId } = route.params || { volunteerId: "" };
@@ -90,11 +89,9 @@ const AddPetTypesToVolunteerProfileScreen = ({ route, navigation }) => {
         {error && <Text style={styles.error}>{error}</Text>}
         {paymentRates.map((rate, index) => (
           <View key={index} style={styles.rateContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Animal Type"
-              value={rate.animalType}
-              onChangeText={(value) =>
+            <AnimalTypeDropdown
+              selectedAnimal={rate.animalType}
+              onAnimalTypeChange={(value) =>
                 handleInputChange(index, "animalType", value)
               }
             />
@@ -129,14 +126,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 40,
     textAlign: "center",
-  },
-  input: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
-    height: 50,
   },
   error: {
     color: "red",

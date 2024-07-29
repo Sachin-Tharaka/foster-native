@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import PetsService from "../services/PetsService";
 import * as ImagePicker from "expo-image-picker";
 import Icon from "react-native-vector-icons/FontAwesome";
+import AnimalTypeDropdown from "../components/AnimalTypeDropdown";
 
 const AddPetScreen = ({ navigation }) => {
   const [petType, setPetType] = useState("");
@@ -129,6 +130,10 @@ const AddPetScreen = ({ navigation }) => {
     setImages(updatedImages);
   };
 
+  const handleAnimalTypeChange = (type) => {
+    setPetType(type);
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerContainer}>
@@ -136,12 +141,7 @@ const AddPetScreen = ({ navigation }) => {
       </View>
       {error && <Text style={styles.error}>{error}</Text>}
 
-      <TextInput
-        style={styles.input}
-        placeholder="Pet Type"
-        value={petType}
-        onChangeText={setPetType}
-      />
+      <AnimalTypeDropdown selectedAnimal={petType} onAnimalTypeChange={handleAnimalTypeChange} />
 
       <TextInput
         style={styles.input}
