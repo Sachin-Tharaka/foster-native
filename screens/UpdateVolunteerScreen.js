@@ -15,6 +15,7 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
   const [longitude, setLongitude] = useState(0);
   const [latitude, setLatitude] = useState(0);
   const [locationLabel, setLocationLabel] = useState('Set Location');
+  const [selectedLocation, setSelectedLocation] = useState({});
 
   useEffect(() => {
     const getToken = async () => {
@@ -84,17 +85,17 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
       formData.append('volunteerLatitude', latitude.toString());
 
       images.forEach((image, index) => {
-        formData.append('images', {
+        formData.append("images", {
           uri: image.uri,
           name: `image_${index}.jpg`,
-          type: 'image/jpeg',
+          type: "image/jpeg",
         });
       });
 
       const response = await VolunteerService.updateVolunteer(formData, token);
       navigation.navigate('VolunteerScreen', { volunteerId: volunteerId });
     } catch (error) {
-      console.error('Error:', error.message);
+      console.error("Error:", error.message);
       setError("Failed to update volunteer");
     }
   };
@@ -116,15 +117,18 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
     setImages(updatedImages);
   };
 
-  const goToChangeLocation = () => {
-    navigation.navigate('LocationSetterScreen', { setLocation: setSelectedLocation });
+  const goToChangeLocation = async() => {
+    navigation.navigate("LocationSetterScreen", {
+      setLocation: setSelectedLocation,
+      existingLocation: selectedLocation,
+    });
+    console.log(selectedLocation);
+    setLatitude( selectedLocation.latitude);
+    setLongitude(selectedLocation.longitude);
+    
   };
 
-  const setSelectedLocation = (location) => {
-    setLatitude(location.latitude);
-    setLongitude(location.longitude);
-    setLocationLabel(location.label);
-  };
+  
 
   return (
     <ScrollView>
@@ -145,13 +149,19 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
           {images.map((image, index) => (
             <View key={index} style={styles.imageWrapper}>
               <Image source={{ uri: image.uri }} style={styles.image} />
-              <TouchableOpacity onPress={() => removeImage(index)} style={styles.removeButton}>
+              <TouchableOpacity
+                onPress={() => removeImage(index)}
+                style={styles.removeButton}
+              >
                 <Text style={styles.removeButtonText}>Remove</Text>
               </TouchableOpacity>
             </View>
           ))}
         </View>
-        <Button title="Update Volunteer" onPress={updateVolunteer} />
+
+        <TouchableOpacity onPress={updateVolunteer} style={styles.updateButton}>
+          <Text style={styles.updateButtonText}>Update Volunteer</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -160,33 +170,41 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    backgroundColor: '#ffffff',
-    marginTop: 100,
+    padding: 20,
+    backgroundColor: "#ffffff",
+    paddingTop: 40,
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
+    fontWeight: "bold",
+    marginBottom: 40,
+    textAlign: "center",
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     padding: 10,
-    marginBottom: 10,
+    marginBottom: 15,
+    borderRadius: 5,
   },
   error: {
-    color: 'red',
+    color: "red",
     marginTop: 5,
     marginBottom: 10,
   },
   imageContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    marginTop: 15,
+    marginBottom: 15,
   },
   imageWrapper: {
-    position: 'relative',
+    position: "relative",
     margin: 10,
   },
   image: {
@@ -195,15 +213,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   removeButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 5,
     right: 5,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: "rgba(0,0,0,0.5)",
     padding: 5,
     borderRadius: 5,
   },
   removeButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 12,
   },
   locationText: {
@@ -217,13 +235,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#777',
   },
-  changeButton: {
+  updateButton: {
     marginTop: 10,
     backgroundColor: '#007BFF',
     padding: 10,
     borderRadius: 5,
   },
-  changeButtonText: {
+  updateButtonText: {
     color: 'white',
     textAlign: 'center',
   },

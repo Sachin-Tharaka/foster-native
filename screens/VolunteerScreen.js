@@ -94,6 +94,28 @@ const VolunteerScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.petContainer}>
+        <Image
+          style={styles.petImage}
+          source={
+            volunteer.images && volunteer.images.length > 0
+              ? { uri: volunteer.images[0] }
+              : null
+          }
+        />
+        <View>
+          <Text>Nic NO: {volunteer.nicNumber}</Text>
+          {volunteer.paymentRates && (
+            <View>
+              <Text>Animal Types:</Text>
+              {volunteer.paymentRates.map((rate, index) => (
+                <Text key={index}>{rate.animalType}</Text>
+              ))}
+            </View>
+          )}
+        </View>
+      </View>
+
       <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
         <Text style={styles.buttonText}>Edit Account</Text>
       </TouchableOpacity>
@@ -116,28 +138,6 @@ const VolunteerScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.button} onPress={handleDeleteAccount}>
         <Text style={styles.buttonText}>Delete Account</Text>
       </TouchableOpacity>
-
-      <View style={styles.petContainer}>
-        <Image
-          style={styles.petImage}
-          source={
-            volunteer.images && volunteer.images.length > 0
-              ? { uri: volunteer.images[0] }
-              : null
-          }
-        />
-        <View>
-          <Text>Nic NO: {volunteer.nicNumber}</Text>
-          {volunteer.paymentRates && (
-            <View>
-              <Text>Animal Types:</Text>
-              {volunteer.paymentRates.map((rate, index) => (
-                <Text key={index}>{rate.animalType}</Text>
-              ))}
-            </View>
-          )}
-        </View>
-      </View>
 
       <ScrollView>
         <View style={styles.images}>
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "#ffffff",
-    marginTop: 100,
+    paddingTop: 60,
   },
   petImage: {
     width: 120,
@@ -181,7 +181,6 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     padding: 10,
     borderRadius: 5,
-    marginTop: 5,
     marginBottom: 5,
   },
   buttonText: {
@@ -196,6 +195,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "black",
     borderRadius: 5,
+    marginBottom: 20,
   },
   images: {
     flexDirection: "row",

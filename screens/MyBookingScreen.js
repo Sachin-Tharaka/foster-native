@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BookingService from "../services/BookingService";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const MyBookingScreen = ({ navigation }) => {
   const [bookings, setBookings] = useState([]);
@@ -78,7 +79,7 @@ const MyBookingScreen = ({ navigation }) => {
         style={styles.button}
         onPress={() => handlePetProfilePress(booking.pet.petID)}
       >
-        <Text style={styles.buttonText}>Pet Profile</Text>
+        <Icon name="paw" size={24} color="#333" />
       </TouchableOpacity>
     );
 
@@ -89,7 +90,7 @@ const MyBookingScreen = ({ navigation }) => {
           style={styles.button}
           onPress={() => handleKennelProfilePress(booking.kennel.kennelId)}
         >
-          <Text style={styles.buttonText}>Kennel Profile</Text>
+          <Icon name="home" size={24} color="#333" />
         </TouchableOpacity>
       );
     }
@@ -101,7 +102,7 @@ const MyBookingScreen = ({ navigation }) => {
           style={styles.button}
           onPress={() => handleVolunteerProfilePress(booking.volunteerID)}
         >
-          <Text style={styles.buttonText}>Volunteer Profile</Text>
+          <Icon name="user" size={24} color="#333" />
         </TouchableOpacity>
       );
     }
@@ -110,7 +111,7 @@ const MyBookingScreen = ({ navigation }) => {
       buttons.push(
         <TouchableOpacity
           key="cancelBooking"
-          style={styles.button}
+          style={styles.textButton}
           onPress={() => cancelBooking(booking.bookingID)}
         >
           <Text style={styles.buttonText}>Cancel</Text>
@@ -122,7 +123,7 @@ const MyBookingScreen = ({ navigation }) => {
       buttons.push(
         <TouchableOpacity
           key="addReview"
-          style={styles.button}
+          style={styles.textButton}
           onPress={() =>
             handleAddReviewPress(
               booking.bookingID,
@@ -144,7 +145,7 @@ const MyBookingScreen = ({ navigation }) => {
       <Text style={styles.header}>My Bookings</Text>
       {bookings.map((booking) => (
         <View key={booking.bookingID} style={styles.bookingContainer}>
-          <Text style={styles.bookingText}>Status: {booking.pet.petName}</Text>
+          <Text style={styles.bookingText}>Pet: {booking.pet.petName}</Text>
           <Text style={styles.bookingText}>
             Start Date: {new Date(booking.startDate).toLocaleString()}
           </Text>
@@ -184,13 +185,19 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     marginTop: 10,
+    gap: 12,
   },
   button: {
-    backgroundColor: "black",
     padding: 10,
     borderRadius: 5,
+  },
+
+  textButton: {
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: "black",
   },
   buttonText: {
     color: "white",

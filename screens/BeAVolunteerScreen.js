@@ -82,7 +82,10 @@ const BeAVolunteerScreen = ({ navigation }) => {
   };
 
   const goToChangeLocation = async() => {
-    navigation.navigate('LocationSetterScreen', { setLocation: setSelectedLocation });
+    navigation.navigate("LocationSetterScreen", {
+      setLocation: setSelectedLocation,
+      existingLocation: selectedLocation,
+    });
     console.log(selectedLocation);
     setLatitude( selectedLocation.latitude);
     setLongitude(selectedLocation.longitude);

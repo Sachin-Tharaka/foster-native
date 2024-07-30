@@ -4,30 +4,37 @@ class KennelService {
   }
 
   //get kennel nearby
-  async getAllKennelNear(longitude, latitude, maxDistance, token) {
+  async getAllKennelNear(longitude, latitude, distanceInMeters, animalType, token) {
     console.warn("Calling api...");
     try {
       const response = await fetch(
-        `${this.baseUrl}/api/kennel/near?longitude=${longitude}&latitude=${latitude}&maxDistance=${maxDistance}`,
+        `${this.baseUrl}/api/kennel/filter?longitude=${longitude}&latitude=${latitude}&maxDistance=${distanceInMeters}&animalType=${animalType}`,
         {
           method: "GET",
           headers: {
-            "Content-Type": "application/json;charset=utf-8",
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          //mode: 'no-cors'
         }
       );
 
       if (!response.ok) {
-        console.warn("Error.........");
-        throw new Error("Failed to get kennel data");
+
+        console.warn(
+          "Response from server for filter kennel:",
+          response.status,
+          response.statusText
+        );
+        const errorMessage = await response.text();
+        console.error("Server error message for filter kennel:", errorMessage);
+        throw new Error(errorMessage);
       }
       //console.warn("response " ,response);
       const data = await response.json();
       //console.warn(data);
       return data;
     } catch (error) {
+      console.error("Error:", error.message);
       throw error;
     }
   }
@@ -96,7 +103,14 @@ class KennelService {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to get kennels data");
+        console.warn(
+          "Response from server for kennel:",
+          response.status,
+          response.statusText
+        );
+        const errorMessage = await response.text();
+        console.error("Server error message for  kennel:", errorMessage);
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
