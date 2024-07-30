@@ -1,25 +1,21 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Button,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-} from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import VounteerService from "../services/VounteerService";
-import * as ImagePicker from "expo-image-picker";
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput, Button, ScrollView, Image, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Location from 'expo-location';
+import VolunteerService from '../services/VounteerService';
+import * as ImagePicker from 'expo-image-picker';
 
 const UpdateVolunteerScreen = ({ route, navigation }) => {
   const { volunteerId } = route.params || { volunteerId: "" };
 
-  const [nicNo, setNicNo] = useState("");
-  const [userId, setUserId] = useState("");
+  const [nicNo, setNicNo] = useState('');
+  const [userId, setUserId] = useState('');
   const [images, setImages] = useState([]);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
+  const [longitude, setLongitude] = useState(0);
+  const [latitude, setLatitude] = useState(0);
+  const [locationLabel, setLocationLabel] = useState('Set Location');
+  const [selectedLocation, setSelectedLocation] = useState({});
 
   useEffect(() => {
     const getToken = async () => {
@@ -34,49 +30,59 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
     getToken();
   }, [navigation]);
 
+  useEffect(() => {
+    if (longitude && latitude) {
+      getAddressFromCoordinates(latitude, longitude);
+    }
+  }, [longitude, latitude]);
+
   const getVolunteerById = async (id, token) => {
     try {
-      const data = await VounteerService.getVolunteerDataById(id, token);
-      console.log("volunteer data:", data);
-
-      setNicNo(data.nicNumber || "");
-      setUserId(data.userId || "");
-
-      const imageUris = (data.images || [])
-        .map((image) => {
-          if (typeof image === "string") {
-            return { uri: image };
-          } else if (image.uri) {
-            return { uri: image.uri };
-          }
-          return null;
-        })
-        .filter(Boolean);
-
+      const data = await VolunteerService.getVolunteerDataById(id, token);
+      setNicNo(data.nicNumber || '');
+      setUserId(data.userId || '');
+      setLongitude(data.volunteerLocation?.coordinates[0] || 0);
+      setLatitude(data.volunteerLocation?.coordinates[1] || 0);
+      const imageUris = (data.images || []).map(image => (typeof image === 'string' ? { uri: image } : image.uri ? { uri: image.uri } : null)).filter(Boolean);
       setImages(imageUris);
-      console.log("images:", imageUris);
     } catch (error) {
       console.error("Error:", error.message);
     }
   };
 
-  const updateVolunteer = async () => {
-    console.log("update volunteer....");
+  const getAddressFromCoordinates = async (lat, lon) => {
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setError('Permission to access location was denied');
+        return;
+      }
+      let reverseGeocode = await Location.reverseGeocodeAsync({ latitude: lat, longitude: lon });
+      if (reverseGeocode.length > 0) {
+        const address = reverseGeocode[0];
+        setLocationLabel(`${address.street}, ${address.city}, ${address.region}, ${address.country}`);
+      } else {
+        setLocationLabel('Location not found');
+      }
+    } catch (error) {
+      console.error("Error getting location label:", error);
+    }
+  };
 
-    if (!nicNo || images.length === 0) {
-      setError("All fields are required, including at least one image");
+  const updateVolunteer = async () => {
+    if (!nicNo || !longitude || !latitude || images.length === 0) {
+      setError('All fields are required, including at least one image');
       return;
     }
 
-    console.log("images:", images);
-
     try {
-      const token = await AsyncStorage.getItem("token");
-
+      const token = await AsyncStorage.getItem('token');
       const formData = new FormData();
-      formData.append("nicNumber", nicNo);
-      formData.append("volunteerId", volunteerId);
-      formData.append("userId", userId);
+      formData.append('nicNumber', nicNo);
+      formData.append('volunteerId', volunteerId);
+      formData.append('userId', userId);
+      formData.append('volunteerLongitude', longitude.toString());
+      formData.append('volunteerLatitude', latitude.toString());
 
       images.forEach((image, index) => {
         formData.append("images", {
@@ -86,11 +92,8 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
         });
       });
 
-      console.log("Calling backend...");
-      const response = await VounteerService.updateVolunteer(formData, token);
-      console.log(" data: ", response);
-      console.log("navigate to all screen");
-      navigation.navigate("VolunteerScreen", { volunteerId: volunteerId });
+      const response = await VolunteerService.updateVolunteer(formData, token);
+      navigation.navigate('VolunteerScreen', { volunteerId: volunteerId });
     } catch (error) {
       console.error("Error:", error.message);
       setError("Failed to update volunteer");
@@ -114,22 +117,34 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
     setImages(updatedImages);
   };
 
+  const goToChangeLocation = async() => {
+    navigation.navigate("LocationSetterScreen", {
+      setLocation: setSelectedLocation,
+      existingLocation: selectedLocation,
+    });
+    console.log(selectedLocation);
+    setLatitude( selectedLocation.latitude);
+    setLongitude(selectedLocation.longitude);
+    
+  };
+
+  
+
   return (
     <ScrollView>
       <View style={styles.container}>
         <Text style={styles.header}>Update Volunteer</Text>
         {error && <Text style={styles.error}>{error}</Text>}
-
-        <Text style={styles.label}>NIC No</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="NIC No"
-          value={nicNo}
-          onChangeText={setNicNo}
-        />
-
-        <Button title="Choose Images" onPress={pickImages} color="black" />
-
+        <TextInput style={styles.input} placeholder="Nic No" value={nicNo} onChangeText={setNicNo} />
+        <View style={styles.locationContainer}>
+          <TouchableOpacity style={styles.locationText} onPress={goToChangeLocation}>
+            <Text style={styles.address}>{locationLabel}</Text>
+            <Text style={styles.addressDetails}>
+              {latitude} {longitude}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <Button title="Choose Images" onPress={pickImages} />
         <View style={styles.imageContainer}>
           {images.map((image, index) => (
             <View key={index} style={styles.imageWrapper}>
@@ -209,16 +224,26 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 12,
   },
+  locationText: {
+    marginBottom: 10,
+  },
+  address: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  addressDetails: {
+    fontSize: 14,
+    color: '#777',
+  },
   updateButton: {
-    backgroundColor: "black",
-    padding: 15,
+    marginTop: 10,
+    backgroundColor: '#007BFF',
+    padding: 10,
     borderRadius: 5,
-    alignItems: "center",
-    marginTop: 20,
   },
   updateButtonText: {
-    color: "white",
-    fontSize: 16,
+    color: 'white',
+    textAlign: 'center',
   },
 });
 

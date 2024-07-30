@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import KennelService from '../services/KennelService';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import * as Location from 'expo-location';
 
 const UpdateKennelDataScreen = ({ route, navigation }) => {
 
@@ -19,6 +20,7 @@ const UpdateKennelDataScreen = ({ route, navigation }) => {
   const [images, setImages] = useState([]);
   const [error, setError] = useState('');
   const [selectedLocation, setSelectedLocation] = useState({});
+  const [locationLabel, setLocationLabel] = useState('Set Location');
 
 
   useEffect(() => {
@@ -35,6 +37,13 @@ const UpdateKennelDataScreen = ({ route, navigation }) => {
     };
     getToken();
   }, [navigation]);
+
+  useEffect(() => {
+    
+    if (longitude && latitude) {
+      getAddressFromCoordinates(latitude, longitude);
+    }
+  }, [longitude, latitude]);
 
   const getKennelById = async (id, token) => {
     try {
@@ -68,6 +77,28 @@ const UpdateKennelDataScreen = ({ route, navigation }) => {
       console.error("Error:", error.message);
     }
   };
+
+  const getAddressFromCoordinates = async (lat, lon) => {
+    
+    try {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setError('Permission to access location was denied');
+        return;
+      }
+      let reverseGeocode = await Location.reverseGeocodeAsync({ latitude: lat, longitude: lon });
+      if (reverseGeocode.length > 0) {
+        const address = reverseGeocode[0];
+        setLocationLabel(`${address.street}, ${address.city}, ${address.region}, ${address.country}`);
+      } else {
+        setLocationLabel('Location not found');
+      }
+    } catch (error) {
+      console.error("Error getting location label:", error);
+    }
+  };
+
 
   const updateKennel = async () => {
     console.log('update kennel....');
@@ -142,7 +173,10 @@ const UpdateKennelDataScreen = ({ route, navigation }) => {
   };
 
   const goToChangeLocation = async() => {
-    navigation.navigate('LocationSetterScreen', { setLocation: setSelectedLocation });
+    navigation.navigate("LocationSetterScreen", {
+      setLocation: setSelectedLocation,
+      existingLocation: selectedLocation,
+    });
     console.log(selectedLocation);
     setLatitude( selectedLocation.latitude);
     setLongitude(selectedLocation.longitude);
@@ -159,25 +193,13 @@ const UpdateKennelDataScreen = ({ route, navigation }) => {
         <TextInput style={styles.input} placeholder="City" value={kennelCity} onChangeText={setKennelCity} />
         <TextInput style={styles.input} placeholder="Zip" value={kennelZip} onChangeText={setKennelZip} />
         <View style={styles.locationContainer}>
-        <View style={styles.locationDetails}>
-          <View style={styles.locationIcon}>
-            <Icon name='map-marker' size={32} color='#333' />
-          </View>
-          <TouchableOpacity
-            style={styles.locationText}
-            onPress={goToChangeLocation}
-          >
-            <Text style={styles.address}>{selectedLocation.label || 'Set Location'}</Text>
+          <TouchableOpacity style={styles.locationText} onPress={goToChangeLocation}>
+            <Text style={styles.address}>{locationLabel}</Text>
             <Text style={styles.addressDetails}>
               {latitude} {longitude}
             </Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.changeButton} onPress={goToChangeLocation}>
-          <Text style={styles.changeButtonText}>Select location</Text>
-        </TouchableOpacity>
-        
-      </View>
         <Button title="Choose Images" onPress={pickImages} />
         <View style={styles.imageContainer}>
           {images.map((image, index) => (
