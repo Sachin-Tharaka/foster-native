@@ -2,19 +2,20 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  TextInput,
+  Alert,
   StyleSheet,
   ScrollView,
   Image,
   TouchableOpacity,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import Slider from '@react-native-community/slider';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import KennelService from "../services/KennelService";
 import UserService from "../services/UserService";
 import VolunteerService from "../services/VounteerService";
 import Navbar from "../components/Navbar";
-import KennelFilterScreen from "./KennelFilterScreen";
+import AnimalTypeDropdown from "../components/AnimalTypeDropdown";
 
 const BookingHouseScreen = ({ navigation }) => {
   const [kennels, setKennels] = useState([]);
@@ -22,7 +23,8 @@ const BookingHouseScreen = ({ navigation }) => {
   const [userData, setUserData] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState({});
   const [category, setCategory] = useState("all");
-  const [maxDistance, setMaxDistance] = useState("");
+  const [maxDistance, setMaxDistance] = useState(1);
+  const [animalType, setAnimalType] = useState('');
 
   useEffect(() => {
     const getToken = async () => {
@@ -40,13 +42,14 @@ const BookingHouseScreen = ({ navigation }) => {
     getToken();
   }, [selectedLocation]);
 
-  const getAllKennelNear = async (longitude, latitude, maxDistance, token) => {
+  const getAllKennelNear = async (longitude, latitude, maxDistance, animalType, token) => {
     console.log("Calling for get near by kennels...");
     try {
       const data = await KennelService.getAllKennelNear(
         longitude,
         latitude,
         maxDistance,
+        animalType,
         token
       );
       setKennels(data);
@@ -59,6 +62,7 @@ const BookingHouseScreen = ({ navigation }) => {
     longitude,
     latitude,
     maxDistance,
+    animalType,
     token
   ) => {
     console.log("Calling for get near by volunteer...");
@@ -67,6 +71,7 @@ const BookingHouseScreen = ({ navigation }) => {
         longitude,
         latitude,
         maxDistance,
+        animalType,
         token
       );
       setVolunteersData(data);
@@ -134,19 +139,32 @@ const BookingHouseScreen = ({ navigation }) => {
   };
 
   const searchData = async () => {
+    if (!animalType) {
+      Alert.alert("Error", "Please select an animal type");
+      return;
+    }
+
     const token = await AsyncStorage.getItem("token");
+    const distanceInMeters = maxDistance * 1000;
+
     getAllKennelNear(
       selectedLocation.longitude,
       selectedLocation.latitude,
-      maxDistance,
+      distanceInMeters,
+      animalType,
       token
     );
     getAllVolunteerNear(
       selectedLocation.longitude,
       selectedLocation.latitude,
-      maxDistance,
+      distanceInMeters,
+      animalType,
       token
     );
+  };
+
+  const handleAnimalTypeChange = (type) => {
+    setAnimalType(type);
   };
 
   return (
@@ -165,7 +183,7 @@ const BookingHouseScreen = ({ navigation }) => {
             <Text style={styles.address}>
               {selectedLocation.label || "Set Location"}
             </Text>
-            
+
           </TouchableOpacity>
         </View>
         <TouchableOpacity
@@ -176,21 +194,27 @@ const BookingHouseScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <View>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Maximum Distance"
+      <View style={styles.sliderContainer}>
+        <Text>Maximum Distance: {maxDistance} km</Text>
+        <Slider
+          style={styles.slider}
+          minimumValue={1}
+          maximumValue={200}
+          step={1}
           value={maxDistance}
-          onChangeText={setMaxDistance}
-          keyboardType="numeric"
+          onValueChange={value => setMaxDistance(value)}
+          minimumTrackTintColor="#1EB1FC"
+          maximumTrackTintColor="#d3d3d3"
+          thumbTintColor="#1EB1FC"
         />
       </View>
+      <AnimalTypeDropdown selectedAnimal={animalType} onAnimalTypeChange={handleAnimalTypeChange} />
       <View>
         <TouchableOpacity style={styles.changeButton} onPress={searchData}>
           <Text style={styles.changeButtonText}>Search</Text>
         </TouchableOpacity>
       </View>
-      <KennelFilterScreen />
+
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={getAll}>

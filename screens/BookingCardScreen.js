@@ -161,7 +161,7 @@ const BookingCardScreen = ({ route, navigation }) => {
 
       const responseData = await BookingService.booking(data, token);
       console.log("Booking completed:", responseData);
-      navigation.navigate("PaymentScreen");
+      navigation.navigate("PaymentScreen", { bookingData: responseData });
     } catch (error) {
       console.error("Booking failed:", error.message);
       setError("Booking failed");
