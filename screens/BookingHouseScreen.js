@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import Slider from '@react-native-community/slider';
+import Slider from "@react-native-community/slider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import KennelService from "../services/KennelService";
 import UserService from "../services/UserService";
@@ -24,7 +24,7 @@ const BookingHouseScreen = ({ navigation }) => {
   const [selectedLocation, setSelectedLocation] = useState({});
   const [category, setCategory] = useState("all");
   const [maxDistance, setMaxDistance] = useState(1);
-  const [animalType, setAnimalType] = useState('');
+  const [animalType, setAnimalType] = useState("");
 
   useEffect(() => {
     const getToken = async () => {
@@ -42,7 +42,13 @@ const BookingHouseScreen = ({ navigation }) => {
     getToken();
   }, [selectedLocation]);
 
-  const getAllKennelNear = async (longitude, latitude, maxDistance, animalType, token) => {
+  const getAllKennelNear = async (
+    longitude,
+    latitude,
+    maxDistance,
+    animalType,
+    token
+  ) => {
     console.log("Calling for get near by kennels...");
     try {
       const data = await KennelService.getAllKennelNear(
@@ -183,7 +189,6 @@ const BookingHouseScreen = ({ navigation }) => {
             <Text style={styles.address}>
               {selectedLocation.label || "Set Location"}
             </Text>
-
           </TouchableOpacity>
         </View>
         <TouchableOpacity
@@ -202,19 +207,21 @@ const BookingHouseScreen = ({ navigation }) => {
           maximumValue={200}
           step={1}
           value={maxDistance}
-          onValueChange={value => setMaxDistance(value)}
+          onValueChange={(value) => setMaxDistance(value)}
           minimumTrackTintColor="#1EB1FC"
           maximumTrackTintColor="#d3d3d3"
           thumbTintColor="#1EB1FC"
         />
       </View>
-      <AnimalTypeDropdown selectedAnimal={animalType} onAnimalTypeChange={handleAnimalTypeChange} />
+      <AnimalTypeDropdown
+        selectedAnimal={animalType}
+        onAnimalTypeChange={handleAnimalTypeChange}
+      />
       <View>
         <TouchableOpacity style={styles.changeButton} onPress={searchData}>
           <Text style={styles.changeButtonText}>Search</Text>
         </TouchableOpacity>
       </View>
-
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={getAll}>
