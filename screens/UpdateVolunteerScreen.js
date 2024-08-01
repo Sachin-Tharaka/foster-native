@@ -1,20 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, ScrollView, Image, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Location from 'expo-location';
-import VolunteerService from '../services/VounteerService';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Button,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Location from "expo-location";
+import VolunteerService from "../services/VounteerService";
+import * as ImagePicker from "expo-image-picker";
 
 const UpdateVolunteerScreen = ({ route, navigation }) => {
   const { volunteerId } = route.params || { volunteerId: "" };
 
-  const [nicNo, setNicNo] = useState('');
-  const [userId, setUserId] = useState('');
+  const [nicNo, setNicNo] = useState("");
+  const [userId, setUserId] = useState("");
   const [images, setImages] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [longitude, setLongitude] = useState(0);
   const [latitude, setLatitude] = useState(0);
-  const [locationLabel, setLocationLabel] = useState('Set Location');
+  const [locationLabel, setLocationLabel] = useState("Set Location");
   const [selectedLocation, setSelectedLocation] = useState({});
 
   useEffect(() => {
@@ -39,11 +48,19 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
   const getVolunteerById = async (id, token) => {
     try {
       const data = await VolunteerService.getVolunteerDataById(id, token);
-      setNicNo(data.nicNumber || '');
-      setUserId(data.userId || '');
+      setNicNo(data.nicNumber || "");
+      setUserId(data.userId || "");
       setLongitude(data.volunteerLocation?.coordinates[0] || 0);
       setLatitude(data.volunteerLocation?.coordinates[1] || 0);
-      const imageUris = (data.images || []).map(image => (typeof image === 'string' ? { uri: image } : image.uri ? { uri: image.uri } : null)).filter(Boolean);
+      const imageUris = (data.images || [])
+        .map((image) =>
+          typeof image === "string"
+            ? { uri: image }
+            : image.uri
+            ? { uri: image.uri }
+            : null
+        )
+        .filter(Boolean);
       setImages(imageUris);
     } catch (error) {
       console.error("Error:", error.message);
@@ -53,16 +70,21 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
   const getAddressFromCoordinates = async (lat, lon) => {
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setError('Permission to access location was denied');
+      if (status !== "granted") {
+        setError("Permission to access location was denied");
         return;
       }
-      let reverseGeocode = await Location.reverseGeocodeAsync({ latitude: lat, longitude: lon });
+      let reverseGeocode = await Location.reverseGeocodeAsync({
+        latitude: lat,
+        longitude: lon,
+      });
       if (reverseGeocode.length > 0) {
         const address = reverseGeocode[0];
-        setLocationLabel(`${address.street}, ${address.city}, ${address.region}, ${address.country}`);
+        setLocationLabel(
+          `${address.street}, ${address.city}, ${address.region}, ${address.country}`
+        );
       } else {
-        setLocationLabel('Location not found');
+        setLocationLabel("Location not found");
       }
     } catch (error) {
       console.error("Error getting location label:", error);
@@ -71,18 +93,18 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
 
   const updateVolunteer = async () => {
     if (!nicNo || !longitude || !latitude || images.length === 0) {
-      setError('All fields are required, including at least one image');
+      setError("All fields are required, including at least one image");
       return;
     }
 
     try {
-      const token = await AsyncStorage.getItem('token');
+      const token = await AsyncStorage.getItem("token");
       const formData = new FormData();
-      formData.append('nicNumber', nicNo);
-      formData.append('volunteerId', volunteerId);
-      formData.append('userId', userId);
-      formData.append('volunteerLongitude', longitude.toString());
-      formData.append('volunteerLatitude', latitude.toString());
+      formData.append("nicNumber", nicNo);
+      formData.append("volunteerId", volunteerId);
+      formData.append("userId", userId);
+      formData.append("volunteerLongitude", longitude.toString());
+      formData.append("volunteerLatitude", latitude.toString());
 
       images.forEach((image, index) => {
         formData.append("images", {
@@ -93,7 +115,7 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
       });
 
       const response = await VolunteerService.updateVolunteer(formData, token);
-      navigation.navigate('VolunteerScreen', { volunteerId: volunteerId });
+      navigation.navigate("VolunteerScreen", { volunteerId: volunteerId });
     } catch (error) {
       console.error("Error:", error.message);
       setError("Failed to update volunteer");
@@ -117,27 +139,32 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
     setImages(updatedImages);
   };
 
-  const goToChangeLocation = async() => {
+  const goToChangeLocation = async () => {
     navigation.navigate("LocationSetterScreen", {
       setLocation: setSelectedLocation,
       existingLocation: selectedLocation,
     });
     console.log(selectedLocation);
-    setLatitude( selectedLocation.latitude);
+    setLatitude(selectedLocation.latitude);
     setLongitude(selectedLocation.longitude);
-    
   };
-
-  
 
   return (
     <ScrollView>
       <View style={styles.container}>
         <Text style={styles.header}>Update Volunteer</Text>
         {error && <Text style={styles.error}>{error}</Text>}
-        <TextInput style={styles.input} placeholder="Nic No" value={nicNo} onChangeText={setNicNo} />
+        <TextInput
+          style={styles.input}
+          placeholder="Nic No"
+          value={nicNo}
+          onChangeText={setNicNo}
+        />
         <View style={styles.locationContainer}>
-          <TouchableOpacity style={styles.locationText} onPress={goToChangeLocation}>
+          <TouchableOpacity
+            style={styles.locationText}
+            onPress={goToChangeLocation}
+          >
             <Text style={styles.address}>{locationLabel}</Text>
             <Text style={styles.addressDetails}>
               {latitude} {longitude}
@@ -229,21 +256,21 @@ const styles = StyleSheet.create({
   },
   address: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   addressDetails: {
     fontSize: 14,
-    color: '#777',
+    color: "#777",
   },
   updateButton: {
     marginTop: 10,
-    backgroundColor: '#007BFF',
+    backgroundColor: "#007BFF",
     padding: 10,
     borderRadius: 5,
   },
   updateButtonText: {
-    color: 'white',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
   },
 });
 

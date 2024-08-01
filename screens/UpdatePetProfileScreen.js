@@ -182,7 +182,10 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
         {error && <Text style={styles.error}>{error}</Text>}
 
         <Text style={styles.label}>Pet Type</Text>
-        <AnimalTypeDropdown selectedAnimal={petType} onAnimalTypeChange={handleAnimalTypeChange} />
+        <AnimalTypeDropdown
+          selectedAnimal={petType}
+          onAnimalTypeChange={handleAnimalTypeChange}
+        />
 
         <Text style={styles.label}>Pet Name</Text>
         <TextInput

@@ -141,7 +141,10 @@ const AddPetScreen = ({ navigation }) => {
       </View>
       {error && <Text style={styles.error}>{error}</Text>}
 
-      <AnimalTypeDropdown selectedAnimal={petType} onAnimalTypeChange={handleAnimalTypeChange} />
+      <AnimalTypeDropdown
+        selectedAnimal={petType}
+        onAnimalTypeChange={handleAnimalTypeChange}
+      />
 
       <TextInput
         style={styles.input}
