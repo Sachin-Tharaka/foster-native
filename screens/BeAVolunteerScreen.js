@@ -16,12 +16,16 @@ import VounteerService from "../services/VounteerService";
 const BeAVolunteerScreen = ({ navigation }) => {
   const [nicNo, setNicNo] = useState("");
   const [images, setImages] = useState([]);
+  const [longitude, setLongitude] = useState('');
+  const [latitude, setLatitude] = useState('');
   const [error, setError] = useState("");
 
   const addNewVolunteer = async () => {
     console.log("adding new volunteer....");
+    const volunteerLongitude = longitude;
+    const volunteerLatitude = latitude;
 
-    if (!nicNo || images.length === 0) {
+    if (!nicNo || !longitude || !latitude || images.length === 0) {
       setError("All fields are required, including at least one image");
       return;
     }
@@ -35,6 +39,8 @@ const BeAVolunteerScreen = ({ navigation }) => {
       const formData = new FormData();
       formData.append("nicNumber", nicNo);
       formData.append("userId", ownerId);
+      formData.append('volunteerLongitude', volunteerLongitude.toString());
+      formData.append('volunteerLatitude', volunteerLatitude.toString());
 
       images.forEach((image, index) => {
         formData.append("images", {
@@ -75,6 +81,17 @@ const BeAVolunteerScreen = ({ navigation }) => {
     setImages(updatedImages);
   };
 
+  const goToChangeLocation = async() => {
+    navigation.navigate("LocationSetterScreen", {
+      setLocation: setSelectedLocation,
+      existingLocation: selectedLocation,
+    });
+    console.log(selectedLocation);
+    setLatitude( selectedLocation.latitude);
+    setLongitude(selectedLocation.longitude);
+    
+  };
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -86,6 +103,28 @@ const BeAVolunteerScreen = ({ navigation }) => {
           value={nicNo}
           onChangeText={setNicNo}
         />
+         <View style={styles.locationContainer}>
+        <View style={styles.locationDetails}>
+          <View style={styles.locationIcon}>
+            <Icon name='map-marker' size={32} color='#333' />
+          </View>
+          <TouchableOpacity
+            style={styles.locationText}
+            onPress={goToChangeLocation}
+          >
+            <Text style={styles.address}>{selectedLocation.label || 'Set Location'}</Text>
+            <Text style={styles.addressDetails}>
+              {selectedLocation.latitude && selectedLocation.longitude
+                ? `${selectedLocation.latitude}, ${selectedLocation.longitude}`
+                : ''}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity style={styles.changeButton} onPress={goToChangeLocation}>
+          <Text style={styles.changeButtonText}>Select location</Text>
+        </TouchableOpacity>
+        
+      </View>
         <Button title="Choose Images" onPress={pickImages} />
         <View style={styles.imageContainer}>
           {images.map((image, index) => (

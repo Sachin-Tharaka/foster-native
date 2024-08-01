@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PetsService from "../services/PetsService";
+import Navbar from "../components/Navbar";
 
 const PetProfileScreen = ({ route, navigation }) => {
   const { petID } = route.params || { petID: "" };
@@ -78,17 +79,6 @@ const PetProfileScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
-        <Text style={styles.buttonText}>Edit Account</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: "red" }]}
-        onPress={handleDeletePet}
-      >
-        <Text style={styles.buttonText}>Delete Pet</Text>
-      </TouchableOpacity>
-
       <View style={styles.petContainer}>
         <Image
           style={styles.petImage}
@@ -118,6 +108,17 @@ const PetProfileScreen = ({ route, navigation }) => {
         </View>
       </View>
 
+      <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
+        <Text style={styles.buttonText}>Edit Account</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: "red" }]}
+        onPress={handleDeletePet}
+      >
+        <Text style={styles.buttonText}>Delete This Pet</Text>
+      </TouchableOpacity>
+
       <ScrollView>
         <View style={styles.images}>
           {pet.petImages &&
@@ -138,6 +139,7 @@ const PetProfileScreen = ({ route, navigation }) => {
             )}
         </View>
       </ScrollView>
+      <Navbar />
     </View>
   );
 };
@@ -147,7 +149,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "#ffffff",
-    marginTop: 100,
+    paddingTop: 60,
   },
   petImage: {
     width: 120,
@@ -159,9 +161,10 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "black",
     padding: 10,
+    margin: "auto",
     borderRadius: 5,
     marginTop: 10,
-    marginBottom: 10,
+    width: "90%",
   },
   buttonText: {
     fontWeight: "bold",
@@ -177,6 +180,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   images: {
+    marginTop: 40,
     flexDirection: "row",
     flexWrap: "wrap",
   },

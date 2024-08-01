@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "393442713469",
+    "project_id": "fosterpet-fcm",
+    "storage_bucket": "fosterpet-fcm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:393442713469:android:4d857a3a4314697534f614",
+        "android_client_info": {
+          "package_name": "com.fosterpet.fosterpet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZOtlfCPcdH1apprkXk8HPWELDa59PZ_E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

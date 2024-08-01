@@ -4,25 +4,31 @@ class VoulnteerService {
   }
 
   //get volunteer nearby
-  async getAllVolunteerNear(longitude, latitude, maxDistance, token) {
+  async getAllVolunteerNear(longitude, latitude, distanceInMeters,animalType, token) {
     console.warn("Calling api...");
+    console.warn("passed data:",longitude, latitude, distanceInMeters,animalType);
+    console.warn("token:",token);
     try {
       const response = await fetch(
-        `${this.baseUrl}/api/volunteer/location?longitude=${longitude}&latitude=${latitude}&maxDistance=${maxDistance}`,
+        `${this.baseUrl}/api/volunteer/filter?longitude=${longitude}&latitude=${latitude}&maxDistance=${distanceInMeters}&animalType=${animalType}`,
         {
-          method: "POST",
+          method: "GET",
           headers: {
-            "Content-Type": "application/json;charset=utf-8",
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          //mode: 'no-cors'
         }
       );
 
       if (!response.ok) {
-        console.warn("Error.........");
-        console.log(response);
-        throw new Error("Failed to get volunteer data");
+        console.warn(
+          "Response from server for filter volunteer:",
+          response.status,
+          response.statusText
+        );
+        const errorMessage = await response.text();
+        console.error("Server error message for filter volunteer:", errorMessage);
+        throw new Error(errorMessage);
       }
       console.warn("response ", response);
       const data = await response.json();
@@ -228,7 +234,14 @@ class VoulnteerService {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to get volunteers data");
+        console.warn(
+          "Response from server for volunterr:",
+          response.status,
+          response.statusText
+        );
+        const errorMessage = await response.text();
+        console.error("Server error message for volunterr:", errorMessage);
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();

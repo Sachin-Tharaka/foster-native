@@ -49,7 +49,7 @@ const UserInvoiceScreen = ({ navigation }) => {
         {invoices.map((invoice) => (
           <TouchableOpacity key={invoice.id} style={styles.entry}>
             <Text style={styles.name}>{invoice.invoiceId}</Text>
-            <Text style={styles.name}>{invoice.booking.bookingID}</Text>
+            <Text style={styles.name}>{booking.bookingID}</Text>
 
             <Text style={styles.name}>{invoice.amount}</Text>
             <Text style={styles.name}>{invoice.status}</Text>
@@ -68,13 +68,13 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "#ffffff",
-    marginTop: 100,
+    paddingTop: 60,
   },
   header: {
     fontSize: 24,
     fontWeight: "bold",
     margin: "auto",
-    marginBottom: 30,
+    marginBottom: 40,
   },
 
   buttonContainer: {

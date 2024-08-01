@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Button, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import KennelService from '../services/KennelService';
+import AnimalTypeDropdown from "../components/AnimalTypeDropdown";
 
 const AddChargingRatesScreen = ({ route, navigation }) => {
   const { kennelId } = route.params || { kennelId: "" };
@@ -24,6 +25,7 @@ const AddChargingRatesScreen = ({ route, navigation }) => {
     try {
       const data = await KennelService.getKennelById(id, token);
       setPaymentRates(data.paymentRates || []);
+      console.warn("rates: ",paymentRates);
     } catch (error) {
       console.error("Error:", error.message);
     }
@@ -81,11 +83,11 @@ const AddChargingRatesScreen = ({ route, navigation }) => {
         {error && <Text style={styles.error}>{error}</Text>}
         {paymentRates.map((rate, index) => (
           <View key={index} style={styles.rateContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Animal Type"
-              value={rate.animalType}
-              onChangeText={(value) => handleInputChange(index, 'animalType', value)}
+             <AnimalTypeDropdown
+              selectedAnimal={rate.animalType}
+              onAnimalTypeChange={(value) =>
+                handleInputChange(index, "animalType", value)
+              }
             />
             <TextInput
               style={styles.input}
