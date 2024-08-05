@@ -16,6 +16,8 @@ import UserService from "../services/UserService";
 import VolunteerService from "../services/VounteerService";
 import Navbar from "../components/Navbar";
 import AnimalTypeDropdown from "../components/AnimalTypeDropdown";
+import * as Location from 'expo-location';
+
 
 const BookingHouseScreen = ({ navigation }) => {
   const [kennels, setKennels] = useState([]);
@@ -23,31 +25,55 @@ const BookingHouseScreen = ({ navigation }) => {
   const [userData, setUserData] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState({});
   const [category, setCategory] = useState("all");
-  const [maxDistance, setMaxDistance] = useState(1);
+  const [maxDistance, setMaxDistance] = useState(10);
   const [animalType, setAnimalType] = useState("");
 
   useEffect(() => {
     const getToken = async () => {
       const token = await AsyncStorage.getItem("token");
       const userId = await AsyncStorage.getItem("userId");
+      getAllKennel();
+      getAllVolunteer();
       if (token) {
         getUserById(userId, token);
-
-        getAllKennel(token);
-        getAllVolunteer(token);
-      } else {
-        navigation.navigate("Login");
       }
     };
-    getToken();
-  }, [selectedLocation]);
+
+  const getCurrentLocation = async () => {
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = location.coords;
+
+      const geocode = await Location.reverseGeocodeAsync({ latitude, longitude });
+      const address = geocode[0];
+      const locationLabel = `${address.city}, ${address.region}, ${address.country}`;
+
+      setSelectedLocation({
+        latitude,
+        longitude,
+        label: locationLabel
+      });
+    } catch (error) {
+      console.error("Error getting location:", error);
+    }
+  };
+
+  getCurrentLocation();
+  getToken();
+}, []);
+
 
   const getAllKennelNear = async (
     longitude,
     latitude,
     maxDistance,
-    animalType,
-    token
+    animalType
   ) => {
     console.log("Calling for get near by kennels...");
     try {
@@ -55,8 +81,7 @@ const BookingHouseScreen = ({ navigation }) => {
         longitude,
         latitude,
         maxDistance,
-        animalType,
-        token
+        animalType
       );
       setKennels(data);
     } catch (error) {
@@ -68,8 +93,7 @@ const BookingHouseScreen = ({ navigation }) => {
     longitude,
     latitude,
     maxDistance,
-    animalType,
-    token
+    animalType
   ) => {
     console.log("Calling for get near by volunteer...");
     try {
@@ -77,8 +101,7 @@ const BookingHouseScreen = ({ navigation }) => {
         longitude,
         latitude,
         maxDistance,
-        animalType,
-        token
+        animalType
       );
       setVolunteersData(data);
     } catch (error) {
@@ -104,18 +127,18 @@ const BookingHouseScreen = ({ navigation }) => {
     console.log(selectedLocation);
   };
 
-  const getAllKennel = async (token) => {
+  const getAllKennel = async () => {
     try {
-      const data = await KennelService.getAllKennels(token);
+      const data = await KennelService.getAllKennels();
       setKennels(data);
     } catch (error) {
       console.error("Error:", error.message);
     }
   };
 
-  const getAllVolunteer = async (token) => {
+  const getAllVolunteer = async () => {
     try {
-      const data = await VolunteerService.getAllVolunteers(token);
+      const data = await VolunteerService.getAllVolunteers();
       setVolunteersData(data);
     } catch (error) {
       console.error("Error:", error.message);
@@ -150,22 +173,19 @@ const BookingHouseScreen = ({ navigation }) => {
       return;
     }
 
-    const token = await AsyncStorage.getItem("token");
     const distanceInMeters = maxDistance * 1000;
 
     getAllKennelNear(
       selectedLocation.longitude,
       selectedLocation.latitude,
       distanceInMeters,
-      animalType,
-      token
+      animalType
     );
     getAllVolunteerNear(
       selectedLocation.longitude,
       selectedLocation.latitude,
       distanceInMeters,
-      animalType,
-      token
+      animalType
     );
   };
 
@@ -203,7 +223,7 @@ const BookingHouseScreen = ({ navigation }) => {
         <Text>Maximum Distance: {maxDistance} km</Text>
         <Slider
           style={styles.slider}
-          minimumValue={1}
+          minimumValue={10}
           maximumValue={200}
           step={1}
           value={maxDistance}

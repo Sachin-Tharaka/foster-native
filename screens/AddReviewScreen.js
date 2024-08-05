@@ -12,6 +12,10 @@ const AddReviewScreen = ({ route, navigation }) => {
     const token = await AsyncStorage.getItem("token");
     const reviewerId = await AsyncStorage.getItem("userId");
 
+    if(!token){
+      navigation.navigate("Login");
+    }
+
     if (!message || !rating) {
       Alert.alert("Error", "Please enter a review message and rating.");
       return;

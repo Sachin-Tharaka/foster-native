@@ -4,10 +4,9 @@ class VoulnteerService {
   }
 
   //get volunteer nearby
-  async getAllVolunteerNear(longitude, latitude, distanceInMeters,animalType, token) {
+  async getAllVolunteerNear(longitude, latitude, distanceInMeters,animalType) {
     console.warn("Calling api...");
     console.warn("passed data:",longitude, latitude, distanceInMeters,animalType);
-    console.warn("token:",token);
     try {
       const response = await fetch(
         `${this.baseUrl}/api/volunteer/filter?longitude=${longitude}&latitude=${latitude}&maxDistance=${distanceInMeters}&animalType=${animalType}`,
@@ -15,7 +14,6 @@ class VoulnteerService {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -100,7 +98,7 @@ class VoulnteerService {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            //Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -223,13 +221,13 @@ class VoulnteerService {
   }
 
   //get all volunteers
-  async getAllVolunteers(token) {
+  async getAllVolunteers() {
     try {
-      const response = await fetch(`${this.baseUrl}/api/volunteer`, {
+      const response = await fetch(`${this.baseUrl}/api/volunteer/active`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          
         },
       });
 

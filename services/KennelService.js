@@ -4,7 +4,7 @@ class KennelService {
   }
 
   //get kennel nearby
-  async getAllKennelNear(longitude, latitude, distanceInMeters, animalType, token) {
+  async getAllKennelNear(longitude, latitude, distanceInMeters, animalType) {
     console.warn("Calling api...");
     try {
       const response = await fetch(
@@ -12,8 +12,7 @@ class KennelService {
         {
           method: "GET",
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
           },
         }
       );
@@ -48,7 +47,7 @@ class KennelService {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            //Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -92,13 +91,13 @@ class KennelService {
   }
 
   //get all kennel
-  async getAllKennels(token) {
+  async getAllKennels() {
     try {
-      const response = await fetch(`${this.baseUrl}/api/kennel`, {
+      const response = await fetch(`${this.baseUrl}/api/kennel/active`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          
         },
       });
 
