@@ -57,9 +57,6 @@ const UserAccount = ({ navigation }) => {
     navigation.navigate("ChangeDetails");
   };
 
-  const notifications = () => {
-    navigation.navigate("NotificationScreen");
-  };
   const goToVolunteerScreen = async () => {
     navigation.navigate("VolunteerScreen");
   };
@@ -118,9 +115,6 @@ const UserAccount = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={goToMyBooking}>
             <Text style={styles.buttonText}>My Bookings</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={notifications}>
-            <Text style={styles.buttonText}>Notifications</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={goToVolunteerScreen}>
             <Text style={styles.buttonText}>Become a Volunteer</Text>
