@@ -90,7 +90,7 @@ class VoulnteerService {
   }
 
   //get data by volunteer id
-  async getVolunteerDataById(id, token) {
+  async getVolunteerDataById(id) {
     try {
       const response = await fetch(
         `${this.baseUrl}/api/volunteer/id?volunteerId=${id}`,

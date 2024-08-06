@@ -15,25 +15,16 @@ const VolunteerProfileScreen = ({ route, navigation }) => {
   const [volunteer, setVolunteer] = useState([]);
 
   useEffect(() => {
-    const getToken = async () => {
-      const token = await AsyncStorage.getItem("token");
-      if (token) {
-        // Token exists, fetch pet data
-        getVolunteerById(volunteerId, token);
-      } else {
-        // Token doesn't exist, navigate to Login screen
-        console.log("Please login");
-        navigation.navigate("Login");
-      }
-    };
-    getToken();
+    
+        getVolunteerById(volunteerId);
+      
   }, [navigation]);
 
   //get pet by id
-  const getVolunteerById = async (id, token) => {
+  const getVolunteerById = async (id) => {
     // call get pets by userid function
     try {
-      const data = await VounteerService.getVolunteerDataById(id, token);
+      const data = await VounteerService.getVolunteerDataById(id);
       console.log("volunteer data:", data);
       setVolunteer(data);
     } catch (error) {

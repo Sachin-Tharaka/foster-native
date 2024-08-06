@@ -39,7 +39,7 @@ class KennelService {
   }
 
   //get kennel by id
-  async getKennelById(id, token) {
+  async getKennelById(id) {
     try {
       const response = await fetch(
         `${this.baseUrl}/api/kennel/id?kennelId=${id}`,

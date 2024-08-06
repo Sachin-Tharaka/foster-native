@@ -19,25 +19,18 @@ const FosterProfile = ({ route, navigation }) => {
   });
 
   useEffect(() => {
-    const getToken = async () => {
-      const token = await AsyncStorage.getItem("token");
-      if (token) {
-        // Token exists, fetch kennels and user data
-        getKennelById(kennelId, token);
-      } else {
-        // Token doesn't exist, navigate to Login screen
-        console.log("Please login");
-        navigation.navigate("Login");
-      }
-    };
-    getToken();
+    
+     
+        getKennelById(kennelId);
+      
+    
   }, []);
 
   //get kennel by id
-  const getKennelById = async (id, token) => {
+  const getKennelById = async (id) => {
     // call get kennel by id function
     try {
-      const data = await KennelService.getKennelById(id, token);
+      const data = await KennelService.getKennelById(id);
       console.log("kennel data:", data);
       setKennelData(data);
     } catch (error) {
