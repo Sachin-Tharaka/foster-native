@@ -21,7 +21,7 @@ const UserAccount = ({ navigation }) => {
     const getToken = async () => {
       const token = await AsyncStorage.getItem("token");
       const userId = await AsyncStorage.getItem("userId");
-      if (token) {
+      if (token && userId) {
         // Token exists, fetch user data
         getUserById(userId, token);
       } else {
