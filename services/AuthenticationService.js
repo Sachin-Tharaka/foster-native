@@ -1,15 +1,31 @@
+import {Platform} from "react-native";
+import * as Device from "expo-device";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 class AuthenticationService {
+
+
+
   constructor() {
     this.baseUrl = "https://fosterpet.azurewebsites.net";
   }
 
   //login function
   async login(email, password) {
+
+    const deviceType = `${Device.brand} ${Device.modelName}` || "Unknown Device";
+    const os = `${Platform.OS} ${Platform.Version}` || "Unknown OS";
+    const expoToken = await AsyncStorage.getItem("expoToken");
+
     try {
+      console.log(expoToken)
       const response = await fetch(`${this.baseUrl}/api/auth/authenticate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'Device-Type': deviceType,
+          'OS': os,
+          'Expo-Token': expoToken
         },
         body: JSON.stringify({ email, password }),
       });
