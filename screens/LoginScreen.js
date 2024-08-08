@@ -9,6 +9,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AuthenticationService from "../services/AuthenticationService";
 import Navbar from "../components/Navbar";
+import {Icon} from "react-native-elements";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -16,6 +17,8 @@ const LoginScreen = ({ navigation }) => {
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
 
   const [error, setError] = useState("");
 
@@ -72,8 +75,18 @@ const LoginScreen = ({ navigation }) => {
           placeholder="Password"
           onChangeText={(text) => setPassword(text)}
           value={password}
-          secureTextEntry={true}
+          secureTextEntry={secureTextEntry}
         />
+        <TouchableOpacity
+            onPress={() => setSecureTextEntry(!secureTextEntry)}
+            style={styles.eyeIcon}
+        >
+          <Icon
+              name={secureTextEntry ? 'eye-off' : 'eye'}
+              size={20}
+              color="gray"
+          />
+        </TouchableOpacity>
         {passwordError && <Text style={styles.error}>{passwordError}</Text>}
 
         <View style={styles.forgot_container}>
@@ -166,6 +179,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: "blue",
     fontWeight: "bold",
+  },
+
+  eyeIcon: {
+    marginLeft: -30, // Adjust as needed
   },
 });
 
