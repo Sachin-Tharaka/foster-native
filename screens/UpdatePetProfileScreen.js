@@ -32,6 +32,7 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
   const [petVaccinationStatus, setPetVaccinationStatus] = useState("");
   const [kasl_regNo, setKasl_regNo] = useState("");
   const [images, setImages] = useState([]);
+  const [profileImage, setProfileImage] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -77,6 +78,7 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
         .filter(Boolean);
 
       setImages(imageUris);
+      setProfileImage(data.profileImage ? { uri: data.profileImage } : null);
       console.log("images:", imageUris);
     } catch (error) {
       console.error("Error:", error.message);
@@ -105,13 +107,15 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
       !petMediConditions ||
       !petVaccinationStatus ||
       !kasl_regNo ||
-      images.length === 0
+      images.length === 0 ||
+      !profileImage
     ) {
-      setError("All fields are required, including at least one image");
+      setError("All fields are required, including at least one image and a profile image");
       return;
     }
 
     console.log("petImages:", images);
+    console.log("profileImage:", profileImage);
 
     try {
       const token = await AsyncStorage.getItem("token");
@@ -133,6 +137,15 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
       formData.append("ownerId", ownerId);
       formData.append("KASL_regNo", kasl_regNo);
 
+      // Append profile image
+      if (profileImage) {
+        formData.append("profileImage", {
+          uri: profileImage.uri,
+          name: "profile_image.jpg",
+          type: "image/jpeg",
+        });
+      }
+
       images.forEach((image, index) => {
         formData.append("petImages", {
           uri: image.uri,
@@ -148,7 +161,18 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
       navigation.navigate("PetProfileScreen", { petID: petID });
     } catch (error) {
       console.error("Error:", error.message);
-      setError("Failed to add new pet");
+      setError("Failed to update pet profile");
+    }
+  };
+
+  const pickProfileImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      base64: false,
+    });
+
+    if (!result.canceled) {
+      setProfileImage(result.assets[0]);
     }
   };
 
@@ -180,6 +204,21 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
           <Text style={styles.header}>Update Pet Profile</Text>
         </View>
         {error && <Text style={styles.error}>{error}</Text>}
+
+        {profileImage && (
+          <View style={styles.profileImageContainer}>
+            <Image source={{ uri: profileImage.uri }} style={styles.profileImage} />
+            <TouchableOpacity
+              onPress={() => setProfileImage(null)}
+              style={styles.removeButton}
+            >
+              <Icon name="close" size={24} color="#ffffff" />
+            </TouchableOpacity>
+          </View>
+        )}
+        <TouchableOpacity style={styles.imagePickerButton} onPress={pickProfileImage}>
+          <Text style={styles.imagePickerButtonText}>Choose Profile Image</Text>
+        </TouchableOpacity>
 
         <Text style={styles.label}>Pet Type</Text>
         <AnimalTypeDropdown
@@ -219,15 +258,16 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
           onChangeText={setPetCity}
         />
 
-        <Text style={styles.label}>Pet Zip</Text>
+        <Text style={styles.label}>Pet Zip Code</Text>
         <TextInput
           style={styles.input}
-          placeholder="Pet Zip"
+          placeholder="Pet Zip Code"
           value={petZip}
           onChangeText={setPetZip}
+          keyboardType="numeric"
         />
 
-        <Text style={styles.label}>Pet Age</Text>
+        <Text style={styles.label}>Pet Age (in years)</Text>
         <TextInput
           style={styles.input}
           placeholder="Pet Age"
@@ -236,7 +276,7 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
           keyboardType="numeric"
         />
 
-        <Text style={styles.label}>Pet Weight</Text>
+        <Text style={styles.label}>Pet Weight (in kg)</Text>
         <TextInput
           style={styles.input}
           placeholder="Pet Weight"
@@ -278,9 +318,10 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
         />
 
         <TouchableOpacity style={styles.imagePickerButton} onPress={pickImages}>
-          <Text style={styles.imagePickerButtonText}>Choose Images</Text>
+          <Text style={styles.imagePickerButtonText}>Choose Additional Images</Text>
         </TouchableOpacity>
-        <View style={styles.imageContainer}>
+
+        <View style={styles.imagesContainer}>
           {images.map((image, index) => (
             <View key={index} style={styles.imageWrapper}>
               <Image source={{ uri: image.uri }} style={styles.image} />
@@ -293,9 +334,8 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={styles.updateButton} onPress={updateData}>
-          <Text style={styles.updateButtonText}>Update</Text>
-        </TouchableOpacity>
+
+        <Button title="Update Pet Profile" onPress={updateData} />
       </ScrollView>
       <Navbar />
     </View>
@@ -304,92 +344,76 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    backgroundColor: "#f8f8f8",
+    padding: 16,
   },
   headerContainer: {
-    flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
+    marginVertical: 16,
   },
   header: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "black",
-    margin: "auto",
+  },
+  error: {
+    color: "red",
+    marginVertical: 8,
+    textAlign: "center",
+  },
+  profileImageContainer: {
+    position: "relative",
+    marginBottom: 16,
+    alignItems: "center",
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  removeButton: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    backgroundColor: "red",
+    borderRadius: 50,
+    padding: 4,
+  },
+  imagePickerButton: {
+    backgroundColor: "#007bff",
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 16,
+  },
+  imagePickerButtonText: {
+    color: "#ffffff",
+    textAlign: "center",
+    fontWeight: "bold",
   },
   label: {
     fontSize: 16,
     fontWeight: "bold",
-    marginBottom: 5,
-    color: "#333",
+    marginVertical: 8,
   },
   input: {
-    height: 50,
-    borderColor: "#ddd",
+    height: 40,
+    borderColor: "#ccc",
     borderWidth: 1,
-    borderRadius: 10,
-    marginBottom: 15,
-    paddingHorizontal: 15,
-    backgroundColor: "#fff",
-    width: "100%",
+    borderRadius: 5,
+    paddingHorizontal: 8,
+    marginBottom: 16,
   },
-  imagePickerButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "black",
-    borderRadius: 10,
-    height: 48,
-    width: "100%",
-    marginBottom: 20,
-  },
-  imagePickerButtonText: {
-    color: "#fff",
-    marginLeft: 10,
-    fontSize: 16,
-  },
-  imageContainer: {
+  imagesContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "center",
-    marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 16,
   },
   imageWrapper: {
     position: "relative",
-    marginRight: 10,
-    marginBottom: 10,
+    margin: 4,
   },
   image: {
     width: 100,
     height: 100,
     borderRadius: 10,
-  },
-  removeButton: {
-    position: "absolute",
-    top: 5,
-    right: 5,
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
-    borderRadius: 25,
-    padding: 2,
-  },
-  updateButton: {
-    backgroundColor: "black",
-    borderRadius: 10,
-    height: 48,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-  },
-  updateButtonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  error: {
-    color: "red",
-    marginBottom: 10,
   },
 });
 

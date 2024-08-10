@@ -4,7 +4,7 @@ class ReviewService {
   }
 
   //get reviews by kennel id
-  async getReviewsByKennelId(kennelId, token) {
+  async getReviewsByKennelId(kennelId) {
     console.warn("Calling api...");
     try {
       const response = await fetch(
@@ -13,7 +13,7 @@ class ReviewService {
           method: "GET",
           headers: {
             "Content-Type": "application/json;charset=utf-8",
-            Authorization: `Bearer ${token}`,
+           // Authorization: `Bearer ${token}`,
           },
           //mode: 'no-cors'
         }
@@ -33,7 +33,7 @@ class ReviewService {
   }
 
   //get reviews by kennel id
-  async getReviewsByVolunteerId(id, token) {
+  async getReviewsByVolunteerId(id) {
     console.warn("Calling api...");
     try {
       const response = await fetch(
@@ -42,7 +42,7 @@ class ReviewService {
           method: "GET",
           headers: {
             "Content-Type": "application/json;charset=utf-8",
-            Authorization: `Bearer ${token}`,
+            //Authorization: `Bearer ${token}`,
           },
           //mode: 'no-cors'
         }

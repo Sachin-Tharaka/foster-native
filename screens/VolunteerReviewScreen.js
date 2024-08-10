@@ -14,21 +14,14 @@ const VolunteerReviewScreen = ({ route, navigation }) => {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    const getToken = async () => {
-      const token = await AsyncStorage.getItem("token");
-      if (token) {
-        getReviewByVolunteerId(volunteerId, token);
-      } else {
-        console.log("Please login");
-        navigation.navigate("Login");
-      }
-    };
-    getToken();
+    
+        getReviewByVolunteerId(volunteerId);
+     
   }, [navigation]);
 
-  const getReviewByVolunteerId = async (id, token) => {
+  const getReviewByVolunteerId = async (id) => {
     try {
-      const data = await ReviewService.getReviewsByVolunteerId(id, token);
+      const data = await ReviewService.getReviewsByVolunteerId(id);
       console.log("reviews data:", data);
       setReviews(data);
     } catch (error) {

@@ -83,8 +83,8 @@ const PetProfileScreen = ({ route, navigation }) => {
         <Image
           style={styles.petImage}
           source={
-            pet.petImages && pet.petImages.length > 0
-              ? { uri: pet.petImages[0] }
+            pet.profileImage 
+              ? { uri: pet.profileImage}
               : null
           }
         />

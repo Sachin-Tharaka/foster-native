@@ -87,11 +87,11 @@ const KennelHome = ({ route, navigation }) => {
 
           <View style={styles.user_header}>
             <Image
-                source={{
-                  uri: kennelData.images && kennelData.images.length > 0
-                      ? kennelData.images[0]
-                      : '',
-                }}
+                source={
+                  kennelData.profileImage 
+                    ? { uri: kennelData.profileImage}
+                    : null
+                }
                 style={styles.logo}
             />
 

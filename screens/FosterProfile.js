@@ -53,12 +53,11 @@ const FosterProfile = ({ route, navigation }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Image
-          source={{
-            uri:
-              kennelData.images && kennelData.images.length > 0
-                ? kennelData.images[0]
-                : "",
-          }}
+         source={
+          kennelData.profileImage 
+            ? { uri: kennelData.profileImage}
+            : null
+        }
           style={styles.logo}
         />
         <Text style={styles.title}>{kennelData.kennelName}</Text>
