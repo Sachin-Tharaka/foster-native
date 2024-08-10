@@ -18,7 +18,14 @@ class PetsService {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to get pets data");
+        console.warn(
+          "Response from server for pets:",
+          response.status,
+          response.statusText
+        );
+        const errorMessage = await response.text();
+        console.error("Server error message for  pets:", errorMessage);
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();

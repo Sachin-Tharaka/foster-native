@@ -49,8 +49,8 @@ const VolunteerProfileScreen = ({ route, navigation }) => {
         <Image
           style={styles.petImage}
           source={
-            volunteer.images && volunteer.images.length > 0
-              ? { uri: volunteer.images[0] }
+            volunteer.profileImage 
+              ? { uri: volunteer.profileImage}
               : null
           }
         />

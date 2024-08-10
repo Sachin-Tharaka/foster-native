@@ -37,6 +37,7 @@ const ChatListUser = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Text >Chat</Text>
       <FlatList
         data={chatPreview}
         keyExtractor={(item) => item.id}
