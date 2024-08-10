@@ -5,11 +5,13 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Image,
+  Dimensions,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AuthenticationService from "../services/AuthenticationService";
 import Navbar from "../components/Navbar";
-import {Icon} from "react-native-elements";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -23,7 +25,7 @@ const LoginScreen = ({ navigation }) => {
   const [error, setError] = useState("");
 
   const handleLogin = async () => {
-    console.warn("Loging...");
+    console.warn("Logging in...");
     setEmailError("");
     setPasswordError("");
     setError("");
@@ -70,23 +72,25 @@ const LoginScreen = ({ navigation }) => {
           value={email}
         />
         {emailError && <Text style={styles.error}>{emailError}</Text>}
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-          secureTextEntry={secureTextEntry}
-        />
-        <TouchableOpacity
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.passwordInput}
+            placeholder="Password"
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            secureTextEntry={secureTextEntry}
+          />
+          <TouchableOpacity
             onPress={() => setSecureTextEntry(!secureTextEntry)}
             style={styles.eyeIcon}
-        >
-          <Icon
-              name={secureTextEntry ? 'eye-off' : 'eye'}
+          >
+            <Icon
+              name={secureTextEntry ? "eye" : "eye-slash"}
               size={20}
               color="gray"
-          />
-        </TouchableOpacity>
+            />
+          </TouchableOpacity>
+        </View>
         {passwordError && <Text style={styles.error}>{passwordError}</Text>}
 
         <View style={styles.forgot_container}>
@@ -148,6 +152,19 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 4,
   },
+  passwordContainer: {
+    width: "80%",
+    position: "relative",
+    marginTop: 20,
+  },
+  passwordInput: {
+    width: "100%",
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 4,
+  },
   button: {
     backgroundColor: "blue",
     padding: 10,
@@ -182,7 +199,9 @@ const styles = StyleSheet.create({
   },
 
   eyeIcon: {
-    marginLeft: -30, // Adjust as needed
+    position: "absolute",
+    right: 10,
+    top: 10,
   },
 });
 

@@ -60,98 +60,96 @@ import { Platform } from "react-native";
 import * as Device from "expo-device";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
 registerRootComponent(App);
 
 Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: true,
-    }),
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
 });
 
 function handleRegistrationError(errorMessage) {
-    alert(errorMessage);
-    throw new Error(errorMessage);
+  alert(errorMessage);
+  throw new Error(errorMessage);
 }
 
 async function registerForPushNotificationsAsync() {
-    if (Platform.OS === "android") {
-        Notifications.setNotificationChannelAsync("default", {
-            name: "default",
-            importance: Notifications.AndroidImportance.MAX,
-            vibrationPattern: [0, 250, 250, 250],
-            lightColor: "#FF231F7C",
-        });
-    }
+  if (Platform.OS === "android") {
+    Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
+    });
+  }
 
-    if (Device.isDevice) {
-        const { status: existingStatus } =
-            await Notifications.getPermissionsAsync();
-        let finalStatus = existingStatus;
-        if (existingStatus !== "granted") {
-            const { status } = await Notifications.requestPermissionsAsync();
-            finalStatus = status;
-        }
-        if (finalStatus !== "granted") {
-            handleRegistrationError(
-                "Permission not granted to get push token for push notification!"
-            );
-            return;
-        }
-        const projectId = "750f7a13-ac45-40b6-ac4d-bac69a27bbd0";
-        if (!projectId) {
-            handleRegistrationError("Project ID not found");
-        }
-        try {
-            const pushTokenString = (
-                await Notifications.getExpoPushTokenAsync({ projectId })
-            ).data;
-            AsyncStorage.setItem("expoToken", pushTokenString);
-            return pushTokenString;
-        } catch (e) {
-            handleRegistrationError(`${e}`);
-        }
-    } else {
-        handleRegistrationError("Must use physical device for push notifications");
+  if (Device.isDevice) {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
     }
+    if (finalStatus !== "granted") {
+      handleRegistrationError(
+        "Permission not granted to get push token for push notification!"
+      );
+      return;
+    }
+    const projectId = "750f7a13-ac45-40b6-ac4d-bac69a27bbd0";
+    if (!projectId) {
+      handleRegistrationError("Project ID not found");
+    }
+    try {
+      const pushTokenString = (
+        await Notifications.getExpoPushTokenAsync({ projectId })
+      ).data;
+      AsyncStorage.setItem("expoToken", pushTokenString);
+      return pushTokenString;
+    } catch (e) {
+      handleRegistrationError(`${e}`);
+    }
+  } else {
+    handleRegistrationError("Must use physical device for push notifications");
+  }
 }
-
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-    const [expoPushToken, setExpoPushToken] = useState("");
-    const [notification, setNotification] = useState(undefined);
-    const notificationListener = useRef();
-    const responseListener = useRef();
+  const [expoPushToken, setExpoPushToken] = useState("");
+  const [notification, setNotification] = useState(undefined);
+  const notificationListener = useRef();
+  const responseListener = useRef();
 
-    useEffect(() => {
-        registerForPushNotificationsAsync()
-            .then((token) => {
-                setExpoPushToken(token ?? "");
-            })
-            .catch((error) => setExpoPushToken(`${error}`));
+  useEffect(() => {
+    registerForPushNotificationsAsync()
+      .then((token) => {
+        setExpoPushToken(token ?? "");
+      })
+      .catch((error) => setExpoPushToken(`${error}`));
 
-        notificationListener.current =
-            Notifications.addNotificationReceivedListener((notification) => {
-                setNotification(notification);
-            });
-        responseListener.current =
-            Notifications.addNotificationResponseReceivedListener((response) => {
-                console.log(response);
-            });
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(notification);
+      });
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
 
-        return () => {
-            notificationListener.current &&
-            Notifications.removeNotificationSubscription(
-                notificationListener.current
-            );
-            responseListener.current &&
-            Notifications.removeNotificationSubscription(responseListener.current);
-        };
-    }, []);
+    return () => {
+      notificationListener.current &&
+        Notifications.removeNotificationSubscription(
+          notificationListener.current
+        );
+      responseListener.current &&
+        Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
 
   return (
     <NavigationContainer>
@@ -333,7 +331,7 @@ export default function App() {
           }}
         />
         <Stack.Screen
-          name="ChatUser"
+          name="ChatScreenUser"
           component={ChatScreenUser}
           options={{
             headerShown: false,

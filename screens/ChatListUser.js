@@ -1,5 +1,5 @@
 // ChatListUser.js
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,6 @@ import ChatService from "../services/ChatService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ChatListUser = ({ navigation }) => {
-
   const [chatPreview, setChatPreview] = useState([]);
 
   useEffect(() => {
@@ -28,7 +27,9 @@ const ChatListUser = ({ navigation }) => {
   const renderChatItem = ({ item }) => (
     <TouchableOpacity
       style={styles.chatItem}
-      onPress={() => navigation.navigate("Chat", { chatId: item.chatThreadId })}
+      onPress={() =>
+        navigation.navigate("ChatScreenUser", { chatId: item.chatThreadId })
+      }
     >
       <Text style={styles.chatName}>{item.chatThreadName}</Text>
       <Text style={styles.lastMessage}>{item.lastMessage.message}</Text>
