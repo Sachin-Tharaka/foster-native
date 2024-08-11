@@ -65,7 +65,11 @@ const MyKennelsScreen = ({ navigation }) => {
             style={styles.entry}
             onPress={() => handleClickOnKennel(kennel.kennelId)}
           >
-            <Image source={{ uri: kennel.images[0] }} style={styles.image} />
+            <Image source={
+            kennel.profileImage 
+              ? { uri: kennel.profileImage}
+              : null
+          } style={styles.image} />
             <View style={styles.infoContainer}>
               <Text style={styles.name}>{kennel.kennelName}</Text>
             </View>

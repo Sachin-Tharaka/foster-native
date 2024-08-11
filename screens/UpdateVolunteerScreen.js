@@ -19,6 +19,7 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
 
   const [nicNo, setNicNo] = useState("");
   const [userId, setUserId] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
   const [images, setImages] = useState([]);
   const [error, setError] = useState("");
   const [longitude, setLongitude] = useState(0);
@@ -52,6 +53,12 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
       setUserId(data.userId || "");
       setLongitude(data.volunteerLocation?.coordinates[0] || 0);
       setLatitude(data.volunteerLocation?.coordinates[1] || 0);
+      const profileImageData = typeof data.profileImage === "string"
+        ? { uri: data.profileImage }
+        : data.profileImage;
+      setProfileImage(profileImageData || null);
+
+
       const imageUris = (data.images || [])
         .map((image) =>
           typeof image === "string"
@@ -92,8 +99,9 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
   };
 
   const updateVolunteer = async () => {
-    if (!nicNo || !longitude || !latitude || images.length === 0) {
-      setError("All fields are required, including at least one image");
+    console.warn(images.length);
+    if (!nicNo || !longitude || !latitude || images.length === 0 || !profileImage) {
+      setError("All fields are required, including at least one image and profile image");
       return;
     }
 
@@ -105,6 +113,14 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
       formData.append("userId", userId);
       formData.append("volunteerLongitude", longitude.toString());
       formData.append("volunteerLatitude", latitude.toString());
+
+      if (profileImage) {
+        formData.append("profileImage", {
+          uri: profileImage.uri,
+          name: "profile_image.jpg",
+          type: "image/jpeg",
+        });
+      }
 
       images.forEach((image, index) => {
         formData.append("images", {
@@ -119,6 +135,17 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
     } catch (error) {
       console.error("Error:", error.message);
       setError("Failed to update volunteer");
+    }
+  };
+
+  const pickProfileImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      base64: false,
+    });
+
+    if (!result.canceled) {
+      setProfileImage(result.assets[0]);
     }
   };
 
@@ -154,6 +181,13 @@ const UpdateVolunteerScreen = ({ route, navigation }) => {
       <View style={styles.container}>
         <Text style={styles.header}>Update Volunteer</Text>
         {error && <Text style={styles.error}>{error}</Text>}
+        <TouchableOpacity onPress={pickProfileImage} style={styles.profileImageContainer}>
+        <Image
+  source={profileImage ? { uri: profileImage.uri } : null}
+  style={styles.profileImage}
+/>
+
+        </TouchableOpacity>
         <TextInput
           style={styles.input}
           placeholder="Nic No"
@@ -222,6 +256,17 @@ const styles = StyleSheet.create({
     color: "red",
     marginTop: 5,
     marginBottom: 10,
+  },
+  profileImageContainer: {
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#ccc",
   },
   imageContainer: {
     flexDirection: "row",

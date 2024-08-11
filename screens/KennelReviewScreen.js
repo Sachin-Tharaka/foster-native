@@ -14,21 +14,15 @@ const KennelReviewScreen = ({ route, navigation }) => {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    const getToken = async () => {
-      const token = await AsyncStorage.getItem("token");
-      if (token) {
-        getReviewByKennelId(kennelId, token);
-      } else {
-        console.log("Please login");
-        navigation.navigate("Login");
-      }
-    };
-    getToken();
+    
+        getReviewByKennelId(kennelId);
+      
+    
   }, [navigation]);
 
-  const getReviewByKennelId = async (id, token) => {
+  const getReviewByKennelId = async (id) => {
     try {
-      const data = await ReviewService.getReviewsByKennelId(id, token);
+      const data = await ReviewService.getReviewsByKennelId(id);
       console.log("reviews data:", data);
       setReviews(data);
     } catch (error) {

@@ -28,6 +28,7 @@ const AddPetScreen = ({ navigation }) => {
   const [petMediConditions, setPetMediConditions] = useState("");
   const [petVaccinationStatus, setPetVaccinationStatus] = useState("");
   const [kasl_regNo, setKasl_regNo] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
   const [images, setImages] = useState([]);
   const [error, setError] = useState("");
 
@@ -53,12 +54,14 @@ const AddPetScreen = ({ navigation }) => {
       !petMediConditions ||
       !petVaccinationStatus ||
       !kasl_regNo ||
+      !profileImage ||
       images.length === 0
     ) {
-      setError("All fields are required, including at least one image");
+      setError("All fields are required, including profile image and at least one other image");
       return;
     }
 
+    console.log("profileImage:", profileImage);
     console.log("petImages:", images);
 
     try {
@@ -79,6 +82,12 @@ const AddPetScreen = ({ navigation }) => {
       formData.append("petVaccinationStatus", petVaccinationStatus);
       formData.append("ownerId", ownerId);
       formData.append("KASL_regNo", kasl_regNo);
+
+      formData.append("profileImage", {
+        uri: profileImage.uri,
+        name: "profile_image.jpg",
+        type: "image/jpeg",
+      });
 
       images.forEach((image, index) => {
         formData.append("petImages", {
@@ -106,10 +115,23 @@ const AddPetScreen = ({ navigation }) => {
       setPetMediConditions("");
       setPetVaccinationStatus("");
       setKasl_regNo("");
+      setProfileImage(null);
       setImages([]);
     } catch (error) {
       console.error("Error:", error.message);
       setError("Failed to add new pet");
+    }
+  };
+
+  const pickProfileImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: false,
+      base64: false,
+    });
+
+    if (!result.canceled) {
+      setProfileImage(result.assets[0]);
     }
   };
 
@@ -225,6 +247,15 @@ const AddPetScreen = ({ navigation }) => {
         onChangeText={setKasl_regNo}
       />
 
+      <TouchableOpacity style={styles.imagePickerButton} onPress={pickProfileImage}>
+        <Text style={styles.imagePickerButtonText}>Choose Profile Image</Text>
+      </TouchableOpacity>
+      {profileImage && (
+        <View style={styles.profileImageContainer}>
+          <Image source={{ uri: profileImage.uri }} style={styles.profileImage} />
+        </View>
+      )}
+
       <TouchableOpacity style={styles.imagePickerButton} onPress={pickImages}>
         <Text style={styles.imagePickerButtonText}>Choose Images</Text>
       </TouchableOpacity>
@@ -261,45 +292,35 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "black",
-    margin: "auto",
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 5,
-    color: "#333",
+    flex: 1,
   },
   input: {
     height: 50,
-    borderColor: "#ddd",
+    borderColor: "#ccc",
     borderWidth: 1,
-    borderRadius: 10,
-    marginBottom: 15,
-    paddingHorizontal: 15,
-    backgroundColor: "#fff",
-    width: "100%",
+    marginBottom: 10,
+    padding: 10,
+    borderRadius: 5,
   },
-  imagePickerButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "black",
-    borderRadius: 10,
-    height: 48,
-    width: "100%",
+  error: {
+    color: "red",
     marginBottom: 20,
   },
+  imagePickerButton: {
+    backgroundColor: "#007bff",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
   imagePickerButtonText: {
-    color: "#fff",
-    marginLeft: 10,
-    fontSize: 16,
+    color: "#ffffff",
+    textAlign: "center",
+    fontWeight: "bold",
   },
   imageContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "center",
-    marginTop: 10,
     marginBottom: 20,
   },
   imageWrapper: {
@@ -310,32 +331,34 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
-    borderRadius: 10,
+    borderRadius: 5,
   },
   removeButton: {
     position: "absolute",
-    top: 5,
-    right: 5,
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    top: 0,
+    right: 0,
+    backgroundColor: "rgba(0,0,0,0.5)",
     borderRadius: 15,
-    padding: 2,
+  },
+  profileImageContainer: {
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
   },
   addButton: {
-    backgroundColor: "black",
-    borderRadius: 10,
-    height: 48,
+    backgroundColor: "#28a745",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
     alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
   },
   addButtonText: {
-    color: "#fff",
-    fontSize: 18,
+    color: "#ffffff",
     fontWeight: "bold",
-  },
-  error: {
-    color: "red",
-    marginBottom: 10,
   },
 });
 
