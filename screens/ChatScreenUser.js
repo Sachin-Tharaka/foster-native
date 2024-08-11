@@ -28,7 +28,7 @@ const ChatScreenUser = ({ route }) => {
   };
 
   useEffect(() => {
-    fetchChatMessages();
+    fetchChatMessages().then(r => console.log("Chat messages fetched"));
   }, []);
 
   const pickAttachment = async () => {
@@ -62,9 +62,11 @@ const ChatScreenUser = ({ route }) => {
     formData.append("senderType", "User");
 
     const response = await ChatService.sendMessage(token, formData);
+    console.log(response);
     if (response.ok) {
       setInputText("");
       setAttachment(null);
+      setChatMessages([]); // Clear chat messages (temporary solution)
       await fetchChatMessages(); // Fetch chat messages again after sending a message
     }
   };

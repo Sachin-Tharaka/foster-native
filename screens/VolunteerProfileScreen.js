@@ -15,9 +15,9 @@ const VolunteerProfileScreen = ({ route, navigation }) => {
   const [volunteer, setVolunteer] = useState([]);
 
   useEffect(() => {
-    
+
         getVolunteerById(volunteerId);
-      
+
   }, [navigation]);
 
   //get pet by id
@@ -40,7 +40,13 @@ const VolunteerProfileScreen = ({ route, navigation }) => {
   };
 
   const bookingVolunteer = async () => {
-    navigation.navigate("Booking", { volunteerID: volunteerId });
+    const token = await AsyncStorage.getItem("token");
+    if(token!=null) {
+      navigation.navigate("Booking", {volunteerID: volunteerId});
+    }
+    else {
+        navigation.navigate("Landing");
+    }
   };
 
   return (

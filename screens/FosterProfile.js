@@ -19,11 +19,11 @@ const FosterProfile = ({ route, navigation }) => {
   });
 
   useEffect(() => {
-    
-     
+
+
         getKennelById(kennelId);
-      
-    
+
+
   }, []);
 
   //get kennel by id
@@ -40,9 +40,14 @@ const FosterProfile = ({ route, navigation }) => {
   };
 
   // Handle book a foster house
-  const handleBookFosterHouse = () => {
-    //navigate to booking screen
-    navigation.navigate("Booking", { kennelID: kennelId });
+  const handleBookFosterHouse = async () => {
+    const token = await AsyncStorage.getItem("token");
+    if(token!=null) {
+      navigation.navigate("Booking", { kennelID: kennelId });
+    }
+    else {
+      navigation.navigate("Landing");
+    }
   };
 
   const viewReviews = () => {

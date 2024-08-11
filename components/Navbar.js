@@ -18,7 +18,7 @@ const Navbar = () => {
     navigation.navigate("UserAccount");
   };
 
-  const handleGallery = () => {
+  const handleChats = () => {
     navigation.navigate("ChatListUser");
   };
 
@@ -36,7 +36,7 @@ const Navbar = () => {
       <TouchableOpacity onPress={handleAccount} style={styles.iconContainer}>
         <Icon name="user-circle" size={24} color="#333" />
       </TouchableOpacity>
-      <TouchableOpacity onPress={handleGallery} style={styles.iconContainer}>
+      <TouchableOpacity onPress={handleChats} style={styles.iconContainer}>
         <Icon name="comment" size={24} color="#333" />
       </TouchableOpacity>
     </View>
