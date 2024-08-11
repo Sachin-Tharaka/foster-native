@@ -54,6 +54,16 @@ const FosterProfile = ({ route, navigation }) => {
     navigation.navigate("KennelReviewsForUserScreen", { kennelId: kennelId });
   };
 
+  const messageKennel = async () => {
+    const token = await AsyncStorage.getItem("token");
+    if(token!=null) {
+      //Handle Create new chat and Navigtion
+    }
+    else {
+      navigation.navigate("Landing");
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -91,7 +101,7 @@ const FosterProfile = ({ route, navigation }) => {
           <Text style={styles.buttonText}>Reviews</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Message</Text>
+          <Text style={styles.buttonText}>Message onPress={messageKennel}</Text>
         </TouchableOpacity>
       </View>
       <ScrollView>
