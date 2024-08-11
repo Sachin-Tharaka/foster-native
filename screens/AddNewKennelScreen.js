@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Button, ScrollView, Image, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import KennelService from '../services/KennelService';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import * as Location from 'expo-location';
+
 
 const AddNewKennelScreen = ({ navigation }) => {
   const [kennelName, setKennelName] = useState('');
@@ -13,22 +15,49 @@ const AddNewKennelScreen = ({ navigation }) => {
   const [kennelZip, setKennelZip] = useState('');
   const [longitude, setLongitude] = useState('');
   const [latitude, setLatitude] = useState('');
+  const [profileImage, setProfileImage] = useState(null);
   const [images, setImages] = useState([]);
   const [error, setError] = useState('');
   const [selectedLocation, setSelectedLocation] = useState({});
 
+  useEffect(() => {
+
+  const getCurrentLocation = async () => {
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = location.coords;
+
+      const geocode = await Location.reverseGeocodeAsync({ latitude, longitude });
+      const address = geocode[0];
+      const locationLabel = `${address.city}, ${address.region}, ${address.country}`;
+
+      setSelectedLocation({
+        latitude,
+        longitude,
+        label: locationLabel
+      });
+    } catch (error) {
+      console.error("Error getting location:", error);
+    }
+  };
+
+  getCurrentLocation();
+}, []);
+
   const addNewKennel = async () => {
-    console.log('adding new kennel....');
-    const kennelLongitude = longitude;
-    const kennelLatitude = latitude;
-
-    // if (isNaN(kennelLongitude) || isNaN(kennelLatitude)) {
-    //   setError('Longitude and Latitude must be numbers');
-    //   return;
-    // }
-
-    if (!kennelName || !kennelAddress1 || !kennelAddress2 || !kennelCity || !kennelZip || !longitude || !latitude || images.length === 0) {
-      setError('All fields are required, including at least one image');
+    console.warn('location ',selectedLocation);
+    setError('');
+    const kennelLongitude = selectedLocation.longitude;
+    const kennelLatitude = selectedLocation.latitude;
+   console.warn(kennelName ,kennelAddress1 ,kennelAddress2 ,kennelCity ,kennelZip ,kennelLongitude,kennelLatitude ,images.length ,profileImage)
+    if (!kennelName || !kennelAddress1 || !kennelAddress2 || !kennelCity || !kennelZip || !kennelLongitude || !kennelLatitude || images.length === 0 || !profileImage) {
+      setError('All fields are required, including profile image and at least one additional image');
       return;
     }
 
@@ -47,6 +76,12 @@ const AddNewKennelScreen = ({ navigation }) => {
       formData.append('kennelLongitude', kennelLongitude.toString());
       formData.append('kennelLatitude', kennelLatitude.toString());
       formData.append('ownerId', ownerId);
+
+      formData.append('profileImage', {
+        uri: profileImage.uri,
+        name: 'profile_image.jpg',
+        type: 'image/jpeg',
+      });
 
       images.forEach((image, index) => {
         formData.append('images', {
@@ -69,6 +104,7 @@ const AddNewKennelScreen = ({ navigation }) => {
       setKennelZip('');
       setLatitude('');
       setLongitude('');
+      setProfileImage(null);
       setImages([]);
     } catch (error) {
       console.error('Error:', error.message);
@@ -88,17 +124,30 @@ const AddNewKennelScreen = ({ navigation }) => {
     }
   };
 
+  const pickProfileImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: false,
+      base64: false,
+    });
+
+    if (!result.canceled) {
+      setProfileImage(result.assets[0]);
+    }
+  };
+
   const removeImage = (index) => {
     const updatedImages = images.filter((_, i) => i !== index);
     setImages(updatedImages);
   };
 
-  const goToChangeLocation = async() => {
-    navigation.navigate('LocationSetterScreen', { setLocation: setSelectedLocation });
+  const goToChangeLocation = async () => {
+    console.log("existing location: ", selectedLocation);
+    navigation.navigate("LocationSetterScreen", {
+      setLocation: setSelectedLocation,
+      existingLocation: selectedLocation,
+    });
     console.log(selectedLocation);
-    setLatitude( selectedLocation.latitude);
-    setLongitude(selectedLocation.longitude);
-    
   };
 
   return (
@@ -108,31 +157,29 @@ const AddNewKennelScreen = ({ navigation }) => {
         {error && <Text style={styles.error}>{error}</Text>}
         <TextInput style={styles.input} placeholder="Kennel Name" value={kennelName} onChangeText={setKennelName} />
         <TextInput style={styles.input} placeholder=" Address Line 1" value={kennelAddress1} onChangeText={setKennelAddress1} />
+
         <TextInput style={styles.input} placeholder=" Address Line 2" value={kennelAddress2} onChangeText={setKennelAddress2} />
         <TextInput style={styles.input} placeholder="City" value={kennelCity} onChangeText={setKennelCity} />
         <TextInput style={styles.input} placeholder="Zip" value={kennelZip} onChangeText={setKennelZip} />
         <View style={styles.locationContainer}>
-        <View style={styles.locationDetails}>
-          <View style={styles.locationIcon}>
-            <Icon name='map-marker' size={32} color='#333' />
+          <View style={styles.locationDetails}>
+            <View style={styles.locationIcon}>
+              <Icon name='map-marker' size={32} color='#333' />
+            </View>
+            <TouchableOpacity style={styles.locationText} onPress={goToChangeLocation}>
+              <Text style={styles.address}>{selectedLocation.label || 'Set Location'}</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={styles.locationText}
-            onPress={goToChangeLocation}
-          >
-            <Text style={styles.address}>{selectedLocation.label || 'Set Location'}</Text>
-            <Text style={styles.addressDetails}>
-              {selectedLocation.latitude && selectedLocation.longitude
-                ? `${selectedLocation.latitude}, ${selectedLocation.longitude}`
-                : ''}
-            </Text>
+          <TouchableOpacity style={styles.changeButton} onPress={goToChangeLocation}>
+            <Text style={styles.changeButtonText}>Select location</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.changeButton} onPress={goToChangeLocation}>
-          <Text style={styles.changeButtonText}>Select location</Text>
-        </TouchableOpacity>
-        
-      </View>
+        <Button title="Choose Profile Image" onPress={pickProfileImage} />
+        {profileImage && (
+          <View style={styles.profileImageWrapper}>
+            <Image source={{ uri: profileImage.uri }} style={styles.profileImage} />
+          </View>
+        )}
         <Button title="Choose Images" onPress={pickImages} />
         <View style={styles.imageContainer}>
           {images.map((image, index) => (
@@ -172,6 +219,15 @@ const styles = StyleSheet.create({
     color: 'red',
     marginTop: 5,
     marginBottom: 10,
+  },
+  profileImageWrapper: {
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
   },
   imageContainer: {
     flexDirection: 'row',
@@ -224,22 +280,17 @@ const styles = StyleSheet.create({
   },
   addressDetails: {
     fontSize: 14,
-    color: '#888',
+    color: '#666',
   },
   changeButton: {
+    backgroundColor: '#007bff',
     padding: 10,
-    backgroundColor: 'blue',
     borderRadius: 5,
-    alignItems:'center',
-    justifyContent:'center'
   },
   changeButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    alignItems:'center'
+    color: '#fff',
+    fontSize: 14,
   },
-  
- 
 });
 
 export default AddNewKennelScreen;

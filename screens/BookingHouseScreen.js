@@ -269,7 +269,11 @@ const BookingHouseScreen = ({ navigation }) => {
                   })
             }
           >
-            <Image source={{ uri: item.images[0] }} style={styles.image} />
+            <Image source={
+            item.profileImage 
+              ? { uri: item.profileImage}
+              : null
+          } style={styles.image} />
             <View style={styles.infoContainer}>
               <Text style={styles.name}>
                 {item.kennelName || item.volunteerName}
