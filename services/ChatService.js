@@ -54,6 +54,7 @@ class ChatService {
 
   async sendMessage(token, formData) {
     try {
+      console.log("Sending message...");
       const response = await fetch(`${this.baseUrl}/api/chat/send-message`, {
         method: "POST",
         headers: {
@@ -61,12 +62,11 @@ class ChatService {
         },
         body: formData,
       });
-
+      console.log(response);
       if (!response.ok) {
         const errorMessage = await response.text();
         throw new Error(errorMessage);
       }
-
       return await response.json(); // Ensure the response is returned in JSON format
     } catch (error) {
       throw error;

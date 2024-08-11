@@ -6,7 +6,7 @@ const WelcomeScreen = ({ navigation }) => {
   useEffect(() => {
     // Auto-navigate to the login page after 10 seconds
     const timer = setTimeout(() => {
-      navigation.navigate('Landing');
+      navigation.navigate('BookingHouse');
     }, 3000);
 
     return () => clearTimeout(timer);
@@ -15,7 +15,7 @@ const WelcomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Welcome to FosterPet</Text>
-      
+
     </View>
   );
 };
