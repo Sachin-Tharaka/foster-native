@@ -33,7 +33,15 @@ const VolunteerProfileScreen = ({ route, navigation }) => {
     }
   };
 
-  const openChat = async () => {};
+  const messageVolunteer = async () => {
+    const token = await AsyncStorage.getItem("token");
+    if(token!=null) {
+      //Handle Create new chat and Navigtion
+    }
+    else {
+      navigation.navigate("Landing");
+    }
+  };
 
   const viewReview = async () => {
     navigation.navigate("VolunteerReviewForUser", { volunteerId: volunteerId });
@@ -87,7 +95,7 @@ const VolunteerProfileScreen = ({ route, navigation }) => {
         <Text style={styles.buttonText}>Book</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={openChat}>
+      <TouchableOpacity style={styles.button} onPress={messageVolunteer}>
         <Text style={styles.buttonText}>Message</Text>
       </TouchableOpacity>
 
