@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+} from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
@@ -79,24 +85,15 @@ const BookingCardScreen = ({ route, navigation }) => {
   };
 
   const isPetTypeAvailable = (petType) => {
-    console.log("pet type:", petType);
     if (volunteer) {
-      console.log("volunteer", volunteer.paymentRates);
       const volunteerPetTypes = volunteer.paymentRates.map(
         (rate) => rate.animalType
       );
-
-      if (volunteerPetTypes.includes(petType)) {
-        return true;
-      }
+      if (volunteerPetTypes.includes(petType)) return true;
     }
     if (kennel) {
-      console.log("kennel", kennel.paymentRates);
       const kennelPetTypes = kennel.paymentRates.map((rate) => rate.animalType);
-
-      if (kennelPetTypes.includes(petType)) {
-        return true;
-      }
+      if (kennelPetTypes.includes(petType)) return true;
     }
     return false;
   };
@@ -115,20 +112,8 @@ const BookingCardScreen = ({ route, navigation }) => {
       );
       return;
     }
-    if (!selectedStartDate) {
-      setError("Start date is required.");
-      return;
-    }
-    if (!startTime) {
-      setError("Start time is required.");
-      return;
-    }
-    if (!selectedEndDate) {
-      setError("End date is required.");
-      return;
-    }
-    if (!endTime) {
-      setError("End time is required.");
+    if (!selectedStartDate || !startTime || !selectedEndDate || !endTime) {
+      setError("All date and time fields are required.");
       return;
     }
 
@@ -151,16 +136,9 @@ const BookingCardScreen = ({ route, navigation }) => {
             startDate,
             endDate,
           }
-        : {
-            petID,
-            volunteerID: volunteerID || null,
-            startDate,
-            endDate,
-          };
-      console.log("Booking data: ", data);
+        : { petID, volunteerID: volunteerID || null, startDate, endDate };
 
       const responseData = await BookingService.booking(data, token);
-      console.log("Booking completed:", responseData);
       navigation.navigate("PaymentScreen", { bookingData: responseData });
     } catch (error) {
       console.error("Booking failed:", error.message);
@@ -175,117 +153,128 @@ const BookingCardScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={backToHome} style={styles.iconContainer}>
-        <Icon name="arrow-left" size={24} color="#333" />
+        <Icon name="arrow-left" size={24} color="#fff" />
       </TouchableOpacity>
       <Text style={styles.text}>Booking Card</Text>
       {error && <Text style={styles.error}>{error}</Text>}
 
-      <Picker
-        selectedValue={petID}
-        onValueChange={(itemValue, itemIndex) => setPetID(itemValue)}
-        style={styles.picker}
-      >
-        <Picker.Item label="Select Pet" value="" />
-        {pets.map((pet) => (
-          <Picker.Item key={pet.petID} label={pet.petName} value={pet.petID} />
-        ))}
-      </Picker>
-      <TouchableOpacity
-        onPress={() => setShowStartDatePicker(true)}
-        style={styles.setterButton}
-      >
-        <Text>Select Start Date</Text>
-      </TouchableOpacity>
-      {showStartDatePicker && (
-        <DateTimePicker
-          value={selectedStartDate}
-          mode="date"
-          is24Hour={true}
-          display="default"
-          onChange={(event, selectedDate) => {
-            setShowStartDatePicker(false);
-            if (selectedDate) {
-              setSelectedStartDate(selectedDate);
-            }
-          }}
-        />
-      )}
+      <View style={styles.card}>
+        <Picker
+          selectedValue={petID}
+          onValueChange={(itemValue) => setPetID(itemValue)}
+          style={styles.picker}
+        >
+          <Picker.Item label="Select Pet" value="" />
+          {pets.map((pet) => (
+            <Picker.Item
+              key={pet.petID}
+              label={pet.petName}
+              value={pet.petID}
+            />
+          ))}
+        </Picker>
+      </View>
 
-      <TouchableOpacity
-        onPress={() => setShowStartTimePicker(true)}
-        style={styles.setterButton}
-      >
-        <Text>Select Start Time</Text>
-      </TouchableOpacity>
-      {showStartTimePicker && (
-        <DateTimePicker
-          value={startTime}
-          mode="time"
-          is24Hour={true}
-          display="default"
-          onChange={(event, selectedTime) => {
-            setShowStartTimePicker(false);
-            if (selectedTime) {
-              setStartTime(selectedTime);
-            }
-          }}
-        />
-      )}
+      <View style={styles.card}>
+        <TouchableOpacity
+          onPress={() => setShowStartDatePicker(true)}
+          style={styles.pickerButton}
+        >
+          <Text style={styles.pickerButtonText}>Select Start Date</Text>
+        </TouchableOpacity>
+        {showStartDatePicker && (
+          <DateTimePicker
+            value={selectedStartDate}
+            mode="date"
+            is24Hour={true}
+            display="spinner"
+            onChange={(event, selectedDate) => {
+              setShowStartDatePicker(false);
+              if (selectedDate) {
+                setSelectedStartDate(selectedDate);
+              }
+            }}
+          />
+        )}
 
-      <Text style={styles.showerText}>
-        Start Date and Time: {selectedStartDate.toLocaleDateString()}{" "}
-        {startTime.toLocaleTimeString()}
-      </Text>
+        <TouchableOpacity
+          onPress={() => setShowStartTimePicker(true)}
+          style={styles.pickerButton}
+        >
+          <Text style={styles.pickerButtonText}>Select Start Time</Text>
+        </TouchableOpacity>
+        {showStartTimePicker && (
+          <DateTimePicker
+            value={startTime}
+            mode="time"
+            is24Hour={true}
+            display="spinner"
+            onChange={(event, selectedTime) => {
+              setShowStartTimePicker(false);
+              if (selectedTime) {
+                setStartTime(selectedTime);
+              }
+            }}
+          />
+        )}
 
-      <TouchableOpacity
-        onPress={() => setShowEndDatePicker(true)}
-        style={styles.setterButton}
-      >
-        <Text>Select End Date</Text>
-      </TouchableOpacity>
-      {showEndDatePicker && (
-        <DateTimePicker
-          value={selectedEndDate}
-          mode="date"
-          is24Hour={true}
-          display="default"
-          onChange={(event, selectedDate) => {
-            setShowEndDatePicker(false);
-            if (selectedDate) {
-              setSelectedEndDate(selectedDate);
-            }
-          }}
-        />
-      )}
+        <Text style={styles.datetimeText}>
+          Start Date and Time: {selectedStartDate.toLocaleDateString()}{" "}
+          {startTime.toLocaleTimeString()}
+        </Text>
+      </View>
 
-      <TouchableOpacity
-        onPress={() => setShowEndTimePicker(true)}
-        style={styles.setterButton}
-      >
-        <Text>Select End Time</Text>
-      </TouchableOpacity>
-      {showEndTimePicker && (
-        <DateTimePicker
-          value={endTime}
-          mode="time"
-          is24Hour={true}
-          display="default"
-          onChange={(event, selectedTime) => {
-            setShowEndTimePicker(false);
-            if (selectedTime) {
-              setEndTime(selectedTime);
-            }
-          }}
-        />
-      )}
+      <View style={styles.card}>
+        <TouchableOpacity
+          onPress={() => setShowEndDatePicker(true)}
+          style={styles.pickerButton}
+        >
+          <Text style={styles.pickerButtonText}>Select End Date</Text>
+        </TouchableOpacity>
+        {showEndDatePicker && (
+          <DateTimePicker
+            value={selectedEndDate}
+            mode="date"
+            is24Hour={true}
+            display="spinner"
+            onChange={(event, selectedDate) => {
+              setShowEndDatePicker(false);
+              if (selectedDate) {
+                setSelectedEndDate(selectedDate);
+              }
+            }}
+          />
+        )}
 
-      <Text style={styles.showerText}>
-        End Date and Time: {selectedEndDate.toLocaleDateString()}{" "}
-        {endTime.toLocaleTimeString()}
-      </Text>
+        <TouchableOpacity
+          onPress={() => setShowEndTimePicker(true)}
+          style={styles.pickerButton}
+        >
+          <Text style={styles.pickerButtonText}>Select End Time</Text>
+        </TouchableOpacity>
+        {showEndTimePicker && (
+          <DateTimePicker
+            value={endTime}
+            mode="time"
+            is24Hour={true}
+            display="spinner"
+            onChange={(event, selectedTime) => {
+              setShowEndTimePicker(false);
+              if (selectedTime) {
+                setEndTime(selectedTime);
+              }
+            }}
+          />
+        )}
+
+        <Text style={styles.datetimeText}>
+          End Date and Time: {selectedEndDate.toLocaleDateString()}{" "}
+          {endTime.toLocaleTimeString()}
+        </Text>
+      </View>
 
       <TouchableOpacity onPress={handleBooking} style={styles.bookingButton}>
-        <Text style={styles.bookingButtonText}>Book</Text>
+        <Text style={styles.bookingButtonText}>Book Now</Text>
       </TouchableOpacity>
     </View>
   );
@@ -294,50 +283,79 @@ const BookingCardScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#f8f9fa",
     padding: 16,
+    paddingTop: 60,
   },
   text: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 40,
+    color: "#343a40",
+    marginBottom: 60,
   },
   iconContainer: {
     position: "absolute",
-    top: 16,
+    top: Platform.OS === "ios" ? 24 : 0,
     left: 16,
     zIndex: 10,
+  },
+  card: {
+    backgroundColor: "#ffffff",
+    borderRadius: 12,
+    padding: 8,
+    marginBottom: 16,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#495057",
+    marginBottom: 8,
   },
   picker: {
     height: 50,
     width: "100%",
     marginBottom: 16,
   },
-  setterButton: {
-    backgroundColor: "#ddd",
-    padding: 12,
+  pickerButton: {
+    backgroundColor: "white",
+    paddingVertical: 12,
+    borderColor: "black",
+    borderRadius: 8,
     marginBottom: 16,
     alignItems: "center",
+    borderColor: "black",
+    borderWidth: 0.5, // Adjust the thickness of the border here
   },
-  showerText: {
+  pickerButtonText: {
+    color: "black",
+    fontSize: 16,
+  },
+  datetimeText: {
     marginBottom: 16,
     fontSize: 16,
     textAlign: "center",
+    color: "#495057",
   },
   bookingButton: {
     backgroundColor: "black",
-    padding: 16,
+    paddingVertical: 16,
     alignItems: "center",
     borderRadius: 8,
+    marginTop: 24,
   },
   bookingButtonText: {
-    color: "#fff",
-    fontSize: 16,
+    color: "#ffffff",
+    fontSize: 18,
     fontWeight: "bold",
   },
   error: {
-    color: "red",
+    color: "#dc3545",
     marginBottom: 16,
     textAlign: "center",
   },

@@ -1,7 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import KennelService from '../services/KennelService';
+import KennelService from "../services/KennelService";
 
 const KennelHome = ({ route, navigation }) => {
   const { kennelID } = route.params;
@@ -32,40 +40,41 @@ const KennelHome = ({ route, navigation }) => {
   };
 
   const updateData = () => {
-    console.log('Navigate to update kennel screen');
+    console.log("Navigate to update kennel screen");
     navigation.navigate("UpdateKennelDataScreen", { kennelId: kennelID });
   };
 
   const viewReviews = () => {
-    console.log('Navigate to reviews screen');
+    console.log("Navigate to reviews screen");
     navigation.navigate("KennelReviewScreen", { kennelId: kennelID });
   };
 
   const viewBooking = () => {
-    console.log('Navigate to booking screen');
+    console.log("Navigate to booking screen");
     navigation.navigate("KennelBookingScreen", { kennelId: kennelID });
   };
 
   const addChargingRates = () => {
-    console.log('Navigate to charging rates screen');
+    console.log("Navigate to charging rates screen");
     navigation.navigate("AddKennelChargingRatesScreen", { kennelId: kennelID });
   };
 
   const handleDeleteKennel = () => {
     Alert.alert(
-        "Delete Kennel",
-        "Are you sure you want to delete this kennel?",
-        [
-          {
-            text: "Cancel",
-            onPress: () => console.log("Cancel Pressed"),
-            style: "cancel"
-          },
-          {
-            text: "Yes", onPress: () => deleteKennel()
-          }
-        ],
-        { cancelable: false }
+      "Delete Kennel",
+      "Are you sure you want to delete this kennel?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: () => deleteKennel(),
+        },
+      ],
+      { cancelable: false }
     );
   };
 
@@ -81,68 +90,66 @@ const KennelHome = ({ route, navigation }) => {
   };
 
   return (
-      <View style={styles.container}>
-        <ScrollView style={styles.content}>
-          <Text style={styles.header}>Home</Text>
+    <View style={styles.container}>
+      <ScrollView style={styles.content}>
+        <Text style={styles.header}>Home</Text>
 
-          <View style={styles.user_header}>
-            <Image
-                source={
-                  kennelData.profileImage 
-                    ? { uri: kennelData.profileImage}
-                    : null
-                }
-                style={styles.logo}
-            />
+        <View style={styles.user_header}>
+          <Image
+            source={
+              kennelData.profileImage ? { uri: kennelData.profileImage } : null
+            }
+            style={styles.logo}
+          />
 
-            <Text style={styles.title}>{kennelData.kennelName}</Text>
-            <Text style={styles.location}>
-              {kennelData.kennelAddress
-                  ? `${kennelData.kennelAddress.address1}, ${kennelData.kennelAddress.address2}, ${kennelData.kennelAddress.city},${kennelData.kennelAddress.zipCode}.`
-                : "Address not available"}
-            </Text>
-            <Text>Owner Name: {kennelData.ownerName}</Text>
-            <Text>Owner Email: {kennelData.ownerEmail}</Text>
-            <Text>Owner Phone: {kennelData.ownerPhone}</Text>
+          <Text style={styles.title}>{kennelData.kennelName}</Text>
+          <Text style={styles.location}>
+            {kennelData.kennelAddress
+              ? `${kennelData.kennelAddress.address1}, ${kennelData.kennelAddress.address2}, ${kennelData.kennelAddress.city},${kennelData.kennelAddress.zipCode}.`
+              : "Address not available"}
+          </Text>
+          <Text>Owner Name: {kennelData.ownerName}</Text>
+          <Text>Owner Email: {kennelData.ownerEmail}</Text>
+          <Text>Owner Phone: {kennelData.ownerPhone}</Text>
 
-            <View style={styles.paymentRatesContainer}>
-              <Text style={styles.paymentRatesTitle}>Payment Rates:</Text>
-              {kennelData.paymentRates && kennelData.paymentRates.map((rate, index) => (
-                  <Text key={index} style={styles.paymentRate}>{rate.animalType}: {rate.rate}</Text>
+          <View style={styles.paymentRatesContainer}>
+            <Text style={styles.paymentRatesTitle}>Payment Rates:</Text>
+            {kennelData.paymentRates &&
+              kennelData.paymentRates.map((rate, index) => (
+                <Text key={index} style={styles.paymentRate}>
+                  {rate.animalType}: {rate.rate}
+                </Text>
               ))}
-            </View>
           </View>
+        </View>
 
-          <ScrollView horizontal style={styles.imagesContainer}>
-            {kennelData.images &&
-                Array.isArray(kennelData.images) &&
-                kennelData.images.map((image, index) => (
-                    <Image key={index} source={{ uri: image }} style={styles.image} />
-                ))}
-          </ScrollView>
-
-          <View style={styles.buttonsContainer}>
-            <TouchableOpacity style={styles.button} onPress={updateData}>
-              <Text style={styles.buttonText}>Change Details</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Notifications</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={viewBooking}>
-              <Text style={styles.buttonText}>Booking</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={viewReviews}>
-              <Text style={styles.buttonText}>Reviews</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={addChargingRates}>
-              <Text style={styles.buttonText}>Add Charging Rates</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={handleDeleteKennel}>
-              <Text style={styles.buttonText}>Delete Kennel</Text>
-            </TouchableOpacity>
-          </View>
+        <ScrollView horizontal style={styles.imagesContainer}>
+          {kennelData.images &&
+            Array.isArray(kennelData.images) &&
+            kennelData.images.map((image, index) => (
+              <Image key={index} source={{ uri: image }} style={styles.image} />
+            ))}
         </ScrollView>
-      </View>
+
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity style={styles.button} onPress={updateData}>
+            <Text style={styles.buttonText}>Change Details</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={viewBooking}>
+            <Text style={styles.buttonText}>Booking</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={viewReviews}>
+            <Text style={styles.buttonText}>Reviews</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={addChargingRates}>
+            <Text style={styles.buttonText}>Add Charging Rates</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleDeleteKennel}>
+            <Text style={styles.buttonText}>Delete Kennel</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -157,7 +164,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginTop: 10,
   },
   logo: {
@@ -167,36 +174,36 @@ const styles = StyleSheet.create({
   },
   location: {
     fontSize: 16,
-    color: 'gray',
+    color: "gray",
     marginBottom: 20,
   },
   user_header: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 20,
   },
   buttonsContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-around',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-around",
     marginVertical: 20,
   },
   button: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
     padding: 10,
-    width: '80%',
-    alignItems: 'center',
+    width: "80%",
+    alignItems: "center",
     borderRadius: 5,
     marginBottom: 10,
   },
   buttonText: {
     fontSize: 12,
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
     marginTop: 50,
   },
@@ -211,15 +218,15 @@ const styles = StyleSheet.create({
   },
   paymentRatesContainer: {
     marginTop: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   paymentRatesTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   paymentRate: {
     fontSize: 16,
-    color: 'gray',
+    color: "gray",
   },
 });
 

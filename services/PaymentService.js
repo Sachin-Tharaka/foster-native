@@ -3,7 +3,6 @@ import { View, Button, Alert } from "react-native";
 import { useStripe } from "@stripe/stripe-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
 export default function PaymentService({ navigation, bookingId }) {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
@@ -17,14 +16,14 @@ export default function PaymentService({ navigation, bookingId }) {
       }
 
       const response = await fetch(
-          `https://fosterpet.azurewebsites.net/api/payment/create-payment-intent?bookingId=${bookingId}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            }
-          }
+        `https://fosterpet.azurewebsites.net/api/payment/create-payment-intent?bookingId=${bookingId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (!response.ok) {
@@ -39,7 +38,6 @@ export default function PaymentService({ navigation, bookingId }) {
         customer,
       };
     } catch (error) {
-
       console.error("Error fetching payment sheet params:", error);
       throw error;
     }

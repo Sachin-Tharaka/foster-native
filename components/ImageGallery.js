@@ -1,5 +1,11 @@
-import React from 'react';
-import { View, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import React from "react";
+import {
+  View,
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 
 const ImageGallery = ({ images, onImagePress }) => {
   const renderItem = ({ item }) => {
@@ -25,10 +31,11 @@ const ImageGallery = ({ images, onImagePress }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: "90%",
   },
   image: {
-    width: 150, 
-    height: 150, 
+    width: 150,
+    height: 150,
     margin: 5,
   },
 });
