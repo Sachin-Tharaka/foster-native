@@ -14,10 +14,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import KennelService from "../services/KennelService";
 import UserService from "../services/UserService";
 import VolunteerService from "../services/VounteerService";
-import Navbar from "../components/Navbar";
 import AnimalTypeDropdown from "../components/AnimalTypeDropdown";
-import * as Location from 'expo-location';
-
+import * as Location from "expo-location";
 
 const BookingHouseScreen = ({ navigation }) => {
   const [kennels, setKennels] = useState([]);
@@ -39,35 +37,37 @@ const BookingHouseScreen = ({ navigation }) => {
       }
     };
 
-  const getCurrentLocation = async () => {
-    try {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert("Permission to access location was denied");
-        return;
+    const getCurrentLocation = async () => {
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          Alert.alert("Permission to access location was denied");
+          return;
+        }
+
+        let location = await Location.getCurrentPositionAsync({});
+        const { latitude, longitude } = location.coords;
+
+        const geocode = await Location.reverseGeocodeAsync({
+          latitude,
+          longitude,
+        });
+        const address = geocode[0];
+        const locationLabel = `${address.city}, ${address.region}, ${address.country}`;
+
+        setSelectedLocation({
+          latitude,
+          longitude,
+          label: locationLabel,
+        });
+      } catch (error) {
+        console.error("Error getting location:", error);
       }
+    };
 
-      let location = await Location.getCurrentPositionAsync({});
-      const { latitude, longitude } = location.coords;
-
-      const geocode = await Location.reverseGeocodeAsync({ latitude, longitude });
-      const address = geocode[0];
-      const locationLabel = `${address.city}, ${address.region}, ${address.country}`;
-
-      setSelectedLocation({
-        latitude,
-        longitude,
-        label: locationLabel
-      });
-    } catch (error) {
-      console.error("Error getting location:", error);
-    }
-  };
-
-  getCurrentLocation();
-  getToken();
-}, []);
-
+    getCurrentLocation();
+    getToken();
+  }, []);
 
   const getAllKennelNear = async (
     longitude,
@@ -269,11 +269,10 @@ const BookingHouseScreen = ({ navigation }) => {
                   })
             }
           >
-            <Image source={
-            item.profileImage 
-              ? { uri: item.profileImage}
-              : null
-          } style={styles.image} />
+            <Image
+              source={item.profileImage ? { uri: item.profileImage } : null}
+              style={styles.image}
+            />
             <View style={styles.infoContainer}>
               <Text style={styles.name}>
                 {item.kennelName || item.volunteerName}
@@ -285,7 +284,6 @@ const BookingHouseScreen = ({ navigation }) => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <Navbar />
     </View>
   );
 };

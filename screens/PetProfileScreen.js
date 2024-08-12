@@ -82,11 +82,7 @@ const PetProfileScreen = ({ route, navigation }) => {
       <View style={styles.petContainer}>
         <Image
           style={styles.petImage}
-          source={
-            pet.profileImage 
-              ? { uri: pet.profileImage}
-              : null
-          }
+          source={pet.profileImage ? { uri: pet.profileImage } : null}
         />
         <View>
           <Text>Name: {pet.petName}</Text>
@@ -139,7 +135,6 @@ const PetProfileScreen = ({ route, navigation }) => {
             )}
         </View>
       </ScrollView>
-      <Navbar />
     </View>
   );
 };

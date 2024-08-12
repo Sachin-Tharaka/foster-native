@@ -110,7 +110,9 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
       images.length === 0 ||
       !profileImage
     ) {
-      setError("All fields are required, including at least one image and a profile image");
+      setError(
+        "All fields are required, including at least one image and a profile image"
+      );
       return;
     }
 
@@ -207,7 +209,10 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
 
         {profileImage && (
           <View style={styles.profileImageContainer}>
-            <Image source={{ uri: profileImage.uri }} style={styles.profileImage} />
+            <Image
+              source={{ uri: profileImage.uri }}
+              style={styles.profileImage}
+            />
             <TouchableOpacity
               onPress={() => setProfileImage(null)}
               style={styles.removeButton}
@@ -216,7 +221,10 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
         )}
-        <TouchableOpacity style={styles.imagePickerButton} onPress={pickProfileImage}>
+        <TouchableOpacity
+          style={styles.imagePickerButton}
+          onPress={pickProfileImage}
+        >
           <Text style={styles.imagePickerButtonText}>Choose Profile Image</Text>
         </TouchableOpacity>
 
@@ -318,7 +326,9 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
         />
 
         <TouchableOpacity style={styles.imagePickerButton} onPress={pickImages}>
-          <Text style={styles.imagePickerButtonText}>Choose Additional Images</Text>
+          <Text style={styles.imagePickerButtonText}>
+            Choose Additional Images
+          </Text>
         </TouchableOpacity>
 
         <View style={styles.imagesContainer}>
@@ -337,7 +347,6 @@ const UpdatePetProfileScreen = ({ route, navigation }) => {
 
         <Button title="Update Pet Profile" onPress={updateData} />
       </ScrollView>
-      <Navbar />
     </View>
   );
 };

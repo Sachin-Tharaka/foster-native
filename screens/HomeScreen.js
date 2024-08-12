@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import ImageGallery from '../components/ImageGallery';
-import Navbar from '../components/Navbar';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
+import ImageGallery from "../components/ImageGallery";
+import Navbar from "../components/Navbar";
 
 const HomeScreen = ({ navigation }) => {
-
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
 
   // Dummy images
   const images = Array.from({ length: 10 }).map((_, index) => ({
@@ -18,7 +24,6 @@ const HomeScreen = ({ navigation }) => {
   const handleSearch = () => {
     // Implement search functionality here
   };
-
 
   return (
     <View style={styles.container}>
@@ -34,10 +39,7 @@ const HomeScreen = ({ navigation }) => {
         {/* Display the image gallery */}
         <ImageGallery images={images} />
       </ScrollView>
-      <View>
-        
-        <Navbar />
-      </View>
+      <View></View>
     </View>
   );
 };
@@ -45,11 +47,10 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop:30,
-    marginHorizontal:10
-    
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 30,
+    marginHorizontal: 10,
   },
   contentContainer: {
     // flexGrow: 1,
@@ -57,20 +58,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   input: {
     width: 300,
     height: 40,
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderRadius: 5,
     paddingLeft: 10,
-    marginTop:10
+    marginTop: 10,
   },
-
-  
 });
 
 export default HomeScreen;

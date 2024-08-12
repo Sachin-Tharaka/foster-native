@@ -116,7 +116,6 @@ const LoginScreen = ({ navigation }) => {
           </Text>
         </Text>
       </View>
-      <Navbar />
     </View>
   );
 };
