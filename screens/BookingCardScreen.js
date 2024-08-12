@@ -323,14 +323,17 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   pickerButton: {
-    backgroundColor: "grey",
+    backgroundColor: "white",
     paddingVertical: 12,
+    borderColor: "black",
     borderRadius: 8,
     marginBottom: 16,
     alignItems: "center",
+    borderColor: "black",
+    borderWidth: 0.5, // Adjust the thickness of the border here
   },
   pickerButtonText: {
-    color: "white",
+    color: "black",
     fontSize: 16,
   },
   datetimeText: {
