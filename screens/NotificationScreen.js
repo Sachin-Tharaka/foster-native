@@ -87,9 +87,7 @@ const NotificationScreen = ({ navigation }) => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <View>
-        <Navbar />
-      </View>
+      <View></View>
     </View>
   );
 };

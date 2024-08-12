@@ -66,18 +66,16 @@ const PetsScreen = ({ navigation }) => {
               navigation.navigate("PetProfileScreen", { petID: pet.petID })
             }
           >
-            <Image source={
-            pet.profileImage 
-              ? { uri: pet.profileImage}
-              : null
-          } style={styles.image} />
+            <Image
+              source={pet.profileImage ? { uri: pet.profileImage } : null}
+              style={styles.image}
+            />
             <View style={styles.infoContainer}>
               <Text style={styles.name}>{pet.petName}</Text>
             </View>
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <Navbar />
     </View>
   );
 };

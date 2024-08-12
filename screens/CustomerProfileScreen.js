@@ -10,17 +10,16 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navbar from "../components/Navbar";
 import UserService from "../services/UserService";
-import defaultProfileImage from "../assets/ProfilePicture.png"; 
-
+import defaultProfileImage from "../assets/ProfilePicture.png";
 
 const CustomerProfileScreen = ({ route, navigation }) => {
-    const { customerId } = route.params || { customerId: "" };
+  const { customerId } = route.params || { customerId: "" };
   const [customerData, setCustomerData] = useState({});
 
   useEffect(() => {
     const getToken = async () => {
       const token = await AsyncStorage.getItem("token");
-     
+
       if (token) {
         // Token exists, fetch user data
         getCustomerById(customerId, token);
@@ -45,21 +44,21 @@ const CustomerProfileScreen = ({ route, navigation }) => {
     }
   };
 
-
   const goToPetsUI = () => {
-   
     console.log("navigate to pet screen");
-    navigation.navigate("CustomerPetsScreen",{customerId:customerId});
+    navigation.navigate("CustomerPetsScreen", { customerId: customerId });
   };
-
-  
 
   return (
     <View style={styles.outerContainer}>
       <ScrollView style={styles.container}>
         <View style={styles.header}>
           <Image
-            source={customerData.profileImage ? { uri: customerData.profileImage } : defaultProfileImage}
+            source={
+              customerData.profileImage
+                ? { uri: customerData.profileImage }
+                : defaultProfileImage
+            }
             style={styles.logo}
           />
           <Text style={styles.title}>
@@ -74,14 +73,11 @@ const CustomerProfileScreen = ({ route, navigation }) => {
         </View>
 
         <View style={styles.buttonsContainer}>
-        
           <TouchableOpacity style={styles.button} onPress={goToPetsUI}>
             <Text style={styles.buttonText}>Pets</Text>
           </TouchableOpacity>
-          
         </View>
       </ScrollView>
-      <Navbar />
     </View>
   );
 };

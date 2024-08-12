@@ -51,7 +51,6 @@ const KennelInvoicesScreen = ({ navigation }) => {
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContent}
       />
-      <Navbar />
     </View>
   );
 };

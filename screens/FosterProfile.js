@@ -19,11 +19,7 @@ const FosterProfile = ({ route, navigation }) => {
   });
 
   useEffect(() => {
-
-
-        getKennelById(kennelId);
-
-
+    getKennelById(kennelId);
   }, []);
 
   //get kennel by id
@@ -42,10 +38,9 @@ const FosterProfile = ({ route, navigation }) => {
   // Handle book a foster house
   const handleBookFosterHouse = async () => {
     const token = await AsyncStorage.getItem("token");
-    if(token!=null) {
+    if (token != null) {
       navigation.navigate("Booking", { kennelID: kennelId });
-    }
-    else {
+    } else {
       navigation.navigate("Landing");
     }
   };
@@ -56,23 +51,20 @@ const FosterProfile = ({ route, navigation }) => {
 
   const messageKennel = async () => {
     const token = await AsyncStorage.getItem("token");
-    if(token!=null) {
+    if (token != null) {
       //Handle Create new chat and Navigtion
-    }
-    else {
+    } else {
       navigation.navigate("Landing");
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Image
-         source={
-          kennelData.profileImage 
-            ? { uri: kennelData.profileImage}
-            : null
-        }
+          source={
+            kennelData.profileImage ? { uri: kennelData.profileImage } : null
+          }
           style={styles.logo}
         />
         <Text style={styles.title}>{kennelData.kennelName}</Text>
@@ -104,26 +96,21 @@ const FosterProfile = ({ route, navigation }) => {
           <Text style={styles.buttonText}>Message onPress={messageKennel}</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView>
-        <View style={styles.petsContainer}>
-          {kennelData.images.map(
-            (image, index) =>
-              index % 2 === 0 && (
-                <View key={index} style={styles.petRow}>
-                  <Image source={{ uri: image }} style={styles.petImage} />
-                  {index + 1 < kennelData.images.length && (
-                    <Image
-                      source={{ uri: kennelData.images[index + 1] }}
-                      style={styles.petImage}
-                    />
-                  )}
-                </View>
-              )
-          )}
-        </View>
-      </ScrollView>
-      <View>
-        <Navbar />
+      <View style={styles.petsContainer}>
+        {kennelData.images.map(
+          (image, index) =>
+            index % 2 === 0 && (
+              <View key={index} style={styles.petRow}>
+                <Image source={{ uri: image }} style={styles.petImage} />
+                {index + 1 < kennelData.images.length && (
+                  <Image
+                    source={{ uri: kennelData.images[index + 1] }}
+                    style={styles.petImage}
+                  />
+                )}
+              </View>
+            )
+        )}
       </View>
     </View>
   );

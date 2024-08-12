@@ -54,6 +54,7 @@ import ChatScreenAgent from "./screens/ChatScreenAgent";
 import KennelFilterScreen from "./screens/KennelFilterScreen";
 import UserInvoiceScreen from "./screens/UserInvoiceScreen";
 import KennelInvoicesScreen from "./screens/KennelInvoicesScreen";
+import Navbar from "./components/Navbar";
 import "./firebaseconfig";
 import { registerRootComponent } from "expo";
 import * as Notifications from "expo-notifications";
@@ -548,6 +549,7 @@ export default function App() {
           }}
         />
       </Stack.Navigator>
+      <Navbar />
     </NavigationContainer>
   );
 }

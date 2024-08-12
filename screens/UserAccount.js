@@ -127,7 +127,6 @@ const UserAccount = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-      <Navbar />
     </View>
   );
 };
