@@ -4,62 +4,119 @@ import PaymentService from "../services/PaymentService";
 import { View, StyleSheet, Text } from "react-native";
 
 const BookingDetails = ({ bookingData }) => {
-    return (
-        <View style={styles.bookingDetailsContainer}>
-            <Text style={styles.detailText}>Booking ID: {bookingData.bookingID}</Text>
-            <Text style={styles.detailText}>Pet: {bookingData.pet.petName}</Text>
-            <Text style={styles.detailText}>Owner: {bookingData.owner.firstName} {bookingData.owner.lastName}</Text>
-            {bookingData.kennel !== null && (
-                <Text style={styles.detailText}>Kennel: {bookingData.kennel.kennelName}</Text>
-            )}
-            {bookingData.volunteer !== null && (
-                <Text style={styles.detailText}>Volunteer: {bookingData.volunteer.name}</Text>
-            )}
-            <Text style={styles.detailText}>Start Date: {new Date(bookingData.startDate).toLocaleString()}</Text>
-            <Text style={styles.detailText}>End Date: {new Date(bookingData.endDate).toLocaleString()}</Text>
-            <Text style={styles.detailText}>Rate: {bookingData.rate} LKR per Hour</Text>
-            <Text style={styles.detailText}>Total: ${bookingData.total} LKR</Text>
+  return (
+    <View style={styles.bookingDetailsContainer}>
+      <Text style={styles.headerText}>Booking Details</Text>
+      <View style={styles.detailRow}>
+        <Text style={styles.label}>Booking ID:</Text>
+        <Text style={styles.value}>{bookingData.bookingID}</Text>
+      </View>
+      <View style={styles.detailRow}>
+        <Text style={styles.label}>Pet:</Text>
+        <Text style={styles.value}>{bookingData.pet.petName}</Text>
+      </View>
+      <View style={styles.detailRow}>
+        <Text style={styles.label}>Owner:</Text>
+        <Text style={styles.value}>
+          {bookingData.owner.firstName} {bookingData.owner.lastName}
+        </Text>
+      </View>
+      {bookingData.kennel !== null && (
+        <View style={styles.detailRow}>
+          <Text style={styles.label}>Kennel:</Text>
+          <Text style={styles.value}>{bookingData.kennel.kennelName}</Text>
         </View>
-    );
+      )}
+      {bookingData.volunteer !== null && (
+        <View style={styles.detailRow}>
+          <Text style={styles.label}>Volunteer:</Text>
+          <Text style={styles.value}>{bookingData.volunteer.name}</Text>
+        </View>
+      )}
+      <View style={styles.detailRow}>
+        <Text style={styles.label}>Start Date:</Text>
+        <Text style={styles.value}>
+          {new Date(bookingData.startDate).toLocaleString()}
+        </Text>
+      </View>
+      <View style={styles.detailRow}>
+        <Text style={styles.label}>End Date:</Text>
+        <Text style={styles.value}>
+          {new Date(bookingData.endDate).toLocaleString()}
+        </Text>
+      </View>
+      <View style={styles.detailRow}>
+        <Text style={styles.label}>Rate:</Text>
+        <Text style={styles.value}>{bookingData.rate} LKR per Hour</Text>
+      </View>
+      <View style={styles.detailRow}>
+        <Text style={styles.label}>Total:</Text>
+        <Text style={styles.value}>{bookingData.total} LKR</Text>
+      </View>
+    </View>
+  );
 };
 
-
 const PaymentScreen = ({ navigation, route }) => {
-    const { bookingData } = route.params;
+  const { bookingData } = route.params;
 
-    return (
-        <View style={styles.container}>
-            <BookingDetails bookingData={bookingData} />
-            <StripeProvider publishableKey="pk_test_51PGFGO2Mzh1pKqwn6HSotqsp8Dx27Ybk9OqinB1tWnl9Hm5PvQC6c17JMEJWGX72Uopgr9D6u6F8WgvcXlv4TSdX00HphqP7y4">
-                <View style={styles.checkoutContainer}>
-                    <PaymentService navigation={navigation} bookingId={bookingData.bookingID} />
-                </View>
-            </StripeProvider>
-        </View>
-    );
+  return (
+    <View style={styles.container}>
+      <BookingDetails bookingData={bookingData} />
+      <View style={styles.buttonContainer}>
+        <StripeProvider publishableKey="pk_test_51PGFGO2Mzh1pKqwn6HSotqsp8Dx27Ybk9OqinB1tWnl9Hm5PvQC6c17JMEJWGX72Uopgr9D6u6F8WgvcXlv4TSdX00HphqP7y4">
+          <PaymentService
+            navigation={navigation}
+            bookingId={bookingData.bookingID}
+          />
+        </StripeProvider>
+      </View>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-    },
-    bookingDetailsContainer: {
-        marginBottom: 20,
-        padding: 10,
-        backgroundColor: "lightgray",
-        borderRadius: 5,
-    },
-    detailText: {
-        fontSize: 16,
-        marginBottom: 5,
-    },
-    checkoutContainer: {
-        marginTop: 20,
-        padding: 20,
-        backgroundColor: "black",
-        borderRadius: 5,
-    },
+  container: {
+    flex: 1,
+    paddingTop: 60,
+    width: "90%",
+    margin: "auto",
+    justifyContent: "space-between",
+  },
+  bookingDetailsContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    elevation: 3, // For shadow on Android
+    shadowColor: "#000", // For shadow on iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    marginBottom: 20,
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 25,
+    color: "#333",
+  },
+  detailRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#555",
+  },
+  value: {
+    fontSize: 16,
+    color: "#333",
+  },
+  buttonContainer: {
+    marginBottom: 20,
+  },
 });
 
 export default PaymentScreen;
