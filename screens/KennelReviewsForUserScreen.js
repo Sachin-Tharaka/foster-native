@@ -18,9 +18,7 @@ const KennelReviewsForUserScreen = ({ route, navigation }) => {
   const [newReviewRating, setNewReviewRating] = useState(0);
 
   useEffect(() => {
-    
-        getReviewByKennelId(kennelId);
-      
+    getReviewByKennelId(kennelId);
   }, [navigation]);
 
   const getReviewByKennelId = async (id) => {
@@ -111,7 +109,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "#ffffff",
-    paddingTop: 100,
+    paddingTop: 60,
   },
   header: {
     fontSize: 24,

@@ -111,7 +111,7 @@ const UserAccount = ({ navigation }) => {
 
         <View style={styles.buttonsContainer}>
           <TouchableOpacity style={styles.button} onPress={goToPetsUI}>
-            <Text style={styles.buttonText}>My Pet</Text>
+            <Text style={styles.buttonText}>Pets</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={goToMyBooking}>
             <Text style={styles.buttonText}>My Bookings</Text>
@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: 100,
+    marginBottom: 10,
   },
   title: {
     fontSize: 24,
@@ -170,7 +171,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "space-around",
-    marginVertical: 20,
+    marginTop: 100,
   },
   button: {
     backgroundColor: "black",
