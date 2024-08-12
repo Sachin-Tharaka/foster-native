@@ -161,7 +161,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   petsContainer: {
-    marginBottom: 20,
+    width: "90%",
+    marginBottom: 10,
+    margin: "auto",
   },
   petRow: {
     flexDirection: "row",
