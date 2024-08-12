@@ -1,4 +1,4 @@
-rootProject.name = 'my-new-project'
+rootProject.name = 'Foster Pet'
 
 dependencyResolutionManagement {
   versionCatalogs {
