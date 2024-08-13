@@ -59,6 +59,11 @@ const KennelHome = ({ route, navigation }) => {
     navigation.navigate("AddKennelChargingRatesScreen", { kennelId: kennelID });
   };
 
+  const handleKennelChats = () => {
+    console.log("Navigate to charging rates screen");
+    navigation.navigate("ChatListAgent", { kennelId: kennelID });
+  };
+
   const handleDeleteKennel = () => {
     Alert.alert(
       "Delete Kennel",
@@ -139,6 +144,9 @@ const KennelHome = ({ route, navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={handleDeleteKennel}>
             <Text style={styles.buttonText}>Delete Kennel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleKennelChats}>
+            <Text style={styles.buttonText}>View Kennel Chats</Text>
           </TouchableOpacity>
         </View>
         <ScrollView horizontal style={styles.imagesContainer}>
