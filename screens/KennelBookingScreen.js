@@ -1,8 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import BookingService from '../services/BookingService';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import BookingService from "../services/BookingService";
 
 const KennelBookingScreen = ({ route, navigation }) => {
   const { kennelId } = route.params || { kennelId: "" };
@@ -44,7 +50,7 @@ const KennelBookingScreen = ({ route, navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (token) {
-        await BookingService.confirmBooking(bookingId,  token);
+        await BookingService.confirmBooking(bookingId, token);
         getBookingByKennelId(kennelId, token); // Refresh the booking data
       }
     } catch (error) {
@@ -57,7 +63,7 @@ const KennelBookingScreen = ({ route, navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (token) {
-        await BookingService.rejectBooking(bookingId,  token);
+        await BookingService.rejectBooking(bookingId, token);
         getBookingByKennelId(kennelId, token); // Refresh the booking data
       }
     } catch (error) {
@@ -70,7 +76,7 @@ const KennelBookingScreen = ({ route, navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (token) {
-        await BookingService.changeBookingStatusToOngoing(bookingId,  token);
+        await BookingService.changeBookingStatusToOngoing(bookingId, token);
         getBookingByKennelId(kennelId, token); // Refresh the booking data
       }
     } catch (error) {
@@ -79,11 +85,11 @@ const KennelBookingScreen = ({ route, navigation }) => {
   };
 
   //change to confirm
-  const handleChangeStatusToCompleted= async (bookingId) => {
+  const handleChangeStatusToCompleted = async (bookingId) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (token) {
-        await BookingService.changeBookingStatusToCompleted(bookingId,  token);
+        await BookingService.changeBookingStatusToCompleted(bookingId, token);
         getBookingByKennelId(kennelId, token); // Refresh the booking data
       }
     } catch (error) {
@@ -98,8 +104,12 @@ const KennelBookingScreen = ({ route, navigation }) => {
         {bookingData.map((booking) => (
           <View key={booking.bookingID} style={styles.itemContainer}>
             <View style={styles.detailContainer}>
-              <Text style={styles.name}>Start Date: {new Date(booking.startDate).toLocaleString()}</Text>
-              <Text style={styles.detail}>End Date: {new Date(booking.endDate).toLocaleString()}</Text>
+              <Text style={styles.name}>
+                Start Date: {new Date(booking.startDate).toLocaleString()}
+              </Text>
+              <Text style={styles.detail}>
+                End Date: {new Date(booking.endDate).toLocaleString()}
+              </Text>
               <Text style={styles.detail}>Status: {booking.status}</Text>
             </View>
             <View style={styles.buttonContainer}>
@@ -115,23 +125,27 @@ const KennelBookingScreen = ({ route, navigation }) => {
               >
                 <Text style={styles.buttonTextWhite}>View Pet Profile</Text>
               </TouchableOpacity>
-              {booking.status === 'PENDING' && (
-                <>
+              {booking.status === "PENDING" && (
+                <View>
                   <TouchableOpacity
                     style={styles.buttonSmallGreen}
-                    onPress={() => handleChangeStatusToConfrm(booking.bookingID)}
+                    onPress={() =>
+                      handleChangeStatusToConfrm(booking.bookingID)
+                    }
                   >
                     <Text style={styles.buttonTextWhite}>Confirm</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.buttonSmallRed}
-                    onPress={() => handleChangeStatusToReject(booking.bookingID)}
+                    onPress={() =>
+                      handleChangeStatusToReject(booking.bookingID)
+                    }
                   >
                     <Text style={styles.buttonTextWhite}>Reject</Text>
                   </TouchableOpacity>
-                </>
+                </View>
               )}
-              {booking.status === 'CONFIRM' && (
+              {booking.status === "CONFIRM" && (
                 <TouchableOpacity
                   style={styles.buttonSmallOrange}
                   onPress={() => handleChangeStatusToOngoing(booking.bookingID)}
@@ -139,12 +153,16 @@ const KennelBookingScreen = ({ route, navigation }) => {
                   <Text style={styles.buttonTextWhite}>Change to Ongoing</Text>
                 </TouchableOpacity>
               )}
-              {booking.status === 'ONGOING' && (
+              {booking.status === "ONGOING" && (
                 <TouchableOpacity
                   style={styles.buttonSmallPurple}
-                  onPress={() => handleChangeStatusToCompleted(booking.bookingID)}
+                  onPress={() =>
+                    handleChangeStatusToCompleted(booking.bookingID)
+                  }
                 >
-                  <Text style={styles.buttonTextWhite}>Change to Completed</Text>
+                  <Text style={styles.buttonTextWhite}>
+                    Change to Completed
+                  </Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -165,90 +183,90 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   itemContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 10,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     marginBottom: 10,
     borderRadius: 5,
-    alignItems: 'center',
+    alignItems: "center",
   },
   detailContainer: {
     flex: 1,
   },
   name: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 16,
   },
   detail: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
   buttonContainer: {
-    flexDirection: 'column',
-    alignItems: 'flex-end',
+    flexDirection: "column",
+    alignItems: "flex-end",
   },
   buttonSmallBlue: {
-    backgroundColor: '#007BFF',
+    backgroundColor: "#007BFF",
     padding: 8,
     borderRadius: 5,
     marginBottom: 5,
   },
   buttonSmallGreen: {
-    backgroundColor: '#28A745',
+    backgroundColor: "#28A745",
     padding: 8,
     borderRadius: 5,
     marginBottom: 5,
   },
   buttonSmallRed: {
-    backgroundColor: '#DC3545',
+    backgroundColor: "#DC3545",
     padding: 8,
     borderRadius: 5,
     marginBottom: 5,
   },
   buttonSmallOrange: {
-    backgroundColor: '#FFC107',
+    backgroundColor: "#FFC107",
     padding: 8,
     borderRadius: 5,
     marginBottom: 5,
   },
   buttonSmallPurple: {
-    backgroundColor: '#6F42C1',
+    backgroundColor: "#6F42C1",
     padding: 8,
     borderRadius: 5,
     marginBottom: 5,
   },
   buttonTextWhite: {
     fontSize: 12,
-    color: '#FFF',
+    color: "#FFF",
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
     marginTop: 50,
   },
   sidebar: {
-    position: 'absolute',
+    position: "absolute",
     width: 200,
-    height: '100%',
-    backgroundColor: '#2C3E50',
+    height: "100%",
+    backgroundColor: "#2C3E50",
     paddingTop: 20,
     left: 0,
     top: 0,
   },
   navItem: {
     padding: 10,
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
   },
   menuIcon: {
-    position: 'absolute',
+    position: "absolute",
     top: 20,
     left: 20,
     zIndex: 2,
   },
   closeIcon: {
-    position: 'absolute',
+    position: "absolute",
     top: 20,
     right: 20,
     zIndex: 2,
