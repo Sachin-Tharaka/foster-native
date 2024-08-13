@@ -10,15 +10,14 @@ import {
 import ChatService from "../services/ChatService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ChatListUser = ({ navigation }) => {
-
+const ChatListUser = ({ route, navigation }) => {
+  const { kennelID } = route.params || { kennelID: "" };
   const [chatPreview, setChatPreview] = useState([]);
 
   useEffect(() => {
     const fetchChatPreview = async () => {
       const token = await AsyncStorage.getItem("token");
-      const userId = await AsyncStorage.getItem("userId");
-      const chatPreview = await ChatService.fetchMessagePreviewsAgent(token, userId);
+      const chatPreview = await ChatService.fetchMessagePreviewsAgent(token, kennelID);
       setChatPreview(chatPreview);
     };
 
@@ -28,7 +27,7 @@ const ChatListUser = ({ navigation }) => {
   const renderChatItem = ({ item }) => (
     <TouchableOpacity
       style={styles.chatItem}
-      onPress={() => navigation.navigate("Chat", { chatId: item.chatThreadId })}
+      onPress={() => navigation.navigate("ChatAgent", { chatId: item.chatThreadId, kennelId: kennelID })}
     >
       <Text style={styles.chatName}>{item.chatThreadName}</Text>
       <Text style={styles.lastMessage}>{item.lastMessage.message}</Text>
