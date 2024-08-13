@@ -48,7 +48,7 @@ const FosterProfile = ({ route, navigation }) => {
   const messageKennel = async () => {
     const token = await AsyncStorage.getItem("token");
     const userId = await AsyncStorage.getItem("userId");
-    console.log("token", token);
+    const volunteerId = "";
     if (token != null) {
       const res = ChatService.getChatThreadByUserAndKennel(
         token,
@@ -56,6 +56,19 @@ const FosterProfile = ({ route, navigation }) => {
         kennelId
       );
       console.warn("response: ", res);
+      if (!res) {
+        //create chat
+        const data = await ChatService.createChatThread(
+          token,
+          userId,
+          kennelId,
+          volunteerId
+        );
+        navigation.navigate("ChatScreenUser", { chatId: data.chatThreadId });
+      } else {
+        //if chat exist
+        navigation.navigate("ChatScreenUser", { chatId: res.chatThreadId });
+      }
     } else {
       navigation.navigate("Landing");
     }
