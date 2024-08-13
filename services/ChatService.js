@@ -72,7 +72,6 @@ class ChatService {
       throw error;
     }
   }
-
   async getChatThreadByUserAndKennel(token, userId,KennelId) {
     try {
       console.log("Sending message...");

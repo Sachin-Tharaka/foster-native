@@ -4,10 +4,10 @@
       "visible": true
     },
     "name": "Foster Pet",
-    "slug": "Foster Pet",
+    "slug": "Foster-Pet",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/lock.svg",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
