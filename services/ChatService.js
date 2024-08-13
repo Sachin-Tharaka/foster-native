@@ -79,13 +79,49 @@ class ChatService {
       const response = await fetch(`${this.baseUrl}/api/chat/get-chat-thread-by-user-and-kennel?userId=${userId}&kennelId=${KennelId}`, {
         method: "GET",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: formData,
+        
       });
       console.log(response);
       if (!response.ok) {
+        console.warn(
+          "Response from server:",
+          response.status,
+          response.statusText
+        );
         const errorMessage = await response.text();
+        console.error("Server error message:", errorMessage);
+        throw new Error(errorMessage);
+      }
+      return await response.json(); // Ensure the response is returned in JSON format
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createChatThread(token, userId,KennelId,volunteerId) {
+    try {
+      
+      const response = await fetch(`${this.baseUrl}/api/chat/create-chat-thread?userId=${userId}&kennelId=${KennelId}&volunteerId=${volunteerId}`, {
+        method: "GET",
+        headers: {
+         "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          
+        },
+       
+      });
+      console.log(response);
+      if (!response.ok) {
+        console.warn(
+          "Response from server:",
+          response.status,
+          response.statusText
+        );
+        const errorMessage = await response.text();
+        console.error("Server error message:", errorMessage);
         throw new Error(errorMessage);
       }
       return await response.json(); // Ensure the response is returned in JSON format
