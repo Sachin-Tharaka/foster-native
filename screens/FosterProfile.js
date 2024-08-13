@@ -38,12 +38,7 @@ const FosterProfile = ({ route, navigation }) => {
 
   // Handle book a foster house
   const handleBookFosterHouse = async () => {
-    const token = await AsyncStorage.getItem("token");
-    if (token != null) {
-      navigation.navigate("Booking", { kennelID: kennelId });
-    } else {
-      navigation.navigate("Landing");
-    }
+    navigation.navigate("Booking", { kennelID: kennelId });
   };
 
   const viewReviews = () => {
@@ -52,21 +47,22 @@ const FosterProfile = ({ route, navigation }) => {
 
   const messageKennel = async () => {
     const token = await AsyncStorage.getItem("token");
-<<<<<<< HEAD
-    const userId=await AsyncStorage.getItem("userId");
-=======
+    const userId = await AsyncStorage.getItem("userId");
     console.log("token", token);
->>>>>>> f31d8f4a954524a3be09cbbe38a92bfcbc15e2e8
     if (token != null) {
-      const res=ChatService.getChatThreadByUserAndKennel(token,userId,kennelId);
-      console.warn("response: ",res);
+      const res = ChatService.getChatThreadByUserAndKennel(
+        token,
+        userId,
+        kennelId
+      );
+      console.warn("response: ", res);
     } else {
       navigation.navigate("Landing");
     }
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Image
           source={
@@ -119,7 +115,7 @@ const FosterProfile = ({ route, navigation }) => {
             )
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
