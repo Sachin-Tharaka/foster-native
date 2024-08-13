@@ -85,7 +85,7 @@ class ChatService {
           },
         }
       );
-      console.log(response);
+      console.warn(response);
       if (!response.ok) {
         console.warn(
           "Response from server:",
@@ -96,9 +96,15 @@ class ChatService {
         console.error("Server error message:", errorMessage);
         throw new Error(errorMessage);
       }
-      const responseData = await response.json();
-      console.log("Booking successful:", responseData);
-      return responseData; // Ensure the response is returned in JSON format
+      // Check if response body is empty
+      if (response.headers.get("Content-Length") === "0") {
+        console.log("No chat threads found.");
+        return null; // Return an empty array or handle as needed
+      } else {
+        const responseData = await response.json();
+        console.log("successful:", responseData);
+        return responseData;
+      } // Ensure the response is returned in JSON format
     } catch (error) {
       throw error;
     }

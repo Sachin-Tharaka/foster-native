@@ -48,9 +48,11 @@ const FosterProfile = ({ route, navigation }) => {
   const messageKennel = async () => {
     const token = await AsyncStorage.getItem("token");
     const userId = await AsyncStorage.getItem("userId");
+    console.warn("userid " + userId);
+    console.warn("kennelid" + kennelId);
     const volunteerId = "";
     if (token != null) {
-      const res = ChatService.getChatThreadByUserAndKennel(
+      const res = await ChatService.getChatThreadByUserAndKennel(
         token,
         userId,
         kennelId
