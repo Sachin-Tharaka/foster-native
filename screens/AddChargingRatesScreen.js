@@ -1,13 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, ScrollView } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import KennelService from '../services/KennelService';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Button,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import KennelService from "../services/KennelService";
 import AnimalTypeDropdown from "../components/AnimalTypeDropdown";
 
 const AddChargingRatesScreen = ({ route, navigation }) => {
   const { kennelId } = route.params || { kennelId: "" };
   const [paymentRates, setPaymentRates] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const getTokenAndFetchData = async () => {
@@ -25,40 +33,44 @@ const AddChargingRatesScreen = ({ route, navigation }) => {
     try {
       const data = await KennelService.getKennelById(id, token);
       setPaymentRates(data.paymentRates || []);
-      console.warn("rates: ",paymentRates);
     } catch (error) {
       console.error("Error:", error.message);
     }
   };
 
   const addRates = async () => {
-    const formattedRates = paymentRates.map(rate => ({
+    const formattedRates = paymentRates.map((rate) => ({
       animalType: rate.animalType,
-      rate: parseFloat(rate.rate)
+      rate: parseFloat(rate.rate),
     }));
 
-    if (formattedRates.some(rate => isNaN(rate.rate) || !rate.animalType || rate.rate === '')) {
-      setError('All fields are required and rates must be numbers.');
+    if (
+      formattedRates.some(
+        (rate) => isNaN(rate.rate) || !rate.animalType || rate.rate === ""
+      )
+    ) {
+      setError("All fields are required and rates must be numbers.");
       return;
     }
 
     try {
-      const token = await AsyncStorage.getItem('token');
+      const token = await AsyncStorage.getItem("token");
       const data = {
         kennelId,
-        paymentRates: formattedRates
+        paymentRates: formattedRates,
       };
-      const response = await KennelService.addRates(data, token);
+      await KennelService.addRates(data, token);
       navigation.navigate("AgentHome", { kennelID: kennelId });
-      setPaymentRates([{ animalType: '', rate: '' }]);
+      setPaymentRates([{ animalType: "", rate: "" }]);
+      setError(""); // Clear error on successful submission
     } catch (error) {
-      console.error('Error:', error.message);
+      console.error("Error:", error.message);
       setError("Failed to save payment rates");
     }
   };
 
   const handleAddField = () => {
-    setPaymentRates([...paymentRates, { animalType: '', rate: '' }]);
+    setPaymentRates([...paymentRates, { animalType: "", rate: "" }]);
   };
 
   const handleRemoveField = (index) => {
@@ -77,13 +89,13 @@ const AddChargingRatesScreen = ({ route, navigation }) => {
   };
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.header}>Add Payment Rates</Text>
         {error && <Text style={styles.error}>{error}</Text>}
         {paymentRates.map((rate, index) => (
           <View key={index} style={styles.rateContainer}>
-             <AnimalTypeDropdown
+            <AnimalTypeDropdown
               selectedAnimal={rate.animalType}
               onAnimalTypeChange={(value) =>
                 handleInputChange(index, "animalType", value)
@@ -93,45 +105,97 @@ const AddChargingRatesScreen = ({ route, navigation }) => {
               style={styles.input}
               placeholder="Payment Rate"
               value={rate.rate.toString()}
-              onChangeText={(value) => handleInputChange(index, 'rate', value)}
+              onChangeText={(value) => handleInputChange(index, "rate", value)}
               keyboardType="numeric"
             />
-            <Button title="Remove" onPress={() => handleRemoveField(index)} />
+            <TouchableOpacity
+              style={styles.removeButton}
+              onPress={() => handleRemoveField(index)}
+            >
+              <Text style={styles.removeButtonText}>Remove</Text>
+            </TouchableOpacity>
           </View>
         ))}
-        <Button title="Add More" onPress={handleAddField} />
-        <Button title="Add Payment Rates" onPress={addRates} />
+      </ScrollView>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.addButton} onPress={handleAddField}>
+          <Text style={styles.addButtonText}>Add Another Rate</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.submitButton} onPress={addRates}>
+          <Text style={styles.submitButtonText}>Save Payment Rates</Text>
+        </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    backgroundColor: '#ffffff',
-    marginTop: 100,
+    padding: 20,
+    backgroundColor: "#ffffff",
+    paddingTop: 60,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 80, // Ensure enough space for buttons
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
+    marginHorizontal: "auto",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     padding: 10,
     marginBottom: 10,
     borderRadius: 5,
   },
   error: {
-    color: 'red',
-    marginTop: 5,
+    color: "red",
     marginBottom: 10,
   },
   rateContainer: {
     marginBottom: 20,
+  },
+  buttonContainer: {
+    padding: 20,
+    borderTopWidth: 1,
+    borderTopColor: "#ccc",
+  },
+  addButton: {
+    backgroundColor: "black",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  addButtonText: {
+    color: "white",
+    fontSize: 16,
+  },
+  submitButton: {
+    backgroundColor: "black",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  submitButtonText: {
+    color: "white",
+    fontSize: 16,
+  },
+  removeButton: {
+    backgroundColor: "#f44336",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  removeButtonText: {
+    color: "white",
+    fontSize: 16,
   },
 });
 

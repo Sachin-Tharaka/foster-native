@@ -92,8 +92,6 @@ const KennelHome = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.content}>
-        <Text style={styles.header}>Home</Text>
-
         <View style={styles.user_header}>
           <Image
             source={
@@ -108,35 +106,30 @@ const KennelHome = ({ route, navigation }) => {
               ? `${kennelData.kennelAddress.address1}, ${kennelData.kennelAddress.address2}, ${kennelData.kennelAddress.city},${kennelData.kennelAddress.zipCode}.`
               : "Address not available"}
           </Text>
-          <Text>Owner Name: {kennelData.ownerName}</Text>
-          <Text>Owner Email: {kennelData.ownerEmail}</Text>
-          <Text>Owner Phone: {kennelData.ownerPhone}</Text>
-
           <View style={styles.paymentRatesContainer}>
-            <Text style={styles.paymentRatesTitle}>Payment Rates:</Text>
-            {kennelData.paymentRates &&
-              kennelData.paymentRates.map((rate, index) => (
-                <Text key={index} style={styles.paymentRate}>
-                  {rate.animalType}: {rate.rate}
-                </Text>
-              ))}
+            {kennelData.paymentRates && kennelData.paymentRates.length > 0 ? (
+              <View>
+                <Text style={styles.paymentRatesTitle}>Payment Rates:</Text>
+                {kennelData.paymentRates.map((rate, index) => (
+                  <Text key={index} style={styles.paymentRate}>
+                    {rate.animalType}: {rate.rate}
+                  </Text>
+                ))}
+              </View>
+            ) : (
+              <Text style={styles.noPaymentRatesText}>
+                No payment rates available
+              </Text>
+            )}
           </View>
         </View>
-
-        <ScrollView horizontal style={styles.imagesContainer}>
-          {kennelData.images &&
-            Array.isArray(kennelData.images) &&
-            kennelData.images.map((image, index) => (
-              <Image key={index} source={{ uri: image }} style={styles.image} />
-            ))}
-        </ScrollView>
 
         <View style={styles.buttonsContainer}>
           <TouchableOpacity style={styles.button} onPress={updateData}>
             <Text style={styles.buttonText}>Change Details</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={viewBooking}>
-            <Text style={styles.buttonText}>Booking</Text>
+            <Text style={styles.buttonText}>Bookings</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={viewReviews}>
             <Text style={styles.buttonText}>Reviews</Text>
@@ -148,6 +141,13 @@ const KennelHome = ({ route, navigation }) => {
             <Text style={styles.buttonText}>Delete Kennel</Text>
           </TouchableOpacity>
         </View>
+        <ScrollView horizontal style={styles.imagesContainer}>
+          {kennelData.images &&
+            Array.isArray(kennelData.images) &&
+            kennelData.images.map((image, index) => (
+              <Image key={index} source={{ uri: image }} style={styles.image} />
+            ))}
+        </ScrollView>
       </ScrollView>
     </View>
   );

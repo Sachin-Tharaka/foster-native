@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   Image,
+  ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
@@ -171,90 +172,92 @@ const ChangeDetails = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        placeholder="First Name"
-        value={firstName}
-        onChangeText={setFirstName}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Last Name"
-        value={lastName}
-        onChangeText={setLastName}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Phone Number"
-        value={phoneNumber}
-        onChangeText={setPhoneNumber}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        style={styles.input}
-        secureTextEntry
-      />
-      <TextInput
-        placeholder="Address 1"
-        value={userAddress1}
-        onChangeText={setUserAddress1}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Address 2"
-        value={userAddress2}
-        onChangeText={setUserAddress2}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="City"
-        value={userCity}
-        onChangeText={setUserCity}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Zip Code"
-        value={userZip}
-        onChangeText={setUserZip}
-        style={styles.input}
-      />
-      <View style={styles.imageContainer}>
-        {profileImage ? (
-          <Image source={{ uri: profileImage }} style={styles.image} />
-        ) : (
-          <Text>No profile picture</Text>
-        )}
+    <ScrollView>
+      <View style={styles.container}>
+        <TextInput
+          placeholder="First Name"
+          value={firstName}
+          onChangeText={setFirstName}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Last Name"
+          value={lastName}
+          onChangeText={setLastName}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Phone Number"
+          value={phoneNumber}
+          onChangeText={setPhoneNumber}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          style={styles.input}
+          secureTextEntry
+        />
+        <TextInput
+          placeholder="Address 1"
+          value={userAddress1}
+          onChangeText={setUserAddress1}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Address 2"
+          value={userAddress2}
+          onChangeText={setUserAddress2}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="City"
+          value={userCity}
+          onChangeText={setUserCity}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Zip Code"
+          value={userZip}
+          onChangeText={setUserZip}
+          style={styles.input}
+        />
+        <View style={styles.imageContainer}>
+          {profileImage ? (
+            <Image source={{ uri: profileImage }} style={styles.image} />
+          ) : (
+            <Text>No profile picture</Text>
+          )}
+        </View>
+        <TouchableOpacity style={styles.button} onPress={pickImage}>
+          <Text style={styles.buttonText}>Update Profile Picture</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Update Details</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: "red" }]}
+          onPress={deleteUserAccount}
+        >
+          <Text style={styles.buttonText}>Delete Account</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.button} onPress={pickImage}>
-        <Text style={styles.buttonText}>Update Profile Picture</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Update Details</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: "red" }]}
-        onPress={deleteUserAccount}
-      >
-        <Text style={styles.buttonText}>Delete Account</Text>
-      </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 20,
     justifyContent: "center",
+    paddingTop: 60,
   },
   input: {
     height: 40,
@@ -268,7 +271,7 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     padding: 10,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 10,
     borderRadius: 10,
   },
   buttonText: {

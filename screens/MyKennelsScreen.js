@@ -51,10 +51,10 @@ const MyKennelsScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.header}>My Kennels</Text>
       <View style={styles.buttonContainer}>
-
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AddNewKennelScreen')}>
-
-
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("AddNewKennelScreen")}
+        >
           <Text style={styles.buttonText}>Add Kennel</Text>
         </TouchableOpacity>
       </View>
@@ -65,11 +65,10 @@ const MyKennelsScreen = ({ navigation }) => {
             style={styles.entry}
             onPress={() => handleClickOnKennel(kennel.kennelId)}
           >
-            <Image source={
-            kennel.profileImage 
-              ? { uri: kennel.profileImage}
-              : null
-          } style={styles.image} />
+            <Image
+              source={kennel.profileImage ? { uri: kennel.profileImage } : null}
+              style={styles.image}
+            />
             <View style={styles.infoContainer}>
               <Text style={styles.name}>{kennel.kennelName}</Text>
             </View>
@@ -85,7 +84,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "#ffffff",
-    marginTop: 100,
+    paddingTop: 100,
   },
   header: {
     fontSize: 24,
