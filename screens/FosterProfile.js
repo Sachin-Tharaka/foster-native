@@ -53,7 +53,8 @@ const FosterProfile = ({ route, navigation }) => {
     const token = await AsyncStorage.getItem("token");
     console.log("token", token);
     if (token != null) {
-      //Handle Create new chat and Navigtion
+      //Handle Create new chat and Navigation
+
     } else {
       navigation.navigate("Landing");
     }

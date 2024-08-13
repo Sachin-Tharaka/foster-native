@@ -72,6 +72,34 @@ class ChatService {
       throw error;
     }
   }
+
+    async createChat(token, userId, kennelId) {
+      try {
+        const response = await fetch(
+            `${this.baseUrl}/api/chat/create-chat-thread`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                userId: userId,
+                kennelId: kennelId,
+              }),
+            }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to create chat thread");
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        throw error;
+      }
+    }
 }
 
 export default new ChatService();
