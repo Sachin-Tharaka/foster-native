@@ -19,6 +19,7 @@ const ChatScreenUser = ({ route }) => {
   const [inputText, setInputText] = useState("");
   const [attachment, setAttachment] = useState(null);
   const { chatId } = route.params;
+  const { kennelId } = route.params;
 
   // Fetch chat messages
   const fetchChatMessages = async () => {
@@ -46,12 +47,11 @@ const ChatScreenUser = ({ route }) => {
 
   const handleSend = async () => {
     const token = await AsyncStorage.getItem("token");
-    const senderId = await AsyncStorage.getItem("userId");
 
     const formData = new FormData();
     formData.append("chatThreadId", chatId);
     formData.append("message", inputText);
-    formData.append("senderId", senderId);
+    formData.append("senderId", kennelId);
     if (attachment != null) {
       formData.append("attachment", {
         uri: attachment.uri,
@@ -59,7 +59,7 @@ const ChatScreenUser = ({ route }) => {
         type: attachment.mimeType,
       });
     }
-    formData.append("senderType", "User");
+    formData.append("senderType", "Kennel");
 
     const response = await ChatService.sendMessage(token, formData);
     if (response.ok) {
@@ -72,7 +72,7 @@ const ChatScreenUser = ({ route }) => {
   const renderMessage = ({ item }) => (
     <View
       style={
-        item.senderType === "User" ? styles.myMessage : styles.otherMessage
+        item.senderType === "Kennel" ? styles.myMessage : styles.otherMessage
       }
     >
       <Text style={styles.messageText}>{item.message}</Text>

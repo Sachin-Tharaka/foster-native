@@ -17,7 +17,7 @@ const ChatListUser = ({ navigation }) => {
       try {
         const token = await AsyncStorage.getItem("token");
         const userId = await AsyncStorage.getItem("userId");
-        const chatPreview = await ChatService.fetchMessagePreviews(
+        const chatPreview = await ChatService.fetchMessagePreviewsUser(
           token,
           userId
         );
