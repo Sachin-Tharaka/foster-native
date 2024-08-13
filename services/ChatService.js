@@ -72,17 +72,19 @@ class ChatService {
       throw error;
     }
   }
-  async getChatThreadByUserAndKennel(token, userId,KennelId) {
+  async getChatThreadByUserAndKennel(token, userId, KennelId) {
     try {
       console.log("Sending message...");
-      const response = await fetch(`${this.baseUrl}/api/chat/get-chat-thread-by-user-and-kennel?userId=${userId}&kennelId=${KennelId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        
-      });
+      const response = await fetch(
+        `${this.baseUrl}/api/chat/get-chat-thread-by-user-and-kennel?userId=${userId}&kennelId=${KennelId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log(response);
       if (!response.ok) {
         console.warn(
@@ -94,25 +96,26 @@ class ChatService {
         console.error("Server error message:", errorMessage);
         throw new Error(errorMessage);
       }
-      return await response.json(); // Ensure the response is returned in JSON format
+      const responseData = await response.json();
+      console.log("Booking successful:", responseData);
+      return responseData; // Ensure the response is returned in JSON format
     } catch (error) {
       throw error;
     }
   }
 
-  async createChatThread(token, userId,KennelId,volunteerId) {
+  async createChatThread(token, userId, KennelId, volunteerId) {
     try {
-      
-      const response = await fetch(`${this.baseUrl}/api/chat/create-chat-thread?userId=${userId}&kennelId=${KennelId}&volunteerId=${volunteerId}`, {
-        method: "GET",
-        headers: {
-         "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          
-        },
-       
-      });
-      console.log(response);
+      const response = await fetch(
+        `${this.baseUrl}/api/chat/create-chat-thread?userId=${userId}&kennelId=${KennelId}&volunteerId=${volunteerId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (!response.ok) {
         console.warn(
           "Response from server:",
@@ -123,7 +126,9 @@ class ChatService {
         console.error("Server error message:", errorMessage);
         throw new Error(errorMessage);
       }
-      return await response.json(); // Ensure the response is returned in JSON format
+      const responseData = await response.json();
+      console.log("Booking successful:", responseData);
+      return responseData; // Ensure the response is returned in JSON format
     } catch (error) {
       throw error;
     }
