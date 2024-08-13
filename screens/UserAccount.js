@@ -6,7 +6,7 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  Alert,
+  ActivityIndicator,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navbar from "../components/Navbar";
@@ -16,6 +16,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 const UserAccount = ({ navigation }) => {
   const [userData, setUserData] = useState({});
+  const [loading, setLoading] = useState(true); // New loading state
 
   useEffect(() => {
     const getToken = async () => {
@@ -26,22 +27,21 @@ const UserAccount = ({ navigation }) => {
         getUserById(userId, token);
       } else {
         // Token doesn't exist, navigate to Login screen
-        console.log("Please login");
         navigation.navigate("Login");
       }
     };
     getToken();
   }, [navigation]);
 
-  // Get user by id
   const getUserById = async (id, token) => {
     try {
       const data = await UserService.getUserById(id, token);
-      console.log("user data:", data);
       setUserData(data);
     } catch (error) {
       // Handle error
       console.error("Error:", error.message);
+    } finally {
+      setLoading(false); // Set loading to false after data fetching
     }
   };
 
@@ -57,13 +57,15 @@ const UserAccount = ({ navigation }) => {
     navigation.navigate("ChangeDetails");
   };
 
-  const goToVolunteerScreen = async () => {
+  const goToVolunteerScreen = () => {
     navigation.navigate("VolunteerScreen");
   };
-  const goToUserReceipts = async () => {
+
+  const goToUserReceipts = () => {
     navigation.navigate("UserInvoiceScreen");
   };
-  const goToKennelReceipts = async () => {
+
+  const goToKennelReceipts = () => {
     navigation.navigate("KennelInvoicesScreen");
   };
 
@@ -72,6 +74,12 @@ const UserAccount = ({ navigation }) => {
     await AsyncStorage.removeItem("userId");
     navigation.navigate("Login");
   };
+
+  if (loading) {
+    return (
+      <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
+    );
+  }
 
   return (
     <View style={styles.outerContainer}>
@@ -184,6 +192,11 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontWeight: "bold",
+  },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
