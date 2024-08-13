@@ -38,12 +38,7 @@ const FosterProfile = ({ route, navigation }) => {
 
   // Handle book a foster house
   const handleBookFosterHouse = async () => {
-    const token = await AsyncStorage.getItem("token");
-    if (token != null) {
-      navigation.navigate("Booking", { kennelID: kennelId });
-    } else {
-      navigation.navigate("Landing");
-    }
+    navigation.navigate("Booking", { kennelID: kennelId });
   };
 
   const viewReviews = () => {
@@ -72,7 +67,7 @@ const FosterProfile = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Image
           source={
@@ -125,7 +120,7 @@ const FosterProfile = ({ route, navigation }) => {
             )
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
