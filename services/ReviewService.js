@@ -20,8 +20,14 @@ class ReviewService {
       );
 
       if (!response.ok) {
-        console.warn("Error.........");
-        throw new Error("Failed to get reviews data");
+        console.warn(
+          "Response from server for review:",
+          response.status,
+          response.statusText
+        );
+        const errorMessage = await response.text();
+        console.error("Server error message for  review:", errorMessage);
+        throw new Error(errorMessage);
       }
       //console.warn("response " ,response);
       const data = await response.json();
@@ -49,8 +55,14 @@ class ReviewService {
       );
 
       if (!response.ok) {
-        console.warn("Error.........");
-        throw new Error("Failed to get reviews data");
+        console.warn(
+          "Response from server for review:",
+          response.status,
+          response.statusText
+        );
+        const errorMessage = await response.text();
+        console.error("Server error message for  review:", errorMessage);
+        throw new Error(errorMessage);
       }
       //console.warn("response " ,response);
       const data = await response.json();
