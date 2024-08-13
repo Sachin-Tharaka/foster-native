@@ -59,7 +59,7 @@ const ChatScreenUser = ({ route }) => {
         type: attachment.mimeType,
       });
     }
-    formData.append("senderType", "User");
+    formData.append("senderType", "Kennel");
 
     const response = await ChatService.sendMessage(token, formData);
     if (response.ok) {
@@ -72,7 +72,7 @@ const ChatScreenUser = ({ route }) => {
   const renderMessage = ({ item }) => (
     <View
       style={
-        item.senderType === "User" ? styles.myMessage : styles.otherMessage
+        item.senderType === "Kennel" ? styles.myMessage : styles.otherMessage
       }
     >
       <Text style={styles.messageText}>{item.message}</Text>
