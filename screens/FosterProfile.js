@@ -10,6 +10,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navbar from "../components/Navbar";
 import KennelService from "../services/KennelService";
+import ChatService from "../services/ChatService";
 
 const FosterProfile = ({ route, navigation }) => {
   const { kennelId } = route.params;
@@ -51,9 +52,14 @@ const FosterProfile = ({ route, navigation }) => {
 
   const messageKennel = async () => {
     const token = await AsyncStorage.getItem("token");
+<<<<<<< HEAD
+    const userId=await AsyncStorage.getItem("userId");
+=======
     console.log("token", token);
+>>>>>>> f31d8f4a954524a3be09cbbe38a92bfcbc15e2e8
     if (token != null) {
-      //Handle Create new chat and Navigtion
+      const res=ChatService.getChatThreadByUserAndKennel(token,userId,kennelId);
+      console.warn("response: ",res);
     } else {
       navigation.navigate("Landing");
     }
@@ -93,8 +99,8 @@ const FosterProfile = ({ route, navigation }) => {
         <TouchableOpacity style={styles.button} onPress={viewReviews}>
           <Text style={styles.buttonText}>Reviews</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Message onPress={messageKennel}</Text>
+        <TouchableOpacity style={styles.button} onPress={messageKennel}>
+          <Text style={styles.buttonText}>Message</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.petsContainer}>

@@ -72,6 +72,27 @@ class ChatService {
       throw error;
     }
   }
+
+  async getChatThreadByUserAndKennel(token, userId,KennelId) {
+    try {
+      console.log("Sending message...");
+      const response = await fetch(`${this.baseUrl}/api/chat/get-chat-thread-by-user-and-kennel?userId=${userId}&kennelId=${KennelId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+      console.log(response);
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage);
+      }
+      return await response.json(); // Ensure the response is returned in JSON format
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default new ChatService();
