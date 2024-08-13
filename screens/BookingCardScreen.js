@@ -329,7 +329,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 16,
     alignItems: "center",
-    borderColor: "black",
     borderWidth: 0.5, // Adjust the thickness of the border here
   },
   pickerButtonText: {
